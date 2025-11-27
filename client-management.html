@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Client Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <!-- Admin Sidebar Navigation -->
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <span>SOULBOX</span>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="trainer-management.html" class="admin-nav-link">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Trainers</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Personal Training</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Group Classes</span>
+                </a>
+                <a href="class-management.html" class="admin-nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Class Management</span>
+                </a>
+                <a href="client-management.html" class="admin-nav-link active">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Clients</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+            
+            <div class="admin-user-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-user-details">
+                    <div class="admin-username">Admin User</div>
+                    <div class="admin-role">Super Admin</div>
+                </div>
+                <button class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Admin Header -->
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Client Management</h1>
+                    <p>Manage member information and bookings</p>
+                </div>
+                <div class="admin-header-actions">
+                    <div class="admin-search">
+                        <input type="text" placeholder="Search clients...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="admin-notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Client Management Content -->
+            <div class="admin-dashboard-content">
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button class="primary-action-btn" id="add-client-btn">
+                        <i class="fas fa-plus"></i> Add New Client
+                    </button>
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label>Status:</label>
+                            <select class="filter-select" id="status-select">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Membership:</label>
+                            <select class="filter-select" id="membership-select">
+                                <option value="all">All Memberships</option>
+                                <option value="premium">Premium</option>
+                                <option value="standard">Standard</option>
+                                <option value="basic">Basic</option>
+                                <option value="trial">Trial</option>
+                            </select>
+                        </div>
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="filter-btn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Client List -->
+                <div class="client-list-container">
+                    <table class="client-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all-clients">
+                                </th>
+                                <th>Client ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Membership</th>
+                                <th>Status</th>
+                                <th>Last Visit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="client-checkbox">
+                                </td>
+                                <td>#1056</td>
+                                <td class="client-name">
+                                    <div class="client-avatar">JD</div>
+                                    <div>John Doe</div>
+                                </td>
+                                <td>john.doe@example.com</td>
+                                <td>+1 234-567-8901</td>
+                                <td>
+                                    <span class="badge premium">Premium</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge active">Active</span>
+                                </td>
+                                <td>Today</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit-btn" title="Edit Client">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn book-btn" title="Book Class">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="client-checkbox">
+                                </td>
+                                <td>#1208</td>
+                                <td class="client-name">
+                                    <div class="client-avatar">JS</div>
+                                    <div>Jane Smith</div>
+                                </td>
+                                <td>jane.smith@example.com</td>
+                                <td>+1 234-567-8902</td>
+                                <td>
+                                    <span class="badge standard">Standard</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge active">Active</span>
+                                </td>
+                                <td>Yesterday</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit-btn" title="Edit Client">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn book-btn" title="Book Class">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="client-checkbox">
+                                </td>
+                                <td>#1311</td>
+                                <td class="client-name">
+                                    <div class="client-avatar">RJ</div>
+                                    <div>Robert Johnson</div>
+                                </td>
+                                <td>robert.j@example.com</td>
+                                <td>+1 234-567-8903</td>
+                                <td>
+                                    <span class="badge basic">Basic</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge inactive">Inactive</span>
+                                </td>
+                                <td>2 weeks ago</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit-btn" title="Edit Client">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn book-btn" title="Book Class">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="client-checkbox">
+                                </td>
+                                <td>#1422</td>
+                                <td class="client-name">
+                                    <div class="client-avatar">EW</div>
+                                    <div>Emily Wilson</div>
+                                </td>
+                                <td>emily.w@example.com</td>
+                                <td>+1 234-567-8904</td>
+                                <td>
+                                    <span class="badge premium">Premium</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge active">Active</span>
+                                </td>
+                                <td>3 days ago</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit-btn" title="Edit Client">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn book-btn" title="Book Class">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="client-checkbox">
+                                </td>
+                                <td>#1536</td>
+                                <td class="client-name">
+                                    <div class="client-avatar">MB</div>
+                                    <div>Michael Brown</div>
+                                </td>
+                                <td>michael.b@example.com</td>
+                                <td>+1 234-567-8905</td>
+                                <td>
+                                    <span class="badge trial">Trial</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge pending">Pending</span>
+                                </td>
+                                <td>Never</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit-btn" title="Edit Client">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn book-btn" title="Book Class">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="pagination-btn" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <span class="pagination-ellipsis">...</span>
+                        <button class="pagination-btn">10</button>
+                        <button class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Client Stats -->
+                <div class="admin-two-column">
+                    <!-- Membership Distribution -->
+                    <div class="admin-chart-card">
+                        <div class="section-header">
+                            <h2>Membership Distribution</h2>
+                        </div>
+                        <div class="chart-container">
+                            <div class="pie-chart">
+                                <div class="pie-segment premium-segment" style="--percentage: 40%; --color: #9b59b2;"></div>
+                                <div class="pie-segment standard-segment" style="--percentage: 30%; --color: #3498db;"></div>
+                                <div class="pie-segment basic-segment" style="--percentage: 20%; --color: #2ecc71;"></div>
+                                <div class="pie-segment trial-segment" style="--percentage: 10%; --color: #f39c12;"></div>
+                                <div class="pie-center">120<br>Clients</div>
+                            </div>
+                            <div class="pie-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color" style="background-color: #9b59b2;"></span>
+                                    <span class="legend-label">Premium (40%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color" style="background-color: #3498db;"></span>
+                                    <span class="legend-label">Standard (30%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color" style="background-color: #2ecc71;"></span>
+                                    <span class="legend-label">Basic (20%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color" style="background-color: #f39c12;"></span>
+                                    <span class="legend-label">Trial (10%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client Activity -->
+                    <div class="admin-chart-card">
+                        <div class="section-header">
+                            <h2>Client Activity</h2>
+                            <div class="chart-filters">
+                                <button class="chart-filter active">Week</button>
+                                <button class="chart-filter">Month</button>
+                                <button class="chart-filter">Year</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <div class="chart-bar" style="height: 60%;" title="Mon: 18 visits"></div>
+                                <div class="chart-bar" style="height: 45%;" title="Tue: 14 visits"></div>
+                                <div class="chart-bar" style="height: 80%;" title="Wed: 24 visits"></div>
+                                <div class="chart-bar" style="height: 65%;" title="Thu: 20 visits"></div>
+                                <div class="chart-bar" style="height: 90%;" title="Fri: 27 visits"></div>
+                                <div class="chart-bar" style="height: 75%;" title="Sat: 22 visits"></div>
+                                <div class="chart-bar" style="height: 40%;" title="Sun: 12 visits"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Bookings -->
+                <div class="admin-chart-card">
+                    <div class="section-header">
+                        <h2>Recent Bookings</h2>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="recent-bookings">
+                        <table class="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Class</th>
+                                    <th>Date & Time</th>
+                                    <th>Trainer</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="client-name">
+                                        <div class="client-avatar">JD</div>
+                                        <div>John Doe</div>
+                                    </td>
+                                    <td>Yoga Flow</td>
+                                    <td>Today, 09:00 AM</td>
+                                    <td>Ankie</td>
+                                    <td>
+                                        <span class="status-badge completed">Completed</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="client-name">
+                                        <div class="client-avatar">EW</div>
+                                        <div>Emily Wilson</div>
+                                    </td>
+                                    <td>HIIT Circuit</td>
+                                    <td>Today, 01:00 PM</td>
+                                    <td>John</td>
+                                    <td>
+                                        <span class="status-badge upcoming">Upcoming</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="client-name">
+                                        <div class="client-avatar">JS</div>
+                                        <div>Jane Smith</div>
+                                    </td>
+                                    <td>Personal Training</td>
+                                    <td>Tomorrow, 10:00 AM</td>
+                                    <td>Delpas</td>
+                                    <td>
+                                        <span class="status-badge upcoming">Upcoming</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="client-name">
+                                        <div class="client-avatar">RJ</div>
+                                        <div>Robert Johnson</div>
+                                    </td>
+                                    <td>Boxing</td>
+                                    <td>Yesterday, 11:00 AM</td>
+                                    <td>Abas</td>
+                                    <td>
+                                        <span class="status-badge cancelled">Cancelled</span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn view-btn" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Client Modal -->
+    <div class="modal" id="client-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Client</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" placeholder="Enter last name">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" placeholder="Enter email address">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" placeholder="Enter phone number">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select class="form-control">
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" placeholder="Enter address">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" placeholder="Enter city">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">State/Province</label>
+                        <input type="text" class="form-control" placeholder="Enter state/province">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Zip/Postal Code</label>
+                        <input type="text" class="form-control" placeholder="Enter zip/postal code">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Membership Type</label>
+                        <select class="form-control">
+                            <option value="">Select membership</option>
+                            <option value="premium">Premium</option>
+                            <option value="standard">Standard</option>
+                            <option value="basic">Basic</option>
+                            <option value="trial">Trial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-control">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Health Information</label>
+                    <textarea class="form-control" rows="3" placeholder="Enter any health concerns, injuries, or special requirements"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-control" rows="2" placeholder="Enter any additional notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm">Save Client</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Class Modal -->
+    <div class="modal" id="book-class-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Book Class for Client</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="client-booking-info">
+                    <div class="client-avatar large">JD</div>
+                    <div class="client-details">
+                        <h4>John Doe</h4>
+                        <p>Premium Membership</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Class Type</label>
+                    <select class="form-control" id="booking-class-type">
+                        <option value="">Select class type</option>
+                        <option value="group">Group Class</option>
+                        <option value="personal">Personal Training</option>
+                    </select>
+                </div>
+                
+                <div id="group-class-options">
+                    <div class="form-group">
+                        <label class="form-label">Select Class</label>
+                        <select class="form-control">
+                            <option value="">Select a class</option>
+                            <option value="yoga">Yoga Flow (09:00 AM)</option>
+                            <option value="hiit">HIIT Circuit (01:00 PM)</option>
+                            <option value="boxing">Boxing (11:00 AM)</option>
+                            <option value="pilates">Pilates (10:00 AM)</option>
+                            <option value="spin">Spin Class (06:00 PM)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="personal-training-options" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Select Trainer</label>
+                            <select class="form-control">
+                                <option value="">Select a trainer</option>
+                                <option value="john">John</option>
+                                <option value="ankie">Ankie</option>
+                                <option value="abas">Abas</option>
+                                <option value="delpas">Delpas</option>
+                                <option value="aldi">Aldi</option>
+                                <option value="ian">Ian</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Time</label>
+                            <select class="form-control">
+                                <option value="">Select time</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="16:00">04:00 PM</option>
+                                <option value="17:00">05:00 PM</option>
+                                <option value="18:00">06:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Payment Status</label>
+                    <select class="form-control">
+                        <option value="paid">Paid</option>
+                        <option value="pending">Payment Pending</option>
+                        <option value="free">Free (Membership Included)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-control" rows="2" placeholder="Enter any booking notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Client Modal -->
+    <div class="modal" id="view-client-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Client Details</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="client-profile">
+                    <div class="client-profile-header">
+                        <div class="client-avatar large">JD</div>
+                        <div class="client-profile-info">
+                            <h2>John Doe</h2>
+                            <p>Member since: Jan 15, 2023</p>
+                            <span class="badge premium">Premium</span>
+                            <span class="status-badge active">Active</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-tabs">
+                        <button class="client-tab active" data-tab="info">Information</button>
+                        <button class="client-tab" data-tab="bookings">Bookings</button>
+                        <button class="client-tab" data-tab="billing">Billing</button>
+                        <button class="client-tab" data-tab="progress">Progress</button>
+                    </div>
+                    
+                    <div class="client-tab-content active" id="info-tab">
+                        <div class="info-section">
+                            <h4>Contact Information</h4>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value">john.doe@example.com</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Phone:</span>
+                                    <span class="info-value">+1 234-567-8901</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Address:</span>
+                                    <span class="info-value">123 Main St, Anytown, CA 12345</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h4>Personal Information</h4>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Date of Birth:</span>
+                                    <span class="info-value">May 12, 1985</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Gender:</span>
+                                    <span class="info-value">Male</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Age:</span>
+                                    <span class="info-value">38</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h4>Health Information</h4>
+                            <p>No known health issues. Regular runner with good cardiovascular fitness.</p>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h4>Notes</h4>
+                            <p>Prefers morning classes. Interested in nutrition coaching.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="client-tab-content" id="bookings-tab" style="display: none;">
+                        <div class="bookings-history">
+                            <h4>Upcoming Bookings</h4>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Date & Time</th>
+                                        <th>Trainer</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>HIIT Circuit</td>
+                                        <td>Today, 01:00 PM</td>
+                                        <td>John</td>
+                                        <td>
+                                            <span class="status-badge upcoming">Upcoming</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Yoga Flow</td>
+                                        <td>Aug 12, 09:00 AM</td>
+                                        <td>Ankie</td>
+                                        <td>
+                                            <span class="status-badge upcoming">Upcoming</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <h4>Past Bookings</h4>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Date & Time</th>
+                                        <th>Trainer</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Yoga Flow</td>
+                                        <td>Today, 09:00 AM</td>
+                                        <td>Ankie</td>
+                                        <td>
+                                            <span class="status-badge completed">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boxing</td>
+                                        <td>Aug 5, 11:00 AM</td>
+                                        <td>Abas</td>
+                                        <td>
+                                            <span class="status-badge completed">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Personal Training</td>
+                                        <td>Aug 3, 02:00 PM</td>
+                                        <td>John</td>
+                                        <td>
+                                            <span class="status-badge completed">Completed</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="client-tab-content" id="billing-tab" style="display: none;">
+                        <div class="billing-info">
+                            <div class="info-section">
+                                <h4>Membership Details</h4>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Plan:</span>
+                                        <span class="info-value">Premium Monthly</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Price:</span>
+                                        <span class="info-value">$99.00/month</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Next Billing:</span>
+                                        <span class="info-value">Aug 15, 2023</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Payment Method:</span>
+                                        <span class="info-value">Visa ending in 4242</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h4>Recent Transactions</h4>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jul 15, 2023</td>
+                                        <td>Premium Membership - Monthly</td>
+                                        <td>$99.00</td>
+                                        <td>
+                                            <span class="status-badge completed">Paid</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jul 10, 2023</td>
+                                        <td>Personal Training Session</td>
+                                        <td>$85.00</td>
+                                        <td>
+                                            <span class="status-badge completed">Paid</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jun 15, 2023</td>
+                                        <td>Premium Membership - Monthly</td>
+                                        <td>$99.00</td>
+                                        <td>
+                                            <span class="status-badge completed">Paid</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="client-tab-content" id="progress-tab" style="display: none;">
+                        <div class="progress-charts">
+                            <div class="chart-container">
+                                <h4>Attendance History</h4>
+                                <div class="chart-placeholder">
+                                    <div class="chart-bar" style="height: 40%;" title="Mar: 8 visits"></div>
+                                    <div class="chart-bar" style="height: 60%;" title="Apr: 12 visits"></div>
+                                    <div class="chart-bar" style="height: 50%;" title="May: 10 visits"></div>
+                                    <div class="chart-bar" style="height: 75%;" title="Jun: 15 visits"></div>
+                                    <div class="chart-bar" style="height: 85%;" title="Jul: 17 visits"></div>
+                                </div>
+                                <div class="chart-labels">
+                                    <span>Mar</span>
+                                    <span>Apr</span>
+                                    <span>May</span>
+                                    <span>Jun</span>
+                                    <span>Jul</span>
+                                </div>
+                            </div>
+                            
+                            <div class="fitness-metrics">
+                                <h4>Fitness Metrics</h4>
+                                <div class="metrics-grid">
+                                    <div class="metric-card">
+                                        <div class="metric-title">Weight</div>
+                                        <div class="metric-value">78 kg</div>
+                                        <div class="metric-change negative">-2.5 kg</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-title">Body Fat %</div>
+                                        <div class="metric-value">18%</div>
+                                        <div class="metric-change negative">-2.3%</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-title">Muscle Mass</div>
+                                        <div class="metric-value">62 kg</div>
+                                        <div class="metric-change positive">+1.2 kg</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-title">Resting HR</div>
+                                        <div class="metric-value">68 bpm</div>
+                                        <div class="metric-change negative">-3 bpm</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="goals-section">
+                                <h4>Goals & Progress</h4>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <div class="goal-name">Weight Loss</div>
+                                        <div class="goal-target">Target: 75 kg by Sep 30</div>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 60%;"></div>
+                                        </div>
+                                        <div class="progress-text">60%</div>
+                                    </div>
+                                </div>
+                                <div class="goal-item">
+                                    <div class="goal-info">
+                                        <div class="goal-name">5K Run Time</div>
+                                        <div class="goal-target">Target: Under 25 min by Oct 15</div>
+                                    </div>
+                                    <div class="goal-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 40%;"></div>
+                                        </div>
+                                        <div class="progress-text">40%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn edit">Edit Client</button>
+                <button class="modal-btn book">Book Class</button>
+                <button class="modal-btn close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+    <script src="client-management.js"></script>
+</body>
+</html>

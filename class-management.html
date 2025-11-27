@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Class Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <!-- Admin Sidebar Navigation -->
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <span>SOULBOX</span>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="trainer-management.html" class="admin-nav-link">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Trainers</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Personal Training</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Group Classes</span>
+                </a>
+                <a href="class-management.html" class="admin-nav-link active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Class Management</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Clients</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+            
+            <div class="admin-user-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-user-details">
+                    <div class="admin-username">Admin User</div>
+                    <div class="admin-role">Super Admin</div>
+                </div>
+                <button class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Admin Header -->
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Class Management</h1>
+                    <p>Manage schedules, spaces, and trainer availability</p>
+                </div>
+                <div class="admin-header-actions">
+                    <div class="admin-search">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="admin-notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Class Management Content -->
+            <div class="admin-dashboard-content">
+                <!-- Schedule Type Tabs -->
+                <div class="schedule-tabs">
+                    <button class="schedule-tab active" data-tab="group">Group Classes</button>
+                    <button class="schedule-tab" data-tab="personal">Personal Training</button>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button class="primary-action-btn">
+                        <i class="fas fa-plus"></i> Add New Class
+                    </button>
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label>View:</label>
+                            <select class="filter-select" id="view-select">
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="day">Day</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Space:</label>
+                            <select class="filter-select" id="space-select">
+                                <option value="all">All Spaces</option>
+                                <option value="studio-a">Studio A</option>
+                                <option value="studio-b">Studio B</option>
+                                <option value="gym-floor">Gym Floor</option>
+                                <option value="outdoor">Outdoor Area</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Trainer:</label>
+                            <select class="filter-select" id="trainer-select">
+                                <option value="all">All Trainers</option>
+                                <option value="john">John</option>
+                                <option value="ankie">Ankie</option>
+                                <option value="abas">Abas</option>
+                                <option value="delpas">Delpas</option>
+                                <option value="aldi">Aldi</option>
+                                <option value="ian">Ian</option>
+                            </select>
+                        </div>
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Calendar Navigation -->
+                <div class="calendar-navigation">
+                    <button class="calendar-nav-btn" id="prev-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 class="calendar-title">August 7 - 13, 2023</h2>
+                    <button class="calendar-nav-btn" id="next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="calendar-today-btn">Today</button>
+                </div>
+
+                <!-- Calendar View -->
+                <div class="calendar-container">
+                    <!-- Calendar Header -->
+                    <div class="calendar-header">
+                        <div class="time-column">Time</div>
+                        <div class="day-column">Monday</div>
+                        <div class="day-column">Tuesday</div>
+                        <div class="day-column">Wednesday</div>
+                        <div class="day-column">Thursday</div>
+                        <div class="day-column">Friday</div>
+                        <div class="day-column weekend">Saturday</div>
+                        <div class="day-column weekend">Sunday</div>
+                    </div>
+
+                    <!-- Calendar Body -->
+                    <div class="calendar-body">
+                        <!-- Time slots -->
+                        <div class="time-slots">
+                            <div class="time-slot">08:00</div>
+                            <div class="time-slot">09:00</div>
+                            <div class="time-slot">10:00</div>
+                            <div class="time-slot">11:00</div>
+                            <div class="time-slot">12:00</div>
+                            <div class="time-slot">13:00</div>
+                            <div class="time-slot">14:00</div>
+                            <div class="time-slot">15:00</div>
+                            <div class="time-slot">16:00</div>
+                            <div class="time-slot">17:00</div>
+                            <div class="time-slot">18:00</div>
+                            <div class="time-slot">19:00</div>
+                            <div class="time-slot">20:00</div>
+                        </div>
+
+                        <!-- Calendar Grid -->
+                        <div class="calendar-grid">
+                            <!-- Monday -->
+                            <div class="day-grid">
+                                <div class="class-item yoga" style="grid-row: 2 / span 2;">
+                                    <div class="class-time">09:00 - 10:30</div>
+                                    <div class="class-name">Yoga Flow</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Ankie</span>
+                                        <span class="class-location">Studio A</span>
+                                        <span class="class-capacity">12/15</span>
+                                    </div>
+                                    <div class="class-revenue">$240</div>
+                                </div>
+                                <div class="class-item hiit" style="grid-row: 6 / span 2;">
+                                    <div class="class-time">13:00 - 14:30</div>
+                                    <div class="class-name">HIIT Circuit</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">John</span>
+                                        <span class="class-location">Gym Floor</span>
+                                        <span class="class-capacity">8/10</span>
+                                    </div>
+                                    <div class="class-revenue">$160</div>
+                                </div>
+                                <div class="class-item pt" style="grid-row: 10 / span 1;">
+                                    <div class="class-time">17:00 - 18:00</div>
+                                    <div class="class-name">PT: Client #1208</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Delpas</span>
+                                        <span class="class-location">Gym Floor</span>
+                                    </div>
+                                    <div class="class-revenue">$85</div>
+                                </div>
+                            </div>
+
+                            <!-- Tuesday -->
+                            <div class="day-grid">
+                                <div class="class-item pilates" style="grid-row: 3 / span 2;">
+                                    <div class="class-time">10:00 - 11:30</div>
+                                    <div class="class-name">Pilates</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Aldi</span>
+                                        <span class="class-location">Studio B</span>
+                                        <span class="class-capacity">10/12</span>
+                                    </div>
+                                    <div class="class-revenue">$200</div>
+                                </div>
+                                <div class="class-item pt" style="grid-row: 7 / span 1;">
+                                    <div class="class-time">14:00 - 15:00</div>
+                                    <div class="class-name">PT: Client #1422</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">John</span>
+                                        <span class="class-location">Gym Floor</span>
+                                    </div>
+                                    <div class="class-revenue">$85</div>
+                                </div>
+                            </div>
+
+                            <!-- Wednesday -->
+                            <div class="day-grid">
+                                <div class="class-item boxing" style="grid-row: 4 / span 2;">
+                                    <div class="class-time">11:00 - 12:30</div>
+                                    <div class="class-name">Boxing</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Abas</span>
+                                        <span class="class-location">Studio A</span>
+                                        <span class="class-capacity">15/15</span>
+                                    </div>
+                                    <div class="class-revenue">$300</div>
+                                </div>
+                                <div class="class-item pt" style="grid-row: 7 / span 1;">
+                                    <div class="class-time">14:00 - 15:00</div>
+                                    <div class="class-name">PT: Client #1056</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">John</span>
+                                        <span class="class-location">Gym Floor</span>
+                                    </div>
+                                    <div class="class-revenue">$85</div>
+                                </div>
+                                <div class="class-item spin" style="grid-row: 11 / span 2;">
+                                    <div class="class-time">18:00 - 19:30</div>
+                                    <div class="class-name">Spin Class</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Ian</span>
+                                        <span class="class-location">Studio B</span>
+                                        <span class="class-capacity">18/20</span>
+                                    </div>
+                                    <div class="class-revenue">$360</div>
+                                </div>
+                            </div>
+
+                            <!-- Thursday -->
+                            <div class="day-grid">
+                                <div class="class-item yoga" style="grid-row: 2 / span 2;">
+                                    <div class="class-time">09:00 - 10:30</div>
+                                    <div class="class-name">Yoga Flow</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Ankie</span>
+                                        <span class="class-location">Studio A</span>
+                                        <span class="class-capacity">14/15</span>
+                                    </div>
+                                    <div class="class-revenue">$280</div>
+                                </div>
+                                <div class="class-item pt" style="grid-row: 8 / span 1;">
+                                    <div class="class-time">15:00 - 16:00</div>
+                                    <div class="class-name">PT: Client #1311</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Delpas</span>
+                                        <span class="class-location">Gym Floor</span>
+                                    </div>
+                                    <div class="class-revenue">$85</div>
+                                </div>
+                            </div>
+
+                            <!-- Friday -->
+                            <div class="day-grid">
+                                <div class="class-item hiit" style="grid-row: 6 / span 2;">
+                                    <div class="class-time">13:00 - 14:30</div>
+                                    <div class="class-name">HIIT Circuit</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">John</span>
+                                        <span class="class-location">Gym Floor</span>
+                                        <span class="class-capacity">9/10</span>
+                                    </div>
+                                    <div class="class-revenue">$180</div>
+                                </div>
+                                <div class="class-item pt" style="grid-row: 7 / span 1;">
+                                    <div class="class-time">14:00 - 15:00</div>
+                                    <div class="class-name">PT: Client #1056</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">John</span>
+                                        <span class="class-location">Gym Floor</span>
+                                    </div>
+                                    <div class="class-revenue">$85</div>
+                                </div>
+                            </div>
+
+                            <!-- Saturday -->
+                            <div class="day-grid">
+                                <div class="class-item boxing" style="grid-row: 4 / span 2;">
+                                    <div class="class-time">11:00 - 12:30</div>
+                                    <div class="class-name">Boxing</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Abas</span>
+                                        <span class="class-location">Studio A</span>
+                                        <span class="class-capacity">12/15</span>
+                                    </div>
+                                    <div class="class-revenue">$240</div>
+                                </div>
+                                <div class="class-item spin" style="grid-row: 8 / span 2;">
+                                    <div class="class-time">15:00 - 16:30</div>
+                                    <div class="class-name">Spin Class</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Ian</span>
+                                        <span class="class-location">Studio B</span>
+                                        <span class="class-capacity">15/20</span>
+                                    </div>
+                                    <div class="class-revenue">$300</div>
+                                </div>
+                            </div>
+
+                            <!-- Sunday -->
+                            <div class="day-grid">
+                                <div class="class-item yoga" style="grid-row: 3 / span 2;">
+                                    <div class="class-time">10:00 - 11:30</div>
+                                    <div class="class-name">Yoga Flow</div>
+                                    <div class="class-details">
+                                        <span class="class-trainer">Ankie</span>
+                                        <span class="class-location">Studio A</span>
+                                        <span class="class-capacity">10/15</span>
+                                    </div>
+                                    <div class="class-revenue">$200</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="admin-two-column">
+                    <!-- Space Utilization -->
+                    <div class="admin-chart-card">
+                        <div class="section-header">
+                            <h2>Space Utilization</h2>
+                            <div class="chart-filters">
+                                <button class="chart-filter active">Week</button>
+                                <button class="chart-filter">Month</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <div class="chart-bar" style="height: 70%;" title="Studio A: 70%"></div>
+                                <div class="chart-bar" style="height: 55%;" title="Studio B: 55%"></div>
+                                <div class="chart-bar" style="height: 85%;" title="Gym Floor: 85%"></div>
+                                <div class="chart-bar" style="height: 30%;" title="Outdoor Area: 30%"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Studio A</span>
+                                <span>Studio B</span>
+                                <span>Gym Floor</span>
+                                <span>Outdoor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Breakdown -->
+                    <div class="admin-chart-card">
+                        <div class="section-header">
+                            <h2>Revenue Breakdown</h2>
+                            <div class="chart-filters">
+                                <button class="chart-filter active">Week</button>
+                                <button class="chart-filter">Month</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <div class="chart-bar revenue-group" style="height: 65%;" title="Group Classes: $1,580"></div>
+                                <div class="chart-bar revenue-pt" style="height: 35%;" title="Personal Training: $850"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Group Classes</span>
+                                <span>Personal Training</span>
+                            </div>
+                        </div>
+                        <div class="revenue-summary">
+                            <div class="revenue-total">Total Weekly Revenue: <span>$2,430</span></div>
+                            <div class="revenue-comparison">+15% vs. Last Week</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trainer Availability -->
+                <div class="admin-chart-card">
+                    <div class="section-header">
+                        <h2>Trainer Availability</h2>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="trainer-availability-container">
+                        <div class="trainer-availability-item">
+                            <div class="trainer-info">
+                                <div class="trainer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="trainer-name">John</div>
+                            </div>
+                            <div class="availability-timeline">
+                                <div class="timeline-segment available" title="08:00 - 13:00"></div>
+                                <div class="timeline-segment booked" title="13:00 - 14:30: HIIT Circuit"></div>
+                                <div class="timeline-segment booked" title="14:30 - 15:00: PT Session"></div>
+                                <div class="timeline-segment available" title="15:00 - 20:00"></div>
+                            </div>
+                            <div class="trainer-hours">Hours: 12/20</div>
+                        </div>
+                        
+                        <div class="trainer-availability-item">
+                            <div class="trainer-info">
+                                <div class="trainer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="trainer-name">Ankie</div>
+                            </div>
+                            <div class="availability-timeline">
+                                <div class="timeline-segment booked" title="09:00 - 10:30: Yoga Flow"></div>
+                                <div class="timeline-segment available" title="10:30 - 20:00"></div>
+                            </div>
+                            <div class="trainer-hours">Hours: 8/25</div>
+                        </div>
+                        
+                        <div class="trainer-availability-item">
+                            <div class="trainer-info">
+                                <div class="trainer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="trainer-name">Abas</div>
+                            </div>
+                            <div class="availability-timeline">
+                                <div class="timeline-segment available" title="08:00 - 11:00"></div>
+                                <div class="timeline-segment booked" title="11:00 - 12:30: Boxing"></div>
+                                <div class="timeline-segment available" title="12:30 - 20:00"></div>
+                            </div>
+                            <div class="trainer-hours">Hours: 10/18</div>
+                        </div>
+                        
+                        <div class="trainer-availability-item">
+                            <div class="trainer-info">
+                                <div class="trainer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="trainer-name">Delpas</div>
+                            </div>
+                            <div class="availability-timeline">
+                                <div class="timeline-segment available" title="08:00 - 17:00"></div>
+                                <div class="timeline-segment booked" title="17:00 - 18:00: PT Session"></div>
+                                <div class="timeline-segment available" title="18:00 - 20:00"></div>
+                            </div>
+                            <div class="trainer-hours">Hours: 6/15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div class="modal" id="add-class-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Class</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Class Type</label>
+                        <select class="form-control" id="class-type">
+                            <option value="group">Group Class</option>
+                            <option value="personal">Personal Training</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Class Name</label>
+                        <input type="text" class="form-control" placeholder="e.g. Yoga Flow, HIIT Circuit">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">End Time</label>
+                        <input type="time" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Trainer</label>
+                        <select class="form-control">
+                            <option value="">Select Trainer</option>
+                            <option value="john">John</option>
+                            <option value="ankie">Ankie</option>
+                            <option value="abas">Abas</option>
+                            <option value="delpas">Delpas</option>
+                            <option value="aldi">Aldi</option>
+                            <option value="ian">Ian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <select class="form-control">
+                            <option value="">Select Location</option>
+                            <option value="studio-a">Studio A</option>
+                            <option value="studio-b">Studio B</option>
+                            <option value="gym-floor">Gym Floor</option>
+                            <option value="outdoor">Outdoor Area</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="capacity-group">
+                    <label class="form-label">Capacity</label>
+                    <input type="number" class="form-control" min="1" value="10">
+                </div>
+                
+                <div class="form-group" id="client-group" style="display: none;">
+                    <label class="form-label">Client</label>
+                    <select class="form-control">
+                        <option value="">Select Client</option>
+                        <option value="1056">Client #1056</option>
+                        <option value="1208">Client #1208</option>
+                        <option value="1311">Client #1311</option>
+                        <option value="1422">Client #1422</option>
+                        <option value="new">+ Add New Client</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Price</label>
+                    <div class="price-input-group">
+                        <span class="price-symbol">$</span>
+                        <input type="number" class="form-control" min="0" step="0.01" value="20.00">
+                    </div>
+                    <div class="form-text" id="price-hint">Per person for group classes, total for personal training</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" rows="3" placeholder="Class description..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Recurring</label>
+                    <div class="recurring-options">
+                        <label class="recurring-option">
+                            <input type="radio" name="recurring" value="none" checked>
+                            <span>One-time</span>
+                        </label>
+                        <label class="recurring-option">
+                            <input type="radio" name="recurring" value="weekly">
+                            <span>Weekly</span>
+                        </label>
+                        <label class="recurring-option">
+                            <input type="radio" name="recurring" value="biweekly">
+                            <span>Bi-weekly</span>
+                        </label>
+                        <label class="recurring-option">
+                            <input type="radio" name="recurring" value="monthly">
+                            <span>Monthly</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm">Add Class</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+    <script src="class-management.js"></script>
+</body>
+</html>

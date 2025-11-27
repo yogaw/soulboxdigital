@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Admin - Trainer Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <!-- Admin Sidebar Navigation -->
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <span>SOULBOX</span>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="trainer-management.html" class="admin-nav-link active">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Trainers</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Personal Training</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Group Classes</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Class Management</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Clients</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Resources</span>
+                </a>
+            </div>
+            
+            <div class="admin-user-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-user-details">
+                    <div class="admin-username">Admin User</div>
+                    <div class="admin-role">Super Admin</div>
+                </div>
+                <button class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Top Header -->
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Trainer Management</h1>
+                    <p>Manage trainer profiles, availability, and assignments</p>
+                </div>
+                <div class="admin-header-actions">
+                    <div class="admin-search">
+                        <input type="text" placeholder="Search trainers...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="admin-notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Trainer Management Content -->
+            <div class="admin-content">
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button class="primary-action-btn" id="addTrainerBtn">
+                        <i class="fas fa-plus"></i> Add New Trainer
+                    </button>
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label>Filter by:</label>
+                            <select class="filter-select" id="specialtyFilter">
+                                <option value="">All Specialties</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="hiit">HIIT</option>
+                                <option value="strength">Strength Training</option>
+                                <option value="cardio">Cardio</option>
+                                <option value="martial-arts">Martial Arts</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="on-leave">On Leave</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Trainers Grid -->
+                <div class="trainers-grid">
+                    <!-- Trainer Card -->
+                    <div class="trainer-card">
+                        <div class="trainer-card-header">
+                            <div class="trainer-avatar">
+                                <img src="assets/images/card1.png" alt="John Smith">
+                            </div>
+                            <div class="trainer-status active">Active</div>
+                        </div>
+                        <div class="trainer-card-body">
+                            <h3 class="trainer-name">Muhammad Arif (John)</h3>
+                            <div class="trainer-title">Senior Fitness Trainer</div>
+                            <div class="trainer-specialties">
+                                <span class="specialty-tag">HIIT</span>
+                                <span class="specialty-tag">Body Camp</span>
+                                <span class="specialty-tag">Strength</span>
+                            </div>
+                            <div class="trainer-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">24</div>
+                                    <div class="metric-label">Classes/Month</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">4.9</div>
+                                    <div class="metric-label">Rating</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">98%</div>
+                                    <div class="metric-label">Attendance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trainer-card-footer">
+                            <button class="trainer-action-btn view-btn" data-trainer="john-smith">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="trainer-action-btn edit-btn" data-trainer="john-smith">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="trainer-action-btn schedule-btn" data-trainer="john-smith">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card -->
+                    <div class="trainer-card">
+                        <div class="trainer-card-header">
+                            <div class="trainer-avatar">
+                                <img src="assets/images/card1.png" alt="Ankie Permata">
+                            </div>
+                            <div class="trainer-status active">Active</div>
+                        </div>
+                        <div class="trainer-card-body">
+                            <h3 class="trainer-name">Ankie Salim</h3>
+                            <div class="trainer-title">Yoga Specialist</div>
+                            <div class="trainer-specialties">
+                                <span class="specialty-tag">Yoga</span>
+                                <span class="specialty-tag">Pilates</span>
+                                <span class="specialty-tag">Meditation</span>
+                            </div>
+                            <div class="trainer-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">18</div>
+                                    <div class="metric-label">Classes/Month</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">4.8</div>
+                                    <div class="metric-label">Rating</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">100%</div>
+                                    <div class="metric-label">Attendance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trainer-card-footer">
+                            <button class="trainer-action-btn view-btn" data-trainer="ankie-permata">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="trainer-action-btn edit-btn" data-trainer="ankie-permata">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="trainer-action-btn schedule-btn" data-trainer="ankie-permata">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card -->
+                    <div class="trainer-card">
+                        <div class="trainer-card-header">
+                            <div class="trainer-avatar">
+                                <img src="assets/images/card1.png" alt="Abas Hendri">
+                            </div>
+                            <div class="trainer-status active">Active</div>
+                        </div>
+                        <div class="trainer-card-body">
+                            <h3 class="trainer-name">Andika Abas</h3>
+                            <div class="trainer-title">Martial Arts Expert</div>
+                            <div class="trainer-specialties">
+                                <span class="specialty-tag">Muay Thai</span>
+                                <span class="specialty-tag">Kickboxing</span>
+                                <span class="specialty-tag">Self Defense</span>
+                            </div>
+                            <div class="trainer-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">20</div>
+                                    <div class="metric-label">Classes/Month</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">4.7</div>
+                                    <div class="metric-label">Rating</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">95%</div>
+                                    <div class="metric-label">Attendance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trainer-card-footer">
+                            <button class="trainer-action-btn view-btn" data-trainer="abas-hendri">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="trainer-action-btn edit-btn" data-trainer="abas-hendri">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="trainer-action-btn schedule-btn" data-trainer="abas-hendri">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card -->
+                    <div class="trainer-card">
+                        <div class="trainer-card-header">
+                            <div class="trainer-avatar">
+                                <img src="assets/images/card1.png" alt="Delpas Kurnia">
+                            </div>
+                            <div class="trainer-status on-leave">On Leave</div>
+                        </div>
+                        <div class="trainer-card-body">
+                            <h3 class="trainer-name">Delpas Kurnia</h3>
+                            <div class="trainer-title">Strength & Conditioning</div>
+                            <div class="trainer-specialties">
+                                <span class="specialty-tag">Kettlebell</span>
+                                <span class="specialty-tag">TRX</span>
+                                <span class="specialty-tag">Strength</span>
+                            </div>
+                            <div class="trainer-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">22</div>
+                                    <div class="metric-label">Classes/Month</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">4.9</div>
+                                    <div class="metric-label">Rating</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">97%</div>
+                                    <div class="metric-label">Attendance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trainer-card-footer">
+                            <button class="trainer-action-btn view-btn" data-trainer="delpas-kurnia">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="trainer-action-btn edit-btn" data-trainer="delpas-kurnia">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="trainer-action-btn schedule-btn" data-trainer="delpas-kurnia">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card -->
+                    <div class="trainer-card">
+                        <div class="trainer-card-header">
+                            <div class="trainer-avatar">
+                                <img src="assets/images/card1.png" alt="Aldi Pratama">
+                            </div>
+                            <div class="trainer-status active">Active</div>
+                        </div>
+                        <div class="trainer-card-body">
+                            <h3 class="trainer-name">Aldi Pratama</h3>
+                            <div class="trainer-title">HIIT Specialist</div>
+                            <div class="trainer-specialties">
+                                <span class="specialty-tag">HIIT</span>
+                                <span class="specialty-tag">Cardio</span>
+                                <span class="specialty-tag">Circuit</span>
+                            </div>
+                            <div class="trainer-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">26</div>
+                                    <div class="metric-label">Classes/Month</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">4.6</div>
+                                    <div class="metric-label">Rating</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">98%</div>
+                                    <div class="metric-label">Attendance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trainer-card-footer">
+                            <button class="trainer-action-btn view-btn" data-trainer="aldi-pratama">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="trainer-action-btn edit-btn" data-trainer="aldi-pratama">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="trainer-action-btn schedule-btn" data-trainer="aldi-pratama">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card -->
+                    <div class="trainer-card">
+                        <div class="trainer-card-header">
+                            <div class="trainer-avatar">
+                                <img src="assets/images/card1.png" alt="Ian Susanto">
+                            </div>
+                            <div class="trainer-status inactive">Inactive</div>
+                        </div>
+                        <div class="trainer-card-body">
+                            <h3 class="trainer-name">Febrian Fadilah</h3>
+                            <div class="trainer-title">Mobility Specialist</div>
+                            <div class="trainer-specialties">
+                                <span class="specialty-tag">Mobility</span>
+                                <span class="specialty-tag">Stretching</span>
+                                <span class="specialty-tag">Recovery</span>
+                            </div>
+                            <div class="trainer-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">0</div>
+                                    <div class="metric-label">Classes/Month</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">4.5</div>
+                                    <div class="metric-label">Rating</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">90%</div>
+                                    <div class="metric-label">Attendance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trainer-card-footer">
+                            <button class="trainer-action-btn view-btn" data-trainer="ian-susanto">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="trainer-action-btn edit-btn" data-trainer="ian-susanto">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="trainer-action-btn schedule-btn" data-trainer="ian-susanto">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trainer Detail Modal (Hidden by default) -->
+                <div class="modal" id="trainerDetailModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Trainer Details</h2>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="trainer-profile">
+                                <div class="trainer-profile-header">
+                                    <div class="trainer-profile-avatar">
+                                        <img src="assets/images/card1.png" alt="Trainer">
+                                    </div>
+                                    <div class="trainer-profile-info">
+                                        <h3 id="profileTrainerName">John Smith</h3>
+                                        <div id="profileTrainerTitle">Senior Fitness Trainer</div>
+                                        <div id="profileTrainerStatus" class="trainer-status active">Active</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="trainer-profile-tabs">
+                                    <button class="profile-tab active" data-tab="info">Information</button>
+                                    <button class="profile-tab" data-tab="schedule">Schedule</button>
+                                    <button class="profile-tab" data-tab="performance">Performance</button>
+                                    <button class="profile-tab" data-tab="certifications">Certifications</button>
+                                </div>
+                                
+                                <div class="trainer-profile-content">
+                                    <!-- Info Tab -->
+                                    <div class="profile-tab-content active" id="infoTab">
+                                        <div class="info-section">
+                                            <h4>Personal Information</h4>
+                                            <div class="info-grid">
+                                                <div class="info-item">
+                                                    <div class="info-label">Email</div>
+                                                    <div class="info-value">john.smith@soulbox.com</div>
+                                                </div>
+                                                <div class="info-item">
+                                                    <div class="info-label">Phone</div>
+                                                    <div class="info-value">+62 812 3456 7890</div>
+                                                </div>
+                                                <div class="info-item">
+                                                    <div class="info-label">Date of Birth</div>
+                                                    <div class="info-value">15 June 1990</div>
+                                                </div>
+                                                <div class="info-item">
+                                                    <div class="info-label">Address</div>
+                                                    <div class="info-value">Jl. Senopati No. 41, Jakarta Selatan</div>
+                                                </div>
+                                                <div class="info-item">
+                                                    <div class="info-label">Join Date</div>
+                                                    <div class="info-value">12 March 2019</div>
+                                                </div>
+                                                <div class="info-item">
+                                                    <div class="info-label">Emergency Contact</div>
+                                                    <div class="info-value">Sarah Smith (+62 812 3456 7891)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-section">
+                                            <h4>Specialties & Skills</h4>
+                                            <div class="specialty-tags">
+                                                <span class="specialty-tag">HIIT</span>
+                                                <span class="specialty-tag">Body Camp</span>
+                                                <span class="specialty-tag">Strength</span>
+                                                <span class="specialty-tag">TRX</span>
+                                                <span class="specialty-tag">Kettlebell</span>
+                                                <span class="specialty-tag">Circuit Training</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-section">
+                                            <h4>Biography</h4>
+                                            <p class="trainer-bio">
+                                                John is a certified fitness trainer with over 8 years of experience in the fitness industry. 
+                                                He specializes in high-intensity interval training, strength conditioning, and functional fitness. 
+                                                John is passionate about helping clients achieve their fitness goals through personalized training programs.
+                                                He has worked with clients of all fitness levels, from beginners to professional athletes.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Schedule Tab -->
+                                    <div class="profile-tab-content" id="scheduleTab">
+                                        <div class="schedule-section">
+                                            <h4>Weekly Availability</h4>
+                                            <div class="availability-calendar">
+                                                <div class="calendar-day">
+                                                    <div class="day-header">Monday</div>
+                                                    <div class="time-slots">
+                                                        <div class="time-slot available">7:00 - 9:00</div>
+                                                        <div class="time-slot booked">9:00 - 10:00</div>
+                                                        <div class="time-slot booked">10:00 - 11:00</div>
+                                                        <div class="time-slot available">11:00 - 13:00</div>
+                                                        <div class="time-slot booked">13:00 - 14:00</div>
+                                                        <div class="time-slot available">14:00 - 16:00</div>
+                                                        <div class="time-slot booked">16:00 - 17:00</div>
+                                                        <div class="time-slot booked">17:00 - 18:00</div>
+                                                    </div>
+                                                </div>
+                                                <div class="calendar-day">
+                                                    <div class="day-header">Tuesday</div>
+                                                    <div class="time-slots">
+                                                        <div class="time-slot unavailable">7:00 - 9:00</div>
+                                                        <div class="time-slot unavailable">9:00 - 10:00</div>
+                                                        <div class="time-slot unavailable">10:00 - 11:00</div>
+                                                        <div class="time-slot unavailable">11:00 - 13:00</div>
+                                                        <div class="time-slot unavailable">13:00 - 14:00</div>
+                                                        <div class="time-slot unavailable">14:00 - 16:00</div>
+                                                        <div class="time-slot unavailable">16:00 - 17:00</div>
+                                                        <div class="time-slot unavailable">17:00 - 18:00</div>
+                                                    </div>
+                                                </div>
+                                                <!-- More days would be added here -->
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="schedule-section">
+                                            <h4>Upcoming Classes</h4>
+                                            <div class="upcoming-classes">
+                                                <div class="class-item">
+                                                    <div class="class-time">Today, 16:00 - 17:00</div>
+                                                    <div class="class-details">
+                                                        <div class="class-name">Body Camp</div>
+                                                        <div class="class-location">Studio 1</div>
+                                                    </div>
+                                                    <div class="class-capacity">
+                                                        <i class="fas fa-users"></i> 12/15
+                                                    </div>
+                                                </div>
+                                                <div class="class-item">
+                                                    <div class="class-time">Today, 17:00 - 18:00</div>
+                                                    <div class="class-details">
+                                                        <div class="class-name">HIIT</div>
+                                                        <div class="class-location">Studio 2</div>
+                                                    </div>
+                                                    <div class="class-capacity">
+                                                        <i class="fas fa-users"></i> 8/15
+                                                    </div>
+                                                </div>
+                                                <div class="class-item">
+                                                    <div class="class-time">Tomorrow, 9:00 - 10:00</div>
+                                                    <div class="class-details">
+                                                        <div class="class-name">Personal Training</div>
+                                                        <div class="class-location">PT Area</div>
+                                                    </div>
+                                                    <div class="class-capacity">
+                                                        <i class="fas fa-user"></i> 1/1
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Performance Tab -->
+                                    <div class="profile-tab-content" id="performanceTab">
+                                        <div class="performance-section">
+                                            <h4>Performance Metrics</h4>
+                                            <div class="performance-metrics">
+                                                <div class="performance-metric">
+                                                    <div class="metric-header">
+                                                        <div class="metric-title">Client Satisfaction</div>
+                                                        <div class="metric-value">4.9/5.0</div>
+                                                    </div>
+                                                    <div class="metric-bar">
+                                                        <div class="metric-progress" style="width: 98%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="performance-metric">
+                                                    <div class="metric-header">
+                                                        <div class="metric-title">Class Attendance</div>
+                                                        <div class="metric-value">98%</div>
+                                                    </div>
+                                                    <div class="metric-bar">
+                                                        <div class="metric-progress" style="width: 98%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="performance-metric">
+                                                    <div class="metric-header">
+                                                        <div class="metric-title">Class Capacity</div>
+                                                        <div class="metric-value">92%</div>
+                                                    </div>
+                                                    <div class="metric-bar">
+                                                        <div class="metric-progress" style="width: 92%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="performance-metric">
+                                                    <div class="metric-header">
+                                                        <div class="metric-title">Client Retention</div>
+                                                        <div class="metric-value">85%</div>
+                                                    </div>
+                                                    <div class="metric-bar">
+                                                        <div class="metric-progress" style="width: 85%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="performance-section">
+                                            <h4>Recent Feedback</h4>
+                                            <div class="feedback-list">
+                                                <div class="feedback-item">
+                                                    <div class="feedback-header">
+                                                        <div class="feedback-client">Andin W.</div>
+                                                        <div class="feedback-rating">
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        </div>
+                                                        <div class="feedback-date">2 days ago</div>
+                                                    </div>
+                                                    <div class="feedback-content">
+                                                        "John is an amazing trainer! He pushes me to my limits but always ensures I'm using proper form. I've seen great results in just a few weeks."
+                                                    </div>
+                                                </div>
+                                                <div class="feedback-item">
+                                                    <div class="feedback-header">
+                                                        <div class="feedback-client">Budi S.</div>
+                                                        <div class="feedback-rating">
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        </div>
+                                                        <div class="feedback-date">1 week ago</div>
+                                                    </div>
+                                                    <div class="feedback-content">
+                                                        "The HIIT class was intense but very effective. John's energy kept everyone motivated throughout the session."
+                                                    </div>
+                                                </div>
+                                                <div class="feedback-item">
+                                                    <div class="feedback-header">
+                                                        <div class="feedback-client">Diana R.</div>
+                                                        <div class="feedback-rating">
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="far fa-star"></i>
+                                                        </div>
+                                                        <div class="feedback-date">2 weeks ago</div>
+                                                    </div>
+                                                    <div class="feedback-content">
+                                                        "Great personal training session. John tailored the workout to my specific needs and goals."
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Certifications Tab -->
+                                    <div class="profile-tab-content" id="certificationsTab">
+                                        <div class="certifications-section">
+                                            <h4>Certifications & Qualifications</h4>
+                                            <div class="certifications-list">
+                                                <div class="certification-item">
+                                                    <div class="certification-icon">
+                                                        <i class="fas fa-certificate"></i>
+                                                    </div>
+                                                    <div class="certification-details">
+                                                        <div class="certification-name">Certified Personal Trainer (CPT)</div>
+                                                        <div class="certification-org">National Academy of Sports Medicine (NASM)</div>
+                                                        <div class="certification-date">Issued: Jan 2018 • Expires: Jan 2024</div>
+                                                    </div>
+                                                    <div class="certification-actions">
+                                                        <button class="cert-action-btn">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="certification-item">
+                                                    <div class="certification-icon">
+                                                        <i class="fas fa-certificate"></i>
+                                                    </div>
+                                                    <div class="certification-details">
+                                                        <div class="certification-name">Corrective Exercise Specialist (CES)</div>
+                                                        <div class="certification-org">National Academy of Sports Medicine (NASM)</div>
+                                                        <div class="certification-date">Issued: Mar 2019 • Expires: Mar 2023</div>
+                                                    </div>
+                                                    <div class="certification-actions">
+                                                        <button class="cert-action-btn">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="certification-item">
+                                                    <div class="certification-icon">
+                                                        <i class="fas fa-certificate"></i>
+                                                    </div>
+                                                    <div class="certification-details">
+                                                        <div class="certification-name">TRX Suspension Training Course</div>
+                                                        <div class="certification-org">TRX Training</div>
+                                                        <div class="certification-date">Issued: Jun 2020 • No Expiration</div>
+                                                    </div>
+                                                    <div class="certification-actions">
+                                                        <button class="cert-action-btn">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="certification-item">
+                                                    <div class="certification-icon">
+                                                        <i class="fas fa-certificate"></i>
+                                                    </div>
+                                                    <div class="certification-details">
+                                                        <div class="certification-name">Kettlebell Certification</div>
+                                                        <div class="certification-org">Kettlebell Athletics</div>
+                                                        <div class="certification-date">Issued: Sep 2021 • No Expiration</div>
+                                                    </div>
+                                                    <div class="certification-actions">
+                                                        <button class="cert-action-btn">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="certifications-section">
+                                            <h4>Continuing Education</h4>
+                                            <div class="education-list">
+                                                <div class="education-item">
+                                                    <div class="education-icon">
+                                                        <i class="fas fa-graduation-cap"></i>
+                                                    </div>
+                                                    <div class="education-details">
+                                                        <div class="education-name">Advanced Nutrition for Fitness Professionals</div>
+                                                        <div class="education-org">Precision Nutrition</div>
+                                                        <div class="education-date">Completed: Nov 2022</div>
+                                                    </div>
+                                                </div>
+                                                <div class="education-item">
+                                                    <div class="education-icon">
+                                                        <i class="fas fa-graduation-cap"></i>
+                                                    </div>
+                                                    <div class="education-details">
+                                                        <div class="education-name">Functional Movement Screening</div>
+                                                        <div class="education-org">Functional Movement Systems</div>
+                                                        <div class="education-date">Completed: Jul 2021</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="modal-action-btn edit-btn">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                            <button class="modal-action-btn schedule-btn">
+                                <i class="fas fa-calendar-alt"></i> Manage Schedule
+                            </button>
+                            <button class="modal-close-action-btn">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add/Edit Trainer Modal (Hidden by default) -->
+                <div class="modal" id="trainerFormModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 id="trainerFormTitle">Add New Trainer</h2>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="trainerForm" class="admin-form">
+                                <div class="form-section">
+                                    <h3>Personal Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="trainerName">Full Name</label>
+                                            <input type="text" id="trainerName" name="trainerName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="trainerTitle">Title/Position</label>
+                                            <input type="text" id="trainerTitle" name="trainerTitle" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="trainerEmail">Email</label>
+                                            <input type="email" id="trainerEmail" name="trainerEmail" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="trainerPhone">Phone</label>
+                                            <input type="tel" id="trainerPhone" name="trainerPhone" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="trainerDOB">Date of Birth</label>
+                                            <input type="date" id="trainerDOB" name="trainerDOB">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="trainerStatus">Status</label>
+                                            <select id="trainerStatus" name="trainerStatus" required>
+                                                <option value="active">Active</option>
+                                                <option value="on-leave">On Leave</option>
+                                                <option value="inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="trainerAddress">Address</label>
+                                        <textarea id="trainerAddress" name="trainerAddress" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="emergencyContact">Emergency Contact</label>
+                                            <input type="text" id="emergencyContact" name="emergencyContact">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="emergencyPhone">Emergency Phone</label>
+                                            <input type="tel" id="emergencyPhone" name="emergencyPhone">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h3>Professional Information</h3>
+                                    <div class="form-group">
+                                        <label for="trainerSpecialties">Specialties</label>
+                                        <div class="specialty-checkboxes">
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specYoga" name="specialties[]" value="Yoga">
+                                                <label for="specYoga">Yoga</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specHIIT" name="specialties[]" value="HIIT">
+                                                <label for="specHIIT">HIIT</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specStrength" name="specialties[]" value="Strength">
+                                                <label for="specStrength">Strength</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specCardio" name="specialties[]" value="Cardio">
+                                                <label for="specCardio">Cardio</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specPilates" name="specialties[]" value="Pilates">
+                                                <label for="specPilates">Pilates</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specMartialArts" name="specialties[]" value="Martial Arts">
+                                                <label for="specMartialArts">Martial Arts</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specBodyCamp" name="specialties[]" value="Body Camp">
+                                                <label for="specBodyCamp">Body Camp</label>
+                                            </div>
+                                            <div class="checkbox-group">
+                                                <input type="checkbox" id="specTRX" name="specialties[]" value="TRX">
+                                                <label for="specTRX">TRX</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="trainerBio">Biography</label>
+                                        <textarea id="trainerBio" name="trainerBio" rows="4"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="trainerJoinDate">Join Date</label>
+                                            <input type="date" id="trainerJoinDate" name="trainerJoinDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="trainerPhoto">Profile Photo</label>
+                                            <input type="file" id="trainerPhoto" name="trainerPhoto" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h3>Certifications</h3>
+                                    <div id="certificationsContainer">
+                                        <div class="certification-entry">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label>Certification Name</label>
+                                                    <input type="text" name="certName[]">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Issuing Organization</label>
+                                                    <input type="text" name="certOrg[]">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label>Issue Date</label>
+                                                    <input type="date" name="certIssueDate[]">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Expiry Date</label>
+                                                    <input type="date" name="certExpiryDate[]">
+                                                </div>
+                                                <div class="form-group cert-actions">
+                                                    <button type="button" class="remove-cert-btn">Remove</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="addCertificationBtn" class="add-item-btn">
+                                        <i class="fas fa-plus"></i> Add Certification
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="modal-action-btn save-btn" id="saveTrainerBtn">
+                                <i class="fas fa-save"></i> Save Trainer
+                            </button>
+                            <button class="modal-close-action-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script>
+    <script src="trainer-management.js"></script>
+</body>
+</html>

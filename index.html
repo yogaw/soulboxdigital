@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Jakarta</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Menu -->
+        <nav class="main-nav">
+            <div class="logo">
+                SOULBOX
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="fas fa-bell"></i></button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen active">
+            <header class="app-header">
+                <div class="user-greeting">
+                    <h2>HELLO, ANDIN</h2>
+                    <p class="motivation-text">You're 2 classes away from hitting your weekly goal!</p>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <!-- Hero Banner Carousel -->
+                <div class="spotlight-carousel">
+                    <div class="carousel-container">
+                        <div class="carousel-track">
+                            <div class="carousel-slide active">
+                                <img src="assets/images/card1.png" alt="SoulBox Event">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="assets/images/card1.png" alt="SoulBox Promotion">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="assets/images/card1.png" alt="SoulBox News">
+                            </div>
+                        </div>
+                        <div class="carousel-indicators">
+                            <span class="indicator active"></span>
+                            <span class="indicator"></span>
+                            <span class="indicator"></span>
+                        </div>
+                        <button class="carousel-control prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="carousel-control next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- My Fitness Journey -->
+                <div class="journey-highlight">
+                    <h3>My Fitness Journey</h3>
+                    <div class="progress-widgets">
+                        <div class="circle-progress">
+                            <div class="progress-ring">
+                                <span class="progress-text">12/20</span>
+                            </div>
+                            <p>classes this month</p>
+                        </div>
+                        <div class="bar-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p>Keep it up, you're on streak!</p>
+                        </div>
+                    </div>
+                    <div class="fitness-goals">
+                        <h4>Fitness Goals</h4>
+                        <div class="goal-buttons">
+                            <button class="goal-btn">
+                                <i class="fas fa-dumbbell"></i>
+                                <span>Strength</span>
+                            </button>
+                            <button class="goal-btn">
+                                <i class="fas fa-trophy"></i>
+                                <span>HYROX Race</span>
+                            </button>
+                            <button class="goal-btn">
+                                <i class="fas fa-running"></i>
+                                <span>Endurance</span>
+                            </button>
+                        </div>
+                        <button class="btn outline-btn journey-cta">View Full Journey</button>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Class -->
+                <div class="upcoming-class-section">
+                    <h3>UPCOMING CLASS</h3>
+                    <div class="class-divider"></div>
+                    <div class="class-card">
+                        <div class="date-box">
+                            <span class="date-number">15</span>
+                            <span class="date-month">JUN</span>
+                        </div>
+                        <div class="class-details">
+                            <h4>AntiGravity® Yoga</h4>
+                            <p class="class-info">2:00 PM • Studio 2 • Senopati</p>
+                            <p class="instructor">with Instructor Maya</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Membership -->
+                <div class="membership-section">
+                    <div class="section-header">
+                        <h3>My Membership</h3>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="benefits-container">
+                        <div class="benefit-card">
+                            <div class="benefit-left">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="benefit-info">
+                                    <h4>Personal Training</h4>
+                                    <p>4 Sessions</p>
+                                </div>
+                            </div>
+                            <button class="benefit-action">Book Session</button>
+                        </div>
+                        
+                        <div class="benefit-card">
+                            <div class="benefit-left">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="benefit-info">
+                                    <h4>Group Classes</h4>
+                                    <p>15 Classes</p>
+                                </div>
+                            </div>
+                            <button class="benefit-action">Book Class</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-navigation">
+            <button class="nav-button active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-button">
+                <i class="fas fa-calendar-check"></i>
+                <span>Appointments</span>
+            </button>
+            <button class="nav-button">
+                <i class="fas fa-chart-line"></i>
+                <span>My Fitness Journey</span>
+            </button>
+            <button class="nav-button">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

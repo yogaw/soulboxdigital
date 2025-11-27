@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Jakarta</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(180deg, #2a2f3a 0%, #121212 50%, #0d0d0d 100%);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        #app {
+            width: 100%;
+            min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Navigation - Mobile Optimized */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #444444;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            background: #000;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            border: 1px solid #444444;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .icon-btn:hover,
+        .icon-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
+        /* App Header - Mobile Optimized */
+        .app-header {
+            padding: 15px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #444444;
+        }
+
+        .user-greeting h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .motivation-text {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .dashboard-content {
+            padding: 15px;
+        }
+
+        /* PT Package Section - Like Group Class Credits */
+        .pt-package-section {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .pt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pt-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .pt-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .package-info {
+            background: #212121;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #444444;
+        }
+
+        .package-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .package-remaining {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .package-total {
+            font-size: 12px;
+            color: #D4AF37;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .buy-pt-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-size: 14px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .buy-pt-btn:hover,
+        .buy-pt-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Schedule Section - Redesigned */
+        .schedule-section {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .schedule-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .filter-toggle {
+            background: #333;
+            border: 1px solid #444444;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            min-height: 40px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .filter-toggle:hover,
+        .filter-toggle:active {
+            background: #444;
+            transform: translateY(-1px);
+        }
+
+        /* Credits Section */
+        .credits-section {
+            margin: 15px;
+            margin-bottom: 20px;
+        }
+
+        .credits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #444444;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .credits-info h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .credits-display {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .credits-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #D4AF37;
+        }
+
+        .credits-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .credits-expiry {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .credits-expiry i {
+            font-size: 12px;
+            color: #FFA726;
+            width: 14px;
+            text-align: center;
+        }
+
+        .expiry-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        .buy-credits-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-height: 40px;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        .buy-credits-btn:hover,
+        .buy-credits-btn:active {
+            background: linear-gradient(135deg, #B8941F 0%, #3d8b40 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .buy-credits-btn i {
+            font-size: 14px;
+        }
+
+        /* Schedule Cards */
+        .schedule-cards {
+            display: grid;
+            gap: 15px;
+        }
+
+        .schedule-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            border-radius: 10px;
+            padding: 20px;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .schedule-card:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .schedule-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(125, 95, 255, 0.2);
+            color: #7d5fff;
+        }
+
+        .schedule-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: rgba(40, 40, 50, 0.6);
+            border-radius: 8px;
+            border-left: 3px solid #D4AF37;
+            transition: all 0.2s ease;
+        }
+
+        .schedule-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .schedule-day {
+            font-weight: 600;
+            font-size: 16px;
+            color: #fff;
+            min-width: 70px;
+        }
+
+        .schedule-details {
+            flex: 1;
+        }
+
+        .schedule-time {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .schedule-trainer {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 3px;
+        }
+
+        .reschedule-btn {
+            background: rgba(212, 175, 55, 0.15);
+            color: #D4AF37;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            -webkit-tap-highlight-color: transparent;
+            backdrop-filter: blur(4px);
+        }
+
+        .reschedule-btn:hover,
+        .reschedule-btn:active {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .reschedule-btn i {
+            font-size: 12px;
+        }
+
+        /* Reschedule Form - Enhanced */
+        .reschedule-form {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #fff;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .reschedule-form.active {
+            display: block;
+        }
+
+        .reschedule-form h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .session-to-reschedule {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: -10px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 0 15px 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Trainer Options */
+        .trainer-options {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 5px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .trainer-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+            padding: 10px;
+            border-radius: 12px;
+            background: rgba(40, 40, 50, 0.6);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .trainer-option:hover,
+        .trainer-option:active {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .trainer-option.selected {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #D4AF37;
+        }
+
+        .trainer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .trainer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .trainer-avatar i {
+            font-size: 24px;
+            color: #D4AF37;
+        }
+
+        .trainer-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .trainer-tag {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #D4AF37;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* Day Options */
+        .day-options {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .day-option {
+            min-width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(40, 40, 50, 0.6);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .day-option:hover,
+        .day-option:active {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .day-option.selected {
+            background: #D4AF37;
+            color: #fff;
+        }
+
+        .day-option.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Time Options */
+        .time-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .time-option {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(40, 40, 50, 0.6);
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .time-option:hover,
+        .time-option:active {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .time-option.selected {
+            background: #D4AF37;
+            color: #fff;
+        }
+
+        .time-option.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Enhanced Confirmation Modal */
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .confirmation-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+            text-align: center;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .change-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .change-from, .change-to {
+            flex: 1;
+            background: rgba(40, 40, 50, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .change-from h4, .change-to h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 0 10px 0;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+
+        .change-arrow {
+            padding: 0 15px;
+            color: #D4AF37;
+            font-size: 20px;
+        }
+
+        .change-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .change-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .change-item i {
+            margin-right: 10px;
+            color: #D4AF37;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Reschedule Options */
+        .reschedule-options {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .reschedule-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reschedule-type:hover,
+        .reschedule-type:active {
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .reschedule-type input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #D4AF37;
+        }
+
+        .reschedule-type label {
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .reschedule-type.selected {
+            border-color: #D4AF37;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .reschedule-description {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Reschedule Type Section */
+        .reschedule-type-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+
+        .reschedule-type-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .reschedule-type-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reschedule-type-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .reschedule-type-option:hover,
+        .reschedule-type-option:active {
+            background: rgba(76, 175, 80, 0.05);
+            border-color: #444;
+            transform: translateY(-1px);
+        }
+
+        .reschedule-type-option.selected {
+            border-color: #D4AF37;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .type-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(76, 175, 80, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #D4AF37;
+            font-size: 16px;
+        }
+
+        .reschedule-type-option.selected .type-icon {
+            background: #D4AF37;
+            color: #fff;
+        }
+
+        .type-text {
+            flex: 1;
+        }
+
+        .type-text strong {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .type-text small {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .type-radio {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .reschedule-type-option.selected .type-radio {
+            border-color: #D4AF37;
+            background: #D4AF37;
+        }
+
+        .type-radio i {
+            font-size: 8px;
+            color: transparent;
+            transition: color 0.2s ease;
+        }
+
+        .reschedule-type-option.selected .type-radio i {
+            color: #fff;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: #fff;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .confirm-btn {
+            flex: 2;
+            padding: 12px;
+            background: linear-gradient(to right, #D4AF37, #B8941F);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cancel-btn:hover,
+        .cancel-btn:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .confirm-btn:hover,
+        .confirm-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 15px;
+            color: #fff;
+            text-align: center;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #D4AF37;
+            margin-bottom: 15px;
+        }
+
+        .success-message h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .success-message p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .updated-session {
+            background: rgba(40, 40, 50, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .updated-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .updated-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .updated-item i {
+            margin-right: 10px;
+            color: #D4AF37;
+            width: 20px;
+            text-align: center;
+        }
+
+        .done-btn {
+            background: linear-gradient(to right, #D4AF37, #B8941F);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .done-btn:hover,
+        .done-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Bottom Navigation - Hide for now to focus on content */
+        .bottom-navigation {
+            display: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .dashboard-content {
+                padding: 10px;
+            }
+
+            .pt-package-section {
+                padding: 15px;
+            }
+
+            .schedule-section {
+                padding: 15px;
+            }
+
+            .schedule-cards {
+                gap: 12px;
+            }
+
+            .schedule-card {
+                padding: 15px;
+            }
+
+            .trainer-options {
+                gap: 10px;
+            }
+
+            .trainer-option {
+                min-width: 60px;
+                padding: 8px;
+            }
+
+            .time-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .schedule-item {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+
+            .schedule-day {
+                min-width: auto;
+            }
+
+            .schedule-details {
+                text-align: center;
+            }
+
+            .reschedule-btn {
+                width: 100%;
+            }
+
+            .time-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .change-details {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .change-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Menu -->
+        <nav class="main-nav">
+            <div class="logo">
+                <img src="assets/images/soulboxlogo.png" alt="SOULBOX">
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="fas fa-bell"></i></button>
+                <button class="icon-btn"><i class="fas fa-user"></i></button>
+            </div>
+        </nav>
+
+        <!-- Personal Training Screen -->
+        <div id="personal-training-screen" class="screen active">
+            <header class="app-header">
+                <div class="user-greeting">
+                    <h2>PERSONAL TRAINING</h2>
+                    <p class="motivation-text">SOULBOX Senopati</p>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <!-- PT Package Section -->
+                <div class="credits-section">
+                    <div class="credits-header">
+                        <div class="credits-info">
+                            <h2>Personal Training Package</h2>
+                            <div class="credits-display">
+                                <span class="credits-number">2</span>
+                                <span class="credits-label">sessions remaining</span>
+                            </div>
+                            <div class="credits-expiry">
+                                <i class="fas fa-clock"></i>
+                                <span class="expiry-text">Valid until: December 3, 2025</span>
+                            </div>
+                        </div>
+                        <button class="buy-credits-btn">
+                            <i class="fas fa-plus"></i>
+                            Buy Package
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Regular Schedule Card -->
+                <div class="schedule-card" id="scheduleCard">
+                    <h3>YOUR REGULAR SCHEDULE</h3>
+                    <div class="schedule-items">
+                        <div class="schedule-item" id="wednesdaySession">
+                            <div class="schedule-day">Wednesday</div>
+                            <div class="schedule-details">
+                                <div class="schedule-time">14:00</div>
+                                <div class="schedule-trainer">with Trainer John</div>
+                            </div>
+                            <button class="reschedule-btn" data-day="Wednesday">
+                <i class="fas fa-calendar-alt"></i>
+                Reschedule
+            </button>
+                        </div>
+                        <div class="schedule-item" id="fridaySession">
+                            <div class="schedule-day">Friday</div>
+                            <div class="schedule-details">
+                                <div class="schedule-time">14:00</div>
+                                <div class="schedule-trainer">with Trainer John</div>
+                            </div>
+                            <button class="reschedule-btn" data-day="Friday">
+                <i class="fas fa-calendar-alt"></i>
+                Reschedule
+            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reschedule Form (Hidden by default) -->
+                <div class="reschedule-form" id="rescheduleForm">
+                    <h3>RESCHEDULE SESSION</h3>
+                    <p class="session-to-reschedule">Wednesday, 14:00 with John</p>
+                    
+                    <!-- Trainer Selection -->
+                    <div class="form-section">
+                        <h4>SELECT TRAINER</h4>
+                        <div class="trainer-options">
+                            <div class="trainer-option selected" data-trainer="John">
+                                <div class="trainer-avatar">
+                                    <img src="assets/images/john.jpeg" alt="John">
+                                </div>
+                                <div class="trainer-name">John</div>
+                                <div class="trainer-tag">Current</div>
+                            </div>
+                            <div class="trainer-option" data-trainer="Ankie">
+                                <div class="trainer-avatar">
+                                    <img src="assets/images/ankie.jpeg" alt="Ankie">
+                                </div>
+                                <div class="trainer-name">Ankie</div>
+                            </div>
+                            <div class="trainer-option" data-trainer="Abas">
+                                <div class="trainer-avatar">
+                                    <img src="assets/images/Abas.jpg" alt="Abas">
+                                </div>
+                                <div class="trainer-name">Abas</div>
+                            </div>
+                            <div class="trainer-option" data-trainer="Delpas">
+                                <div class="trainer-avatar">
+                                    <img src="assets/images/delpas.jpeg" alt="Delpas">
+                                </div>
+                                <div class="trainer-name">Delpas</div>
+                            </div>
+                            <div class="trainer-option" data-trainer="Aldi">
+                                <div class="trainer-avatar">
+                                    <img src="assets/images/aldi.jpeg" alt="Aldi">
+                                </div>
+                                <div class="trainer-name">Aldi</div>
+                            </div>
+                            <div class="trainer-option" data-trainer="Ian">
+                                <div class="trainer-avatar">
+                                    <img src="assets/images/ian.jpeg" alt="Ian">
+                                </div>
+                                <div class="trainer-name">Ian</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day Selection -->
+                    <div class="form-section">
+                        <h4>SELECT DAY</h4>
+                        <div class="day-options">
+                            <div class="day-option" data-day="Mon">Mon</div>
+                            <div class="day-option" data-day="Tue">Tue</div>
+                            <div class="day-option selected" data-day="Wed">Wed</div>
+                            <div class="day-option" data-day="Thu">Thu</div>
+                            <div class="day-option" data-day="Fri">Fri</div>
+                            <div class="day-option disabled" data-day="Sat">Sat</div>
+                            <div class="day-option disabled" data-day="Sun">Sun</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Time Selection -->
+                    <div class="form-section">
+                        <h4>SELECT TIME</h4>
+                        <div class="time-options">
+                            <div class="time-option disabled" data-time="09:00">09:00</div>
+                            <div class="time-option" data-time="10:00">10:00</div>
+                            <div class="time-option" data-time="11:00">11:00</div>
+                            <div class="time-option disabled" data-time="12:00">12:00</div>
+                            <div class="time-option" data-time="13:00">13:00</div>
+                            <div class="time-option selected" data-time="14:00">14:00</div>
+                            <div class="time-option" data-time="15:00">15:00</div>
+                            <div class="time-option disabled" data-time="16:00">16:00</div>
+                            <div class="time-option" data-time="17:00">17:00</div>
+                            <div class="time-option" data-time="18:00">18:00</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirm Button -->
+                    <div class="form-actions">
+                        <button class="cancel-btn" id="cancelReschedule">Cancel</button>
+                        <button class="confirm-btn" id="confirmReschedule">Confirm Reschedule</button>
+                    </div>
+                </div>
+                
+                <!-- Confirmation Modal (Hidden by default) -->
+                <div class="confirmation-modal" id="confirmationModal">
+                    <div class="modal-content">
+                        <h3>CONFIRM CHANGES</h3>
+                        <div class="change-details">
+                            <div class="change-from">
+                                <h4>FROM</h4>
+                                <div class="change-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span id="oldDay">Wednesday</span>
+                                </div>
+                                <div class="change-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="oldTime">14:00</span>
+                                </div>
+                                <div class="change-item">
+                                    <i class="fas fa-user"></i>
+                                    <span id="oldTrainer">John</span>
+                                </div>
+                            </div>
+                            <div class="change-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="change-to">
+                                <h4>TO</h4>
+                                <div class="change-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span id="newDay">Thursday</span>
+                                </div>
+                                <div class="change-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="newTime">15:00</span>
+                                </div>
+                                <div class="change-item">
+                                    <i class="fas fa-user"></i>
+                                    <span id="newTrainer">Ankie</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reschedule Type Selection -->
+                        <div class="reschedule-type-section">
+                            <h4>RESCHEDULE TYPE</h4>
+                            <div class="reschedule-type-options">
+                                <div class="reschedule-type-option selected" data-type="permanent">
+                                    <div class="type-icon">
+                                        <i class="fas fa-infinity"></i>
+                                    </div>
+                                    <div class="type-text">
+                                        <strong>Permanent Change</strong>
+                                        <small>Update all future sessions</small>
+                                    </div>
+                                    <div class="type-radio">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="reschedule-type-option" data-type="onetime">
+                                    <div class="type-icon">
+                                        <i class="fas fa-calendar-day"></i>
+                                    </div>
+                                    <div class="type-text">
+                                        <strong>One Time Only</strong>
+                                        <small>Just this session</small>
+                                    </div>
+                                    <div class="type-radio">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-actions">
+                            <button class="cancel-btn" id="cancelConfirmation">Back</button>
+                            <button class="confirm-btn" id="finalConfirm">Confirm Reschedule</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Success Message (Hidden by default) -->
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>RESCHEDULED SUCCESSFULLY</h3>
+                    <p>Your session has been updated</p>
+                    <div class="updated-session">
+                        <div class="updated-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="updatedDay">Thursday</span>
+                        </div>
+                        <div class="updated-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="updatedTime">15:00</span>
+                        </div>
+                        <div class="updated-item">
+                            <i class="fas fa-user"></i>
+                            <span id="updatedTrainer">Ankie</span>
+                        </div>
+                    </div>
+                    <button class="done-btn" id="doneBtn">Done</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-navigation">
+            <button class="nav-button">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-button active">
+                <i class="fas fa-calendar-check"></i>
+                <span>Appointments</span>
+            </button>
+            <button class="nav-button">
+                <i class="fas fa-chart-line"></i>
+                <span>My Fitness Journey</span>
+            </button>
+            <button class="nav-button">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Personal Training App JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentRescheduleData = {
+                originalDay: 'Wednesday',
+                originalTime: '14:00',
+                originalTrainer: 'John',
+                newDay: 'Wednesday',
+                newTime: '14:00',
+                newTrainer: 'John',
+                rescheduleType: 'permanent'
+            };
+
+            // Buy Sessions button
+            const buyCreditsBtn = document.querySelector('.buy-credits-btn');
+            if (buyCreditsBtn) {
+                buyCreditsBtn.addEventListener('click', function() {
+                    // Redirect to packages page
+                    window.location.href = 'packages.html';
+                });
+            }
+
+            // Reschedule buttons
+            const rescheduleButtons = document.querySelectorAll('.reschedule-btn');
+            rescheduleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const scheduleItem = this.closest('.schedule-item');
+                    const day = scheduleItem.querySelector('.schedule-day').textContent;
+                    const time = scheduleItem.querySelector('.schedule-time').textContent;
+                    const trainer = scheduleItem.querySelector('.schedule-trainer').textContent;
+
+                    currentRescheduleData.originalDay = day;
+                    currentRescheduleData.originalTime = time;
+                    currentRescheduleData.originalTrainer = trainer.replace('with ', '');
+
+                    showRescheduleForm();
+                });
+            });
+
+            function showRescheduleForm() {
+                const scheduleCard = document.getElementById('scheduleCard');
+                const rescheduleForm = document.getElementById('rescheduleForm');
+                const sessionToReschedule = rescheduleForm.querySelector('.session-to-reschedule');
+
+                sessionToReschedule.textContent = `${currentRescheduleData.originalDay}, ${currentRescheduleData.originalTime} with ${currentRescheduleData.originalTrainer}`;
+
+                scheduleCard.style.display = 'none';
+                rescheduleForm.style.display = 'block';
+            }
+
+            // Cancel reschedule
+            const cancelReschedule = document.getElementById('cancelReschedule');
+            if (cancelReschedule) {
+                cancelReschedule.addEventListener('click', function() {
+                    hideRescheduleForm();
+                });
+            }
+
+            function hideRescheduleForm() {
+                const scheduleCard = document.getElementById('scheduleCard');
+                const rescheduleForm = document.getElementById('rescheduleForm');
+
+                scheduleCard.style.display = 'block';
+                rescheduleForm.style.display = 'none';
+            }
+
+            // Trainer selection
+            const trainerOptions = document.querySelectorAll('.trainer-option');
+            trainerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    trainerOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentRescheduleData.newTrainer = this.dataset.trainer;
+                });
+            });
+
+            // Day selection
+            const dayOptions = document.querySelectorAll('.day-option:not(.disabled)');
+            dayOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    dayOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentRescheduleData.newDay = this.dataset.day;
+                });
+            });
+
+            // Time selection
+            const timeOptions = document.querySelectorAll('.time-option:not(.disabled)');
+            timeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    timeOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentRescheduleData.newTime = this.dataset.time;
+                });
+            });
+
+            // Confirm reschedule - show confirmation modal
+            const confirmReschedule = document.getElementById('confirmReschedule');
+            if (confirmReschedule) {
+                confirmReschedule.addEventListener('click', function() {
+                    showConfirmationModal();
+                });
+            }
+
+            function showConfirmationModal() {
+                const rescheduleForm = document.getElementById('rescheduleForm');
+                const confirmationModal = document.getElementById('confirmationModal');
+
+                // Update modal content
+                document.getElementById('oldDay').textContent = currentRescheduleData.originalDay;
+                document.getElementById('oldTime').textContent = currentRescheduleData.originalTime;
+                document.getElementById('oldTrainer').textContent = currentRescheduleData.originalTrainer;
+
+                document.getElementById('newDay').textContent = currentRescheduleData.newDay;
+                document.getElementById('newTime').textContent = currentRescheduleData.newTime;
+                document.getElementById('newTrainer').textContent = currentRescheduleData.newTrainer;
+
+                rescheduleForm.style.display = 'none';
+                confirmationModal.style.display = 'block';
+            }
+
+            // Reschedule type selection
+            const rescheduleTypeOptions = document.querySelectorAll('.reschedule-type-option');
+            rescheduleTypeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    rescheduleTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentRescheduleData.rescheduleType = this.dataset.type;
+                });
+            });
+
+            // Cancel confirmation
+            const cancelConfirmation = document.getElementById('cancelConfirmation');
+            if (cancelConfirmation) {
+                cancelConfirmation.addEventListener('click', function() {
+                    hideConfirmationModal();
+                });
+            }
+
+            function hideConfirmationModal() {
+                const rescheduleForm = document.getElementById('rescheduleForm');
+                const confirmationModal = document.getElementById('confirmationModal');
+
+                confirmationModal.style.display = 'none';
+                rescheduleForm.style.display = 'block';
+            }
+
+            // Final confirm
+            const finalConfirm = document.getElementById('finalConfirm');
+            if (finalConfirm) {
+                finalConfirm.addEventListener('click', function() {
+                    processReschedule();
+                });
+            }
+
+            function processReschedule() {
+                const confirmationModal = document.getElementById('confirmationModal');
+                const successMessage = document.getElementById('successMessage');
+
+                // Update success message
+                document.getElementById('updatedDay').textContent = currentRescheduleData.newDay;
+                document.getElementById('updatedTime').textContent = currentRescheduleData.newTime;
+                document.getElementById('updatedTrainer').textContent = currentRescheduleData.newTrainer;
+
+                confirmationModal.style.display = 'none';
+                successMessage.style.display = 'block';
+
+                // Add a type indicator to success message
+                const typeText = currentRescheduleData.rescheduleType === 'permanent' ?
+                    '(Permanent change for all future sessions)' :
+                    '(One-time reschedule)';
+
+                const typeIndicator = document.createElement('p');
+                typeIndicator.style.fontSize = '14px';
+                typeIndicator.style.color = '#D4AF37';
+                typeIndicator.style.marginTop = '10px';
+                typeIndicator.textContent = typeText;
+                successMessage.appendChild(typeIndicator);
+            }
+
+            // Done button
+            const doneBtn = document.getElementById('doneBtn');
+            if (doneBtn) {
+                doneBtn.addEventListener('click', function() {
+                    // Update the schedule card with new information
+                    const scheduleItems = document.querySelectorAll('.schedule-item');
+                    scheduleItems.forEach(item => {
+                        const day = item.querySelector('.schedule-day').textContent;
+                        if (day === currentRescheduleData.originalDay) {
+                            item.querySelector('.schedule-day').textContent = currentRescheduleData.newDay;
+                            item.querySelector('.schedule-time').textContent = currentRescheduleData.newTime;
+                            item.querySelector('.schedule-trainer').textContent = `with ${currentRescheduleData.newTrainer}`;
+
+                            // Update reschedule button data
+                            const rescheduleBtn = item.querySelector('.reschedule-btn');
+                            rescheduleBtn.dataset.day = currentRescheduleData.newDay;
+                        }
+                    });
+
+                    // Hide success message and show schedule card
+                    const successMessage = document.getElementById('successMessage');
+                    const scheduleCard = document.getElementById('scheduleCard');
+
+                    successMessage.style.display = 'none';
+                    scheduleCard.style.display = 'block';
+                });
+            }
+
+            // Bottom navigation
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const buttonText = this.querySelector('span').textContent;
+                    if (buttonText !== 'Appointments') {
+                        alert(`Navigate to ${buttonText}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

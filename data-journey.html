@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Soulbox - Engineered Performance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: 0 0% 3.9%;
+            --foreground: 0 0% 100%;
+            --card: 0 0% 6%;
+            --card-foreground: 0 0% 100%;
+            --popover: 0 0% 6%;
+            --popover-foreground: 0 0% 100%;
+            --primary: 0 0% 98%;
+            --primary-foreground: 0 0% 3.9%;
+            --secondary: 0 0% 12%;
+            --secondary-foreground: 0 0% 100%;
+            --muted: 0 0% 12%;
+            --muted-foreground: 0 0% 70%;
+            --accent: 0 0% 12%;
+            --accent-foreground: 0 0% 100%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 0 0% 15%;
+            --input: 0 0% 15%;
+            --ring: 0 0% 98%;
+            --radius: 0.75rem;
+            --chart-1: 0 0% 90%;
+            --chart-2: 0 0% 75%;
+            --chart-3: 0 0% 60%;
+            --chart-4: 0 0% 45%;
+            --chart-5: 0 0% 30%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+            min-height: 100vh;
+            font-feature-settings: "rlig" 1, "calt" 1;
+            font-optical-sizing: auto;
+        }
+
+        /* Typography Scale */
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .text-5xl { font-size: 3rem; line-height: 1; }
+        .text-6xl { font-size: 3.75rem; line-height: 1; }
+
+        .font-thin { font-weight: 100; }
+        .font-light { font-weight: 300; }
+        .font-normal { font-weight: 400; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .font-extrabold { font-weight: 800; }
+        .font-black { font-weight: 900; }
+
+        /* Navigation */
+        .navbar {
+            border-bottom: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            text-decoration: none;
+            color: hsl(var(--foreground));
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(255,255,255,0.1), 0 2px 4px -1px rgba(255,255,255,0.06);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border-radius: calc(var(--radius) - 2px);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+            cursor: pointer;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            padding: 0.5rem 1rem;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: hsl(var(--accent));
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+
+        .btn-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: var(--radius);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+            margin-bottom: 1.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .hero-description {
+            font-size: 1.375rem;
+            color: hsl(var(--muted-foreground));
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .scroll-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 4rem;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-icon {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: hsl(var(--foreground));
+        }
+
+        .scroll-indicator span {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Journey Section */
+        .journey {
+            padding: 6rem 1.5rem;
+            background: hsl(var(--muted));
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            color: hsl(var(--foreground));
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: hsl(var(--muted-foreground));
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, hsl(var(--foreground)), hsl(var(--border)));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.25rem;
+            top: 0.75rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            background: hsl(var(--background));
+            border: 3px solid hsl(var(--foreground));
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-content {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 1.5rem;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid hsl(var(--card));
+        }
+
+        .timeline-content:hover {
+            border-color: hsl(var(--foreground));
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            transform: translateX(4px);
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 10px 15px -3px rgba(255,255,255,0.1), 0 4px 6px -2px rgba(255,255,255,0.05);
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: hsl(var(--foreground));
+        }
+
+        .timeline-description {
+            color: hsl(var(--muted-foreground));
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1.0625rem;
+        }
+
+        .timeline-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            transition: all 0.2s ease;
+        }
+
+        .feature:hover {
+            border-color: hsl(var(--foreground));
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+            background: hsl(var(--muted));
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: hsl(var(--foreground));
+            font-size: 0.875rem;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .feature-content h4 {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
+            color: hsl(var(--foreground));
+        }
+
+        .feature-content p {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            line-height: 1.6;
+        }
+
+        /* Coming Soon Tag */
+        .coming-soon-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: calc(var(--radius) - 2px);
+            margin-left: 0.5rem;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .coming-soon-tag:not(.prominent) {
+            background: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+            border: 1px solid hsl(var(--border));
+        }
+
+        .coming-soon-tag.prominent {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+            animation: pulse-glow 2s infinite;
+        }
+
+    
+        /* Subtle shimmer effect */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .timeline-item:nth-child(4) .timeline-content::before {
+            background: linear-gradient(135deg,
+                rgba(0,0,0,0.9) 0%,
+                rgba(0,0,0,0.8) 30%,
+                rgba(255,255,255,0.05) 50%,
+                rgba(0,0,0,0.8) 70%,
+                rgba(0,0,0,0.9) 100%),
+                linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(255,255,255,0.03) 50%,
+                    transparent 100%);
+            background-size: 2000px 100%, 2000px 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        /* Special hover state for the brand ecosystem card */
+        .timeline-item:nth-child(4) .timeline-content:hover {
+            border-color: hsl(var(--foreground));
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
+            transform: translateX(8px) scale(1.02);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 4px 8px rgba(255, 107, 53, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        /* Personas Section */
+        .personas {
+            padding: 6rem 1.5rem;
+        }
+
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .persona-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .persona-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .persona-card:nth-child(1)::before {
+            background: linear-gradient(90deg, hsl(var(--chart-1)), hsl(var(--chart-2)));
+        }
+
+        .persona-card:nth-child(2)::before {
+            background: linear-gradient(90deg, hsl(var(--chart-3)), hsl(var(--chart-4)));
+        }
+
+        .persona-card:nth-child(3)::before {
+            background: linear-gradient(90deg, hsl(var(--chart-5)), hsl(var(--chart-1)));
+        }
+
+        .persona-card:hover {
+            border-color: hsl(var(--foreground));
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            transform: translateY(-8px);
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .persona-avatar {
+            width: 4.5rem;
+            height: 4.5rem;
+            background: hsl(var(--background));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            border: 2px solid hsl(var(--border));
+            font-weight: 700;
+        }
+
+        .persona-card:nth-child(1) .persona-avatar {
+            color: hsl(var(--chart-1));
+            border-color: hsl(var(--chart-1));
+        }
+
+        .persona-card:nth-child(2) .persona-avatar {
+            color: hsl(var(--chart-3));
+            border-color: hsl(var(--chart-3));
+        }
+
+        .persona-card:nth-child(3) .persona-avatar {
+            color: hsl(var(--chart-5));
+            border-color: hsl(var(--chart-5));
+        }
+
+        .persona-info h3 {
+            font-size: 1.375rem;
+            font-weight: 800;
+            margin-bottom: 0.375rem;
+            color: hsl(var(--foreground));
+            letter-spacing: -0.02em;
+        }
+
+        .persona-info p {
+            font-size: 0.9375rem;
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+        }
+
+        .persona-traits {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .trait {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9375rem;
+        }
+
+        .trait-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: hsl(var(--foreground));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .brand-match {
+            background: hsl(var(--muted));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            padding: 1.5rem;
+        }
+
+        .brand-match h4 {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: hsl(var(--foreground));
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: left;
+        }
+
+        .brand-match p {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            line-height: 1.7;
+            text-align: left;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 6rem 1.5rem;
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
+            text-align: center;
+        }
+
+        .cta .section-title,
+        .cta .section-subtitle {
+            color: hsl(var(--background));
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .cta-description {
+            font-size: 1.1875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 1.125rem;
+            padding: 1rem 2.5rem;
+            border: 2px solid hsl(var(--background));
+            font-weight: 700;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(255,255,255,0.1), 0 4px 6px -2px rgba(255,255,255,0.05);
+        }
+
+        .btn-primary:hover {
+            background: hsl(var(--muted));
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(255,255,255,0.1), 0 10px 10px -5px rgba(255,255,255,0.04);
+        }
+
+        /* CTA Cards */
+        .cta-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(255,255,255,0.1);
+            border-color: hsl(var(--foreground));
+        }
+
+        .cta-card-image {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .cta-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .cta-card:hover .cta-card-image img {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, hsl(var(--background)) 100%);
+            opacity: 0.6;
+        }
+
+        .cta-card-content {
+            padding: 1.5rem;
+        }
+
+        .cta-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: hsl(var(--foreground));
+        }
+
+        .cta-card-description {
+            font-size: 0.9375rem;
+            color: hsl(var(--muted-foreground));
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid hsl(var(--border));
+            padding: 4rem 1.5rem 2rem;
+            background: hsl(var(--card));
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            color: hsl(var(--muted-foreground));
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .cta-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .personas-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cta-cards {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 1rem 2rem;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .timeline::before {
+                left: 0.5rem;
+            }
+
+            .timeline-item::before {
+                left: -1.75rem;
+            }
+
+            .personas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-features {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-cards {
+                grid-template-columns: 1fr;
+                max-width: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .navbar, .footer, .cta {
+                display: none;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            :root {
+                --background: 0 0% 100% !important;
+                --foreground: 0 0% 3.9% !important;
+                --card: 0 0% 100% !important;
+                --muted: 0 0% 96.1% !important;
+                --border: 0 0% 89.8% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <img src="https://soulbox.id/wp-content/themes/soulbox/assets/images/logo-soulbox.png" alt="Soulbox" style="width: 120px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="display: none; font-weight: 600; font-size: 1.125rem; color: hsl(var(--foreground));">Soulbox</div>
+            </a>
+            <div class="nav-actions">
+                <button class="btn btn-icon">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button class="btn btn-icon">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Soulbox Engineered Performance</h1>
+            <p class="hero-description">
+                Transforming every member into a success story and every class into meaningful, consistent revenue.
+            </p>
+            <div class="scroll-indicator">
+                <div class="scroll-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <span>Scroll to explore</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Section -->
+    <section class="journey">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Imagining the Next Era of Soulbox</h2>
+                <p class="section-subtitle">
+                    Elevating fitness with a smarter, science-supported approach that unlocks member transformation, strengthens long-term growth, and makes Soulbox a more attractive destination for future brand partnerships.
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="timeline-title">Member Onboarding</div>
+                        </div>
+                        <p class="timeline-description">
+                            Seamless digital experience that captures comprehensive member profiles through
+                            intelligent form design and progressive data collection.
+                        </p>
+                        <div class="timeline-features">
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4><a href="soulbox-links.html" style="color: inherit; text-decoration: none; cursor: pointer;">Digital First Experience</a></h4>
+                                    <p>Mobile-optimized onboarding with progressive profiling</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Behavioral Analytics</h4>
+                                    <p>Capture fitness goals, preferences, and lifestyle patterns</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="timeline-title">Admin Operations</div>
+                        </div>
+                        <p class="timeline-description">
+                            Streamlined command center providing simple, powerful tools for complete studio management,
+                            from daily operations to financial oversight. Simple. Complete. Powerful.
+                        </p>
+                        <div class="timeline-features">
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Studio Dashboard</h4>
+                                    <p>Real-time capacity monitoring, scheduling insights, staff performance metrics</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Financial Management</h4>
+                                    <p>Revenue tracking, expense management, profitability analysis, cash flow optimization</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-sliders-h"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Resource Optimization</h4>
+                                    <p>Equipment utilization tracking, class scheduling efficiency, staffing optimization</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="timeline-title">Performance Intelligence</div>
+                        </div>
+                        <p class="timeline-description">
+                            Real-time data capture during classes transforms member behavior patterns into actionable insights, enabling personalized development and optimized studio operations for enhanced member experiences.
+                        </p>
+                        <div class="timeline-features">
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Behavioral Analytics</h4>
+                                    <p>Capture in-class performance patterns, movement efficiency, and engagement metrics</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Performance Development</h4>
+                                    <p>Real-time member progress tracking, skill development assessment, and personalized improvement recommendations</p>
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <div class="timeline-title">Brand Ecosystem</div>
+                        </div>
+                        <p class="timeline-description">
+                            Intelligent platform connecting premium brands with high-value member segments through targeted campaigns, while creating seamless pathways to Soulbox's broader service ecosystem
+                        </p>
+                        <div class="timeline-features">
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Brand Connect</h4>
+                                    <p>Brand-member matching, partnership discovery, collaboration tools, affinity scoring</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Campaign Studio</h4>
+                                    <p>Targeted campaign creation, A/B testing, performance tracking, ROI optimization</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Revenue Streams</h4>
+                                    <p>Dynamic pricing models, sponsorship opportunities, affiliate partnerships, commission optimization</p>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h4>Ecosystem Gateway</h4>
+                                    <p>Integrated platform featuring Soulbox Recharge and other Soulbox's Sisters</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Personas Section -->
+    <section class="personas">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Soulbox Member Landscape</h2>
+                <p class="section-subtitle">
+                    Understanding the people Soulbox attracts and how each segment strengthens loyalty, revenue, and brand potential
+                </p>
+            </div>
+
+            <div class="personas-grid">
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="persona-info">
+                            <h3>The Peak Performer</h3>
+                            <p>Executive & Professional Athletes</p>
+                        </div>
+                    </div>
+                    <div class="persona-traits">
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>5-6 high-intensity sessions weekly</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Premium nutrition & supplement investment</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Corporate executive demographic (30-45)</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Early adopter of fitness technology</span>
+                        </div>
+                    </div>
+                    <div class="brand-match">
+                        <h4>Strategic Brand Matches</h4>
+                        <p>Luxury performance wear, executive health services, premium supplements,
+                           business class travel, high-end wellness retreats, investment services</p>
+                    </div>
+                </div>
+
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="persona-info">
+                            <h3>The Urban Warrior</h3>
+                            <p>Social Fitness Enthusiasts</p>
+                        </div>
+                    </div>
+                    <div class="persona-traits">
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Weekend & evening class participation</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Social media active fitness lifestyle</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Group fitness & community engagement</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Post-workout social & dining habits</span>
+                        </div>
+                    </div>
+                    <div class="brand-match">
+                        <h4>Strategic Brand Matches</h4>
+                        <p>Athleisure fashion, social venues, craft beverages, urban mobility services,
+                           entertainment platforms, lifestyle tech gadgets, experience-based services</p>
+                    </div>
+                </div>
+
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <div class="persona-info">
+                            <h3>The Wellness Architect</h3>
+                            <p>Mindful Lifestyle Practitioners</p>
+                        </div>
+                    </div>
+                    <div class="persona-traits">
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Yoga, recovery & mindfulness focus</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Organic nutrition & sustainable choices</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Wellness workshop & retreat participation</span>
+                        </div>
+                        <div class="trait">
+                            <div class="trait-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Holistic health & mental wellness investment</span>
+                        </div>
+                    </div>
+                    <div class="brand-match">
+                        <h4>Strategic Brand Matches</h4>
+                        <p>Organic food brands, wellness retreats, sustainable products, meditation apps,
+                           eco-friendly services, holistic health providers, natural supplements</p>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2 class="cta-title">Shaping the Next Era of Soulbox</h2>
+            <p class="cta-description">
+                Evolving the studio to match how people train, what they seek, and how Soulbox can grow with them.
+            </p>
+            <div class="cta-cards">
+                <div class="cta-card">
+                    <div class="cta-card-image">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&crop=entropy&auto=format" alt="Group Fitness Class" loading="lazy">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="cta-card-content">
+                        <h3 class="cta-card-title">Energizing Group Classes</h3>
+                        <p class="cta-card-description">
+                            Join our community-driven workouts led by expert instructors who push you beyond your limits
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cta-card">
+                    <div class="cta-card-image">
+                        <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999176f?w=600&h=400&fit=crop&crop=entropy&auto=format" alt="Personal Training Session" loading="lazy">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="cta-card-content">
+                        <h3 class="cta-card-title">Personalized Training</h3>
+                        <p class="cta-card-description">
+                            Custom workout plans designed around your goals, body type, and fitness level
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cta-card">
+                    <div class="cta-card-image">
+                        <img src="https://images.unsplash.com/photo-1506629905359-35798857c519?w=600&h=400&fit=crop&crop=entropy&auto=format" alt="Recovery & Wellness" loading="lazy">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="cta-card-content">
+                        <h3 class="cta-card-title">Recovery & Wellness</h3>
+                        <p class="cta-card-description">
+                            Recovery that restores the body, elevates the experience, and leads members into Soulbox Recharge for advanced care
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <a href="collaboration.html" class="btn btn-primary" style="margin-top: 3rem;">Let's Collaborate</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2025 Soulbox. Road to 2026, new era of better health and wellness.</p>  
+        </div>
+    </footer>
+
+    <script>
+        // Timeline animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 150);
+                }
+            });
+        }, observerOptions);
+
+        // Observe timeline items
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // CTA button interaction removed - now redirects directly via href
+
+        // Navigation back button
+        document.querySelector('.btn-icon').addEventListener('click', function() {
+            window.history.back();
+        });
+
+        // Add loading animation for images
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

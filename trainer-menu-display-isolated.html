@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trainer Menu Display (Isolated) - SOULBOX</title>
+    <link rel="stylesheet" href="trainer-menu-simple.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Top Header -->
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Workout Menus (ISOLATED VERSION)</h1>
+                    <p>View and manage workout plans - No JavaScript conflicts</p>
+                </div>
+                <div class="admin-header-actions">
+                    <div class="menu-selector">
+                        <label for="menu-select">Select Workout:</label>
+                        <select id="menu-select" onchange="displayWorkout()">
+                            <option value="">Choose a workout menu...</option>
+                        </select>
+                        <button class="admin-action-btn" onclick="refreshWorkoutMenu()" title="Refresh workout list">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                    </div>
+                    <button class="admin-action-btn" onclick="debugStorage()">
+                        <i class="fas fa-bug"></i>
+                        <span>Debug</span>
+                    </button>
+                    <button class="admin-action-btn" onclick="deleteCurrentWorkout()">
+                        <i class="fas fa-trash"></i>
+                        <span>Delete</span>
+                    </button>
+                    <a href="trainer-menu-input.html" class="admin-action-btn primary">
+                        <i class="fas fa-plus"></i>
+                        <span>Create New</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Workout Display Area -->
+            <div class="workout-display-container">
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>No Workout Selected</h3>
+                    <p>Select a workout menu from the dropdown above to display it here.</p>
+                    <button class="admin-action-btn" onclick="createTestWorkout()">
+                        <i class="fas fa-plus"></i>
+                        Create Test Workout
+                    </button>
+                </div>
+
+                <!-- Workout Display -->
+                <div id="workout-display" class="workout-display" style="display: none;">
+                    <!-- Workout Header -->
+                    <div class="workout-header-display">
+                        <div class="workout-title-section">
+                            <h1 id="display-class-name" class="workout-title"></h1>
+                            <div class="workout-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-user"></i>
+                                    <span id="display-coach-name"></span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="display-duration"></span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-layer-group"></i>
+                                    <span id="display-sections-count"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="workout-actions">
+                            <button class="action-btn" onclick="printWorkout()">
+                                <i class="fas fa-print"></i>
+                                Print
+                            </button>
+                            <button class="action-btn" onclick="shareWorkout()">
+                                <i class="fas fa-share"></i>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Workout Sections -->
+                    <div id="workout-sections" class="workout-sections">
+                        <!-- Sections will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load ONLY the trainer menu system - no other scripts to avoid conflicts -->
+    <script src="trainer-menu-simple.js"></script>
+
+    <script>
+        // Override the notification function to make sure it works
+        function showNotification(message, type = 'info') {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(33, 33, 33, 0.9);
+                border: 1px solid #444;
+                border-radius: 8px;
+                padding: 16px 20px;
+                color: #FFFFFF;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 2000;
+                max-width: 400px;
+                line-height: 1.4;
+            `;
+
+            // Handle multi-line messages
+            const formattedMessage = message.replace(/\n/g, '<br>');
+            notification.innerHTML = formattedMessage;
+
+            // Add border color based on type
+            if (type === 'success') {
+                notification.style.borderLeft = '4px solid #4caf50';
+            } else if (type === 'error') {
+                notification.style.borderLeft = '4px solid #f44336';
+            } else if (type === 'info') {
+                notification.style.borderLeft = '4px solid #2196f3';
+            }
+
+            // Add to page
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Hide after 5 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Test functions
+        function createTestWorkout() {
+            console.log('🏋️‍♂️ Creating test workout...');
+
+            const workout = {
+                id: Date.now().toString(),
+                className: 'Isolated Test Workout',
+                coachName: 'Isolated Test Coach',
+                sections: [
+                    {
+                        name: 'Test Section 1',
+                        exercises: [
+                            { name: 'Test Exercise 1', sets: '3', reps: '12', weight: 'Medium' },
+                            { name: 'Test Exercise 2', sets: '2', reps: '15', weight: 'Light' }
+                        ]
+                    },
+                    {
+                        name: 'Test Section 2',
+                        exercises: [
+                            { name: 'Test Exercise 3', sets: '1', reps: '30 sec', weight: '' }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const existing = sessionStorage.getItem('trainerWorkouts');
+                const workouts = existing ? JSON.parse(existing) : [];
+                workouts.push(workout);
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify(workouts));
+
+                showNotification(`Test workout "${workout.className}" created!`, 'success');
+                refreshWorkoutMenu();
+
+            } catch (e) {
+                showNotification(`Error creating test workout: ${e.message}`, 'error');
+            }
+        }
+
+        function printWorkout() {
+            showNotification('Print functionality would go here', 'info');
+        }
+
+        function shareWorkout() {
+            showNotification('Share functionality would go here', 'info');
+        }
+
+        // Enhanced debug function
+        function debugStorage() {
+            console.log('='.repeat(50));
+            console.log('🐛 ISOLATED DEBUG SESSION');
+            console.log('='.repeat(50));
+
+            const debugInfo = {
+                timestamp: new Date().toISOString(),
+                sessionStorageAvailable: typeof sessionStorage !== 'undefined',
+                storageKeys: Object.keys(sessionStorage),
+                trainerWorkouts: null,
+                parsedWorkouts: null
+            };
+
+            console.log('🔍 Session Storage Available:', debugInfo.sessionStorageAvailable);
+            console.log('🔍 Storage Keys:', debugInfo.storageKeys);
+
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            debugInfo.trainerWorkouts = stored;
+
+            if (stored) {
+                try {
+                    const workouts = JSON.parse(stored);
+                    debugInfo.parsedWorkouts = workouts;
+                    console.log('✅ Successfully parsed workouts:', workouts);
+                    console.log(`📊 Total workouts: ${workouts.length}`);
+
+                    workouts.forEach((workout, index) => {
+                        console.log(`📋 Workout ${index + 1}:`, {
+                            id: workout.id,
+                            className: workout.className,
+                            coachName: workout.coachName,
+                            sectionsCount: workout.sections ? workout.sections.length : 0,
+                            createdAt: workout.createdAt
+                        });
+                    });
+
+                } catch (e) {
+                    console.error('❌ Error parsing workouts:', e);
+                }
+            } else {
+                console.warn('⚠️ No trainer workouts found in storage');
+            }
+
+            // Check dropdown
+            const select = document.getElementById('menu-select');
+            if (select) {
+                console.log('🎯 Dropdown element found:', select);
+                console.log('🎯 Dropdown options count:', select.options.length);
+
+                for (let i = 0; i < select.options.length; i++) {
+                    console.log(`  Option ${i}: "${select.options[i].textContent}" (value: ${select.options[i].value})`);
+                }
+            } else {
+                console.error('❌ Dropdown element not found!');
+            }
+
+            showNotification('Debug info logged to console - press F12 to view', 'info');
+            console.log('='.repeat(50));
+            console.log('🐛 END DEBUG SESSION');
+            console.log('='.repeat(50));
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 ISOLATED display page loaded');
+
+            // Check if user just saved a workout
+            const justSaved = sessionStorage.getItem('justSavedWorkout');
+            if (justSaved === 'true') {
+                setTimeout(() => {
+                    showNotification('Great! Your workout has been saved and should appear in the dropdown.', 'success');
+                }, 1500);
+                sessionStorage.removeItem('justSavedWorkout');
+            }
+
+            // Load workout menu after a short delay
+            setTimeout(() => {
+                if (typeof refreshWorkoutMenu === 'function') {
+                    refreshWorkoutMenu();
+                } else {
+                    console.error('❌ refreshWorkoutMenu function not found!');
+                    showNotification('Error: Trainer menu system not loaded properly', 'error');
+                }
+            }, 500);
+        });
+
+        // Add visibility change listener
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                setTimeout(() => {
+                    if (typeof refreshWorkoutMenu === 'function') {
+                        refreshWorkoutMenu();
+                    }
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>

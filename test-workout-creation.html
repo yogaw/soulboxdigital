@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Workout Creation</title>
+    <script>
+        // Simple test script to verify the system works
+        function createTestWorkout() {
+            console.log('🧪 Creating test workout...');
+
+            // Create sample workout data
+            const testWorkout = {
+                id: 'test-' + Date.now(),
+                className: 'Test HIIT Workout',
+                coachName: 'Test Coach',
+                sections: [
+                    {
+                        name: 'Warm-up',
+                        exercises: [
+                            { name: 'Jumping Jacks', sets: '1 min', reps: '', weight: '' },
+                            { name: 'High Knees', sets: '1 min', reps: '', weight: '' }
+                        ]
+                    },
+                    {
+                        name: 'Main Workout',
+                        exercises: [
+                            { name: 'Burpees', sets: '10 min EMOM', reps: '', weight: '' },
+                            { name: 'Push-ups', sets: '3', reps: '15', weight: '' },
+                            { name: 'Squats', sets: '3', reps: '20', weight: '' }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            // Save to session storage
+            sessionStorage.setItem('trainerWorkouts', JSON.stringify([testWorkout]));
+
+            console.log('✅ Test workout created and saved:', testWorkout);
+            console.log('💾 Session storage updated');
+
+            alert('Test workout created! Now go to trainer-menu-display.html to see it in the dropdown.');
+        }
+
+        function clearTestWorkout() {
+            sessionStorage.removeItem('trainerWorkouts');
+            console.log('🗑️ Test workout cleared from storage');
+            alert('Test workout cleared! The dropdown on display page should now be empty.');
+        }
+
+        function checkStorage() {
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            console.log('🔍 Current workouts in storage:', stored);
+
+            if (stored) {
+                const workouts = JSON.parse(stored);
+                console.log('📊 Parsed workouts:', workouts);
+                console.log(`📈 Found ${workouts.length} workouts`);
+
+                alert(`Found ${workouts.length} workouts in storage:\n\n` + workouts.map(w => `• ${w.className} - ${w.coachName}`).join('\n'));
+            } else {
+                console.log('ℹ️ No workouts found in storage');
+                alert('No workouts found in storage');
+            }
+        }
+    </script>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px; background: #121212; color: white;">
+    <h1>🧪 Workout Creation Test</h1>
+
+    <div style="margin: 20px 0;">
+        <button onclick="createTestWorkout()" style="background: #4caf50; color: white; border: none; padding: 10px 20px; margin-right: 10px; cursor: pointer; border-radius: 4px;">
+            Create Test Workout
+        </button>
+        <button onclick="checkStorage()" style="background: #2196f3; color: white; border: none; padding: 10px 20px; margin-right: 10px; cursor: pointer; border-radius: 4px;">
+            Check Storage
+        </button>
+        <button onclick="clearTestWorkout()" style="background: #f44336; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px;">
+            Clear Storage
+        </button>
+    </div>
+
+    <div style="margin: 20px 0; padding: 20px; background: #333; border-radius: 8px;">
+        <h2>Test Instructions:</h2>
+        <ol>
+            <li>Click "Create Test Workout" to save a sample workout to storage</li>
+li>            <li>Open trainer-menu-display.html in a new tab</li>
+            <li>The dropdown should show the test workout</li>
+            <li>Select the workout to display it</li>
+            <li>Use this page to test storage functionality</li>
+        </ol>
+    </div>
+
+    <div style="margin: 20px 0; padding: 20px; background: #333; border-radius: 8px;">
+        <h2>Debugging Tips:</h2>
+        <ul>
+            <li>Open browser console (F12) to see detailed logs</li>
+            <li>Check the "Network" tab for any loading issues</li>
+            <li>Verify the JavaScript files are loading correctly</li>
+            <li>Make sure both HTML files use the same JavaScript file</li>
+        </ul>
+    </div>
+
+    <div style="margin: 20px 0; padding: 20px; background: #333; border-radius: 8px;">
+        <h2>Quick Links:</h2>
+        <p>
+            <a href="trainer-menu-input.html" target="_blank" style="color: #4caf50; text-decoration: none; margin-right: 20px;">Open Input Page</a>
+            <a href="trainer-menu-display.html" target="_blank" style="color: #2196f3; text-decoration: none;">Open Display Page</a>
+        </p>
+    </div>
+</body>
+</html>

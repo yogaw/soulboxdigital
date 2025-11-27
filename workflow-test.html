@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Workflow Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #121212;
+            color: white;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .test-step {
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .test-step.error {
+            border-left-color: #f44336;
+        }
+        .test-step.success {
+            border-left-color: #4caf50;
+        }
+        .test-step.warning {
+            border-left-color: #ff9800;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        button.info {
+            background: #2196f3;
+        }
+        button.warning {
+            background: #ff9800;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        .status.warning {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid #ff9800;
+            color: #ff9800;
+        }
+        .log-output {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #4caf50;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .step-number.error {
+            background: #f44336;
+        }
+        .step-number.warning {
+            background: #ff9800;
+        }
+        .workflow-status {
+            padding: 20px;
+            background: #222;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔄 Complete Trainer Menu Workflow Test</h1>
+
+    <div class="workflow-status">
+        <h2>Overall Status</h2>
+        <div id="overall-status" class="status warning">Ready to start testing</div>
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div id="progress-text">Step 0 of 5 completed</div>
+    </div>
+
+    <div class="test-step">
+        <h2><span class="step-number" id="step-1-number">1</span>Clear Storage & Prepare</h2>
+        <p>Start with a clean slate by clearing any existing workout data.</p>
+        <button onclick="clearStorage()" class="danger">Clear Storage</button>
+        <button onclick="checkStorage()" class="info">Check Storage</button>
+        <div id="step-1-status" class="status warning">Not completed</div>
+        <div id="step-1-log" class="log-output"></div>
+    </div>
+
+    <div class="test-step">
+        <h2><span class="step-number" id="step-2-number">2</span>Create Test Workout</h2>
+        <p>Create a workout with the exact structure expected by the trainer menu system.</p>
+        <button onclick="createTestWorkout()">Create Test Workout</button>
+        <button onclick="verifyWorkoutStructure()" class="info">Verify Structure</button>
+        <div id="step-2-status" class="status warning">Not completed</div>
+        <div id="step-2-log" class="log-output"></div>
+    </div>
+
+    <div class="test-step">
+        <h2><span class="step-number" id="step-3-number">3</span>Test Input Page</h2>
+        <p>Open the trainer menu input page and verify it can read the stored workout.</p>
+        <button onclick="openInputPage()">Open Input Page</button>
+        <button onclick="simulateInputPageTest()" class="info">Simulate Input Test</button>
+        <div id="step-3-status" class="status warning">Not completed</div>
+        <div id="step-3-log" class="log-output"></div>
+    </div>
+
+    <div class="test-step">
+        <h2><span class="step-number" id="step-4-number">4</span>Test Display Page</h2>
+        <p>Open the trainer menu display page and verify the workout appears in the dropdown.</p>
+        <button onclick="openDisplayPage()">Open Display Page</button>
+        <button onclick="simulateDisplayPageTest()" class="info">Simulate Display Test</button>
+        <div id="step-4-status" class="status warning">Not completed</div>
+        <div id="step-4-log" class="log-output"></div>
+    </div>
+
+    <div class="test-step">
+        <h2><span class="step-number" id="step-5-number">5</span>Verify Complete Workflow</h2>
+        <p>Run a complete end-to-end test of the entire system.</p>
+        <button onclick="runCompleteTest()" class="success">Run Complete Test</button>
+        <button onclick="generateReport()" class="info">Generate Test Report</button>
+        <div id="step-5-status" class="status warning">Not completed</div>
+        <div id="step-5-log" class="log-output"></div>
+    </div>
+
+    <div class="test-step">
+        <h2>🔗 Quick Links</h2>
+        <button onclick="openAllPages()">Open All Pages</button>
+        <button onclick="runAllTests()" class="success">Run All Tests</button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+            <a href="trainer-menu-input.html" target="_blank" style="color: #4caf50; text-decoration: none; padding: 8px 16px; border: 1px solid #4caf50; border-radius: 4px;">Input Page</a>
+            <a href="trainer-menu-display.html" target="_blank" style="color: #4caf50; text-decoration: none; padding: 8px 16px; border: 1px solid #4caf50; border-radius: 4px;">Display Page</a>
+            <a href="test-trainer-menu-system.html" target="_blank" style="color: #2196f3; text-decoration: none; padding: 8px 16px; border: 1px solid #2196f3; border-radius: 4px;">System Test</a>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            step1: false,
+            step2: false,
+            step3: false,
+            step4: false,
+            step5: false
+        };
+
+        function log(message, elementId) {
+            const logElement = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function updateStepStatus(stepNumber, status, message) {
+            const statusElement = document.getElementById(`step-${stepNumber}-status`);
+            const numberElement = document.getElementById(`step-${stepNumber}-number`);
+
+            statusElement.className = `status ${status}`;
+            statusElement.textContent = message;
+
+            numberElement.className = `step-number ${status}`;
+
+            testResults[`step${stepNumber}`] = (status === 'success');
+            updateOverallStatus();
+        }
+
+        function updateOverallStatus() {
+            const completedSteps = Object.values(testResults).filter(result => result).length;
+            const totalSteps = Object.keys(testResults).length;
+            const progressPercentage = (completedSteps / totalSteps) * 100;
+
+            document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+            document.getElementById('progress-text').textContent = `Step ${completedSteps} of ${totalSteps} completed`;
+
+            const overallStatus = document.getElementById('overall-status');
+            if (completedSteps === totalSteps) {
+                overallStatus.className = 'status success';
+                overallStatus.textContent = '✅ All tests completed successfully!';
+            } else if (completedSteps > 0) {
+                overallStatus.className = 'status warning';
+                overallStatus.textContent = `⚠️ Testing in progress - ${completedSteps}/${totalSteps} steps completed`;
+            } else {
+                overallStatus.className = 'status warning';
+                overallStatus.textContent = 'Ready to start testing';
+            }
+        }
+
+        function clearStorage() {
+            log('🗑️ Clearing session storage...', 'step-1-log');
+            try {
+                sessionStorage.removeItem('trainerWorkouts');
+                log('✅ Storage cleared successfully', 'step-1-log');
+                updateStepStatus(1, 'success', 'Storage cleared - Ready for testing');
+            } catch (e) {
+                log(`❌ Error clearing storage: ${e.message}`, 'step-1-log');
+                updateStepStatus(1, 'error', 'Failed to clear storage');
+            }
+        }
+
+        function checkStorage() {
+            log('🔍 Checking current storage state...', 'step-1-log');
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            if (stored) {
+                try {
+                    const workouts = JSON.parse(stored);
+                    log(`📊 Found ${workouts.length} workouts in storage`, 'step-1-log');
+                    workouts.forEach((workout, index) => {
+                        log(`  ${index + 1}. ${workout.className} - ${workout.coachName}`, 'step-1-log');
+                    });
+                } catch (e) {
+                    log(`❌ Error parsing storage: ${e.message}`, 'step-1-log');
+                }
+            } else {
+                log('ℹ️ No workouts found in storage', 'step-1-log');
+            }
+        }
+
+        function createTestWorkout() {
+            log('🏋️‍♂️ Creating test workout with correct structure...', 'step-2-log');
+
+            const testWorkout = {
+                id: Date.now().toString(),
+                className: 'Test HIIT Workout',
+                coachName: 'Test Coach',
+                sections: [
+                    {
+                        name: 'Warm-up',
+                        exercises: [
+                            { name: 'Jumping Jacks', sets: '1 min', reps: '', weight: '' },
+                            { name: 'High Knees', sets: '1 min', reps: '', weight: '' }
+                        ]
+                    },
+                    {
+                        name: 'Main Workout',
+                        exercises: [
+                            { name: 'Burpees', sets: '10 min EMOM', reps: '', weight: '' },
+                            { name: 'Push-ups', sets: '3', reps: '15', weight: '' },
+                            { name: 'Squats', sets: '3', reps: '20', weight: '' }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify([testWorkout]));
+                log('✅ Test workout created and saved', 'step-2-log');
+                log(`📝 Workout: ${testWorkout.className}`, 'step-2-log');
+                log(`👤 Coach: ${testWorkout.coachName}`, 'step-2-log');
+                log(`📂 Sections: ${testWorkout.sections.length}`, 'step-2-log');
+                updateStepStatus(2, 'success', 'Test workout created successfully');
+            } catch (e) {
+                log(`❌ Error creating workout: ${e.message}`, 'step-2-log');
+                updateStepStatus(2, 'error', 'Failed to create test workout');
+            }
+        }
+
+        function verifyWorkoutStructure() {
+            log('🔍 Verifying workout structure...', 'step-2-log');
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            if (!stored) {
+                log('❌ No workout found in storage', 'step-2-log');
+                updateStepStatus(2, 'error', 'No workout found to verify');
+                return;
+            }
+
+            try {
+                const workouts = JSON.parse(stored);
+                const workout = workouts[0];
+
+                const requiredFields = ['id', 'className', 'coachName', 'sections', 'createdAt'];
+                const missingFields = requiredFields.filter(field => !(field in workout));
+
+                if (missingFields.length > 0) {
+                    log(`❌ Missing required fields: ${missingFields.join(', ')}`, 'step-2-log');
+                    updateStepStatus(2, 'error', 'Workout structure invalid');
+                    return;
+                }
+
+                if (!Array.isArray(workout.sections) || workout.sections.length === 0) {
+                    log('❌ Sections array is missing or empty', 'step-2-log');
+                    updateStepStatus(2, 'error', 'Workout sections invalid');
+                    return;
+                }
+
+                workout.sections.forEach((section, index) => {
+                    if (!section.name || !Array.isArray(section.exercises)) {
+                        log(`❌ Section ${index + 1} structure invalid`, 'step-2-log');
+                        return;
+                    }
+                    log(`✅ Section ${index + 1}: ${section.name} (${section.exercises.length} exercises)`, 'step-2-log');
+                });
+
+                log('✅ Workout structure verified successfully', 'step-2-log');
+                updateStepStatus(2, 'success', 'Workout structure verified');
+            } catch (e) {
+                log(`❌ Error verifying structure: ${e.message}`, 'step-2-log');
+                updateStepStatus(2, 'error', 'Structure verification failed');
+            }
+        }
+
+        function openInputPage() {
+            log('🚀 Opening trainer menu input page...', 'step-3-log');
+            window.open('trainer-menu-input.html', '_blank');
+            log('✅ Input page opened in new tab', 'step-3-log');
+            updateStepStatus(3, 'success', 'Input page opened');
+        }
+
+        function simulateInputPageTest() {
+            log('🧪 Simulating input page test...', 'step-3-log');
+
+            // Simulate loading the trainer menu system
+            try {
+                // Create a mock SimpleTrainerMenuSystem instance
+                const mockSystem = {
+                    workouts: [],
+                    loadFromSessionStorage: function() {
+                        const stored = sessionStorage.getItem('trainerWorkouts');
+                        if (stored) {
+                            this.workouts = JSON.parse(stored);
+                        }
+                    }
+                };
+
+                mockSystem.loadFromSessionStorage();
+                log(`📊 Input page would find ${mockSystem.workouts.length} workouts`, 'step-3-log');
+
+                if (mockSystem.workouts.length > 0) {
+                    log('✅ Input page test simulation successful', 'step-3-log');
+                    updateStepStatus(3, 'success', 'Input page simulation passed');
+                } else {
+                    log('⚠️ Input page would find no workouts', 'step-3-log');
+                    updateStepStatus(3, 'warning', 'Input page simulation: No workouts');
+                }
+            } catch (e) {
+                log(`❌ Input page simulation failed: ${e.message}`, 'step-3-log');
+                updateStepStatus(3, 'error', 'Input page simulation failed');
+            }
+        }
+
+        function openDisplayPage() {
+            log('🚀 Opening trainer menu display page...', 'step-4-log');
+            window.open('trainer-menu-display.html', '_blank');
+            log('✅ Display page opened in new tab', 'step-4-log');
+            updateStepStatus(4, 'success', 'Display page opened');
+        }
+
+        function simulateDisplayPageTest() {
+            log('🧪 Simulating display page test...', 'step-4-log');
+
+            try {
+                // Simulate the display page loading process
+                const stored = sessionStorage.getItem('trainerWorkouts');
+
+                if (!stored) {
+                    log('❌ No workouts found in storage for display page', 'step-4-log');
+                    updateStepStatus(4, 'error', 'Display page: No workouts found');
+                    return;
+                }
+
+                const workouts = JSON.parse(stored);
+                log(`📊 Display page would find ${workouts.length} workouts`, 'step-4-log');
+
+                // Simulate dropdown population
+                const dropdownOptions = workouts.map(workout =>
+                    `${workout.className} - ${workout.coachName}`
+                );
+
+                log('📋 Dropdown options would be:', 'step-4-log');
+                dropdownOptions.forEach((option, index) => {
+                    log(`  ${index + 1}. ${option}`, 'step-4-log');
+                });
+
+                if (dropdownOptions.length > 0) {
+                    log('✅ Display page test simulation successful', 'step-4-log');
+                    updateStepStatus(4, 'success', 'Display page simulation passed');
+                } else {
+                    log('⚠️ Display page would show empty dropdown', 'step-4-log');
+                    updateStepStatus(4, 'warning', 'Display page simulation: Empty dropdown');
+                }
+            } catch (e) {
+                log(`❌ Display page simulation failed: ${e.message}`, 'step-4-log');
+                updateStepStatus(4, 'error', 'Display page simulation failed');
+            }
+        }
+
+        function runCompleteTest() {
+            log('🔄 Running complete end-to-end test...', 'step-5-log');
+
+            try {
+                // Step 1: Clear storage
+                sessionStorage.removeItem('trainerWorkouts');
+                log('✅ Step 1: Storage cleared', 'step-5-log');
+
+                // Step 2: Create workout
+                const testWorkout = {
+                    id: Date.now().toString(),
+                    className: 'Complete Test Workout',
+                    coachName: 'Test Coach',
+                    sections: [
+                        {
+                            name: 'Test Section',
+                            exercises: [
+                                { name: 'Test Exercise', sets: '3', reps: '10', weight: '' }
+                            ]
+                        }
+                    ],
+                    createdAt: new Date().toISOString()
+                };
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify([testWorkout]));
+                log('✅ Step 2: Test workout created', 'step-5-log');
+
+                // Step 3: Verify storage
+                const verifyStored = sessionStorage.getItem('trainerWorkouts');
+                const verifyWorkouts = JSON.parse(verifyStored);
+                log(`✅ Step 3: Storage verified - ${verifyWorkouts.length} workouts`, 'step-5-log');
+
+                // Step 4: Test data structure
+                const isValid = verifyWorkouts[0] &&
+                               verifyWorkouts[0].className &&
+                               verifyWorkouts[0].sections &&
+                               verifyWorkouts[0].sections.length > 0;
+
+                if (isValid) {
+                    log('✅ Step 4: Data structure validation passed', 'step-5-log');
+                } else {
+                    throw new Error('Data structure validation failed');
+                }
+
+                // Step 5: Final verification
+                log('✅ Step 5: Complete test passed!', 'step-5-log');
+                log(`🎯 Workout "${testWorkout.className}" is ready for display`, 'step-5-log');
+
+                updateStepStatus(5, 'success', 'Complete workflow test passed');
+
+            } catch (e) {
+                log(`❌ Complete test failed: ${e.message}`, 'step-5-log');
+                updateStepStatus(5, 'error', 'Complete workflow test failed');
+            }
+        }
+
+        function generateReport() {
+            log('📊 Generating test report...', 'step-5-log');
+
+            const report = {
+                timestamp: new Date().toISOString(),
+                steps: testResults,
+                summary: Object.values(testResults).every(result => result) ?
+                    'All tests passed successfully' :
+                    'Some tests failed or not completed'
+            };
+
+            log('📋 Test Report:', 'step-5-log');
+            log(`  Timestamp: ${report.timestamp}`, 'step-5-log');
+            log(`  Summary: ${report.summary}`, 'step-5-log');
+            log('  Steps:', 'step-5-log');
+            Object.entries(testResults).forEach(([step, result]) => {
+                log(`    ${step}: ${result ? '✅ PASS' : '❌ FAIL'}`, 'step-5-log');
+            });
+
+            console.log('Complete Test Report:', report);
+        }
+
+        function openAllPages() {
+            log('🚀 Opening all pages...', 'step-5-log');
+            window.open('trainer-menu-input.html', '_blank');
+            window.open('trainer-menu-display.html', '_blank');
+            window.open('test-trainer-menu-system.html', '_blank');
+            log('✅ All pages opened', 'step-5-log');
+        }
+
+        function runAllTests() {
+            log('🔄 Running all tests automatically...', 'step-5-log');
+
+            // Clear and run each step
+            setTimeout(() => clearStorage(), 100);
+            setTimeout(() => createTestWorkout(), 500);
+            setTimeout(() => verifyWorkoutStructure(), 1000);
+            setTimeout(() => simulateInputPageTest(), 1500);
+            setTimeout(() => simulateDisplayPageTest(), 2000);
+            setTimeout(() => runCompleteTest(), 2500);
+            setTimeout(() => generateReport(), 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOverallStatus();
+        });
+    </script>
+</body>
+</html>

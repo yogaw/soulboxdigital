@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Jakarta</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(180deg, #2a2f3a 0%, #121212 50%, #0d0d0d 100%);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        #app {
+            width: 100%;
+            min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Navigation - Mobile Optimized */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #444444;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            background: #000;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            border: 1px solid #444444;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .icon-btn:hover,
+        .icon-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
+        /* App Header - Mobile Optimized */
+        .app-header {
+            padding: 15px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid #444444;
+        }
+
+        .user-greeting h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .motivation-text {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .weekly-classes-container {
+            padding: 15px;
+            max-width: 100%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .user-credits-section {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .credits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .credits-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .credits-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .package-info {
+            background: #212121;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #444444;
+        }
+
+        .package-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .package-remaining {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .package-expiry {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .package-expiry i {
+            font-size: 12px;
+            color: #FFA726;
+            width: 14px;
+            text-align: center;
+        }
+
+        .expiry-text {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .buy-credits-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-size: 14px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .buy-credits-btn:hover,
+        .buy-credits-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .schedule-header {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+            text-align: center;
+        }
+
+        .studio-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .studio-logo {
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            border: 1px solid #444444;
+        }
+
+        .studio-title h3 {
+            color: #fff;
+            font-size: 20px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .studio-location {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .weekly-schedule {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #444444;
+            margin-bottom: 20px;
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .schedule-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .filter-toggle {
+            background: #333;
+            border: 1px solid #444444;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            min-height: 40px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .filter-toggle:hover,
+        .filter-toggle:active {
+            background: #444;
+            transform: translateY(-1px);
+        }
+
+        /* Day Navigation Tabs - Mobile Optimized */
+        .day-navigation {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #1a1a1a;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .day-navigation::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .day-navigation::-webkit-scrollbar-track {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 2px;
+        }
+
+        .day-navigation::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+
+        .day-tab {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            color: #888;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .day-tab:hover,
+        .day-tab:active {
+            background: #333;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .day-tab.active {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: #fff;
+            border-color: #D4AF37;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .day-tab-name {
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 1.1;
+        }
+
+        .day-tab-date {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .day-tab-class-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #D4AF37;
+            color: #fff;
+            border-radius: 8px;
+            padding: 1px 5px;
+            font-size: 9px;
+            font-weight: 600;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        /* Search and Filter Section - Mobile Optimized */
+        .search-filter-section {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #444444;
+            display: none;
+        }
+
+        .search-filter-section.active {
+            display: block;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            border-radius: 8px;
+            padding: 12px 40px 12px 15px;
+            color: #fff;
+            font-size: 14px;
+            min-height: 44px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .filters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-group {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #444444;
+        }
+
+        .filter-group-title {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            min-height: 32px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #D4AF37;
+            min-width: 18px;
+        }
+
+        .filter-option label {
+            color: #ccc;
+            font-size: 13px;
+            cursor: pointer;
+            flex: 1;
+            line-height: 1.3;
+        }
+
+        .filter-option label:hover {
+            color: #fff;
+        }
+
+        /* Day Content Container */
+        .day-content {
+            display: none;
+        }
+
+        .day-content.active {
+            display: block;
+        }
+
+        .day-header {
+            background: #333;
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .day-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Class List - Mobile Optimized */
+        .class-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .class-item {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            align-items: start;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .class-item:hover,
+        .class-item:active {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .class-item.selected {
+            border-color: #D4AF37;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .class-main-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .class-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .class-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+
+        .class-subtext {
+            color: #888;
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .class-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .class-time {
+            color: #D4AF37;
+            font-weight: 500;
+        }
+
+        .class-instructor {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .class-spots {
+            background: #333;
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .class-actions {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .class-type-badge {
+            background: #D4AF37;
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .quick-book-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .quick-book-btn:hover,
+        .quick-book-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Clear Filters Button */
+        .clear-filters-btn {
+            background: transparent;
+            border: 1px solid #888;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .clear-filters-btn:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+
+        /* Smooth Transitions */
+        .day-tab {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .class-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .day-content {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .day-content:not(.active) {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+
+        .day-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .search-filter-section {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .search-filter-section.active {
+            max-height: 1000px;
+        }
+
+        .filter-toggle {
+            transition: all 0.2s ease;
+        }
+
+        .quick-book-btn {
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-book-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .quick-book-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: loading-shimmer 1.5s infinite;
+        }
+
+        @keyframes loading-shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Success Animation */
+        .success-animation {
+            animation: success-pulse 0.6s ease;
+        }
+
+        @keyframes success-pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Tab Switch Animation */
+        .tab-switch-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: #D4AF37;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 3px;
+        }
+
+        /* Class Item Hover Effects */
+        .class-item:hover .class-type-badge {
+            transform: scale(1.1);
+        }
+
+        .class-type-badge {
+            transition: transform 0.2s ease;
+        }
+
+        /* Filter Checkbox Animation */
+        .filter-option input[type="checkbox"] {
+            transition: all 0.2s ease;
+        }
+
+        .filter-option input[type="checkbox"]:checked + label {
+            color: #D4AF37;
+            font-weight: 500;
+        }
+
+        /* Smooth Scroll for Mobile */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Booking Section - Mobile Optimized */
+        .booking-section {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .booking-section.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .selected-class-display {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #444444;
+        }
+
+        .selected-class-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .selected-class-details {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .payment-method {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .payment-method:hover,
+        .payment-method:active {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        .payment-method.selected {
+            border-color: #D4AF37;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .payment-method i {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: block;
+            color: #D4AF37;
+        }
+
+        .payment-method-name {
+            color: #fff;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .payment-details {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #444444;
+        }
+
+        .payment-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .payment-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-detail-item.total {
+            font-weight: 600;
+            color: #D4AF37;
+            font-size: 16px;
+            padding-top: 12px;
+            border-top: 2px solid #444;
+        }
+
+        .payment-detail-label {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .payment-detail-value {
+            color: #fff;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #888;
+            border: 1px solid #444444;
+        }
+
+        .btn:hover,
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Ripple Effect for Buttons */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .selected-class-display {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .selected-class-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .selected-class-details {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .payment-method {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #444444;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .payment-method:hover {
+            background: #333;
+        }
+
+        .payment-method.selected {
+            border-color: #D4AF37;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .payment-method i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+            color: #D4AF37;
+        }
+
+        .payment-method-name {
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .payment-details {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+        }
+
+        .payment-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .payment-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-detail-item.total {
+            font-weight: 600;
+            color: #D4AF37;
+            font-size: 18px;
+            padding-top: 15px;
+            border-top: 2px solid #444;
+        }
+
+        .payment-detail-label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .payment-detail-value {
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #888;
+            border: 1px solid #444444;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile-First Approach - These are the default styles now */
+
+        /* Additional optimization for very small screens */
+        @media (max-width: 375px) {
+            .day-tab {
+                min-width: 55px;
+                padding: 8px 10px;
+            }
+
+            .day-tab-name {
+                font-size: 11px;
+            }
+
+            .class-name {
+                font-size: 14px;
+            }
+
+            .quick-book-btn {
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+
+            .user-greeting h2 {
+                font-size: 22px;
+            }
+
+            .credits-title {
+                font-size: 15px;
+            }
+        }
+
+        /* Tablet optimization (768px and up) */
+        @media (min-width: 768px) {
+            .weekly-classes-container {
+                padding: 20px;
+                max-width: 768px;
+            }
+
+            .credits-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .credits-info {
+                flex-direction: row;
+                gap: 20px;
+                width: auto;
+            }
+
+            .buy-credits-btn {
+                width: auto;
+            }
+
+            .schedule-header {
+                flex-direction: row;
+            }
+
+            .day-navigation {
+                gap: 12px;
+                padding: 5px 0;
+            }
+
+            .day-tab {
+                min-width: 80px;
+                padding: 12px 16px;
+            }
+
+            .search-filter-section .filters-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .class-item {
+                grid-template-columns: 1fr auto;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .class-actions {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+
+            .payment-methods {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .action-buttons {
+                flex-direction: row;
+                gap: 15px;
+            }
+
+            .btn {
+                width: auto;
+                padding: 15px 30px;
+            }
+        }
+
+        /* Large screens */
+        @media (min-width: 1024px) {
+            .weekly-classes-container {
+                max-width: 1200px;
+            }
+
+            .search-filter-section .filters-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .day-tab {
+                min-width: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Menu -->
+        <nav class="main-nav">
+            <div class="logo">
+                <img src="assets/images/soulboxlogo.png" alt="SOULBOX">
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="fas fa-bell"></i></button>
+                <button class="icon-btn"><i class="fas fa-user"></i></button>
+            </div>
+        </nav>
+
+        <!-- Group Class Screen -->
+        <div id="group-class-screen" class="screen active">
+            <header class="app-header">
+                <div class="user-greeting">
+                    <h2>GROUP CLASSES</h2>
+                    <p class="motivation-text">SOULBOX Senopati</p>
+                </div>
+            </header>
+
+            <div class="weekly-classes-container">
+                <!-- User Credits Section -->
+                <div class="user-credits-section">
+                    <div class="credits-header">
+                        <div class="credits-title">YOUR GROUP CLASS PACKAGES</div>
+                    </div>
+                    <div class="credits-info">
+                        <div class="package-info" id="packageInfo">
+                            <div class="package-name">10 Classes Package</div>
+                            <div class="package-remaining">7 classes remaining</div>
+                            <div class="package-expiry">
+                                <i class="fas fa-clock"></i>
+                                <span class="expiry-text">Valid until: December 3, 2025</span>
+                            </div>
+                        </div>
+                        <button class="buy-credits-btn" id="buyCreditsBtn">
+                            <i class="fas fa-plus"></i> Buy Package
+                        </button>
+                    </div>
+                </div>
+
+            
+
+                <!-- Weekly Schedule -->
+                <div class="weekly-schedule">
+                    <div class="schedule-header">
+                        <div class="schedule-title">This Week's Classes</div>
+                        <button class="filter-toggle" id="filterToggle">
+                            <i class="fas fa-filter"></i> Filter & Search
+                        </button>
+                    </div>
+
+                    <!-- Day Navigation Tabs -->
+                    <div class="day-navigation" id="dayNavigation">
+                        <!-- Day tabs will be generated dynamically -->
+                    </div>
+
+                    <!-- Search and Filter Section -->
+                    <div class="search-filter-section" id="searchFilterSection">
+                        <div class="search-container">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search classes...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+
+                        <div class="filters-container">
+                            <div class="filter-group">
+                                <div class="filter-group-title">Class Type</div>
+                                <div class="filter-options" id="classTypeFilters">
+                                    <!-- Class type filters will be generated dynamically -->
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-group-title">Time</div>
+                                <div class="filter-options" id="timeFilters">
+                                    <div class="filter-option">
+                                        <input type="checkbox" id="morningFilter" value="morning">
+                                        <label for="morningFilter">Morning (6AM - 12PM)</label>
+                                    </div>
+                                    <div class="filter-option">
+                                        <input type="checkbox" id="afternoonFilter" value="afternoon">
+                                        <label for="afternoonFilter">Afternoon (12PM - 6PM)</label>
+                                    </div>
+                                    <div class="filter-option">
+                                        <input type="checkbox" id="eveningFilter" value="evening">
+                                        <label for="eveningFilter">Evening (6PM - 12AM)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-group-title">Instructor</div>
+                                <div class="filter-options" id="instructorFilters">
+                                    <!-- Instructor filters will be generated dynamically -->
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-group-title">Availability</div>
+                                <div class="filter-options">
+                                    <div class="filter-option">
+                                        <input type="checkbox" id="availableOnlyFilter">
+                                        <label for="availableOnlyFilter">Available classes only</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 15px;">
+                            <button class="clear-filters-btn" id="clearFiltersBtn">Clear All Filters</button>
+                        </div>
+                    </div>
+
+                    <!-- Day Content Containers -->
+                    <div id="dayContentContainer">
+                        <!-- Day content will be generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Booking Section -->
+                <div class="booking-section" id="bookingSection" style="display: none;">
+                    <div class="selected-class-display">
+                        <div class="selected-class-title" id="selectedClassName">Select a Class</div>
+                        <div class="selected-class-details">
+                            <div id="selectedClassDateTime">Choose a class from the schedule above</div>
+                            <div id="selectedClassInstructor"></div>
+                            <div id="selectedClassSpots"></div>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <div class="payment-method selected" data-method="package" id="packageMethod">
+                            <i class="fas fa-box"></i>
+                            <div class="payment-method-name">Use Package Class</div>
+                        </div>
+                        <div class="payment-method" data-method="credit-card" id="creditCardMethod">
+                            <i class="fas fa-credit-card"></i>
+                            <div class="payment-method-name">Credit Card</div>
+                        </div>
+                        <div class="payment-method" data-method="e-wallet" id="ewalletMethod">
+                            <i class="fas fa-wallet"></i>
+                            <div class="payment-method-name">E-Wallet</div>
+                        </div>
+                    </div>
+
+                    <div class="payment-details">
+                        <div class="payment-detail-item">
+                            <div class="payment-detail-label">Class Fee</div>
+                            <div class="payment-detail-value" id="classFee">Rp 150,000</div>
+                        </div>
+                        <div class="payment-detail-item" id="creditDiscountRow" style="display: none;">
+                            <div class="payment-detail-label">Credit Applied</div>
+                            <div class="payment-detail-value" style="color: #D4AF37;" id="creditApplied">-Rp 150,000</div>
+                        </div>
+                        <div class="payment-detail-item">
+                            <div class="payment-detail-label">Service Fee</div>
+                            <div class="payment-detail-value" id="serviceFee">Rp 0</div>
+                        </div>
+                        <div class="payment-detail-item total">
+                            <div class="payment-detail-label">Total</div>
+                            <div class="payment-detail-value" id="totalAmount">Rp 150,000</div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="cancelBooking">Cancel</button>
+                        <button class="btn btn-primary" id="confirmBooking">Confirm Booking</button>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage" style="display: none;">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>BOOKING CONFIRMED!</h3>
+                    <div class="success-details">
+                        <p>Your class has been successfully booked.</p>
+                        <p>A confirmation has been sent to your email.</p>
+                    </div>
+                    <div class="action-buttons" style="margin-top: 20px; justify-content: center;">
+                        <button class="btn btn-primary" id="viewMyBookings">View My Bookings</button>
+                        <button class="btn btn-secondary" id="bookAnotherClass">Book Another Class</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User data (mock data)
+            let userData = {
+                packageClasses: 7,
+                packageName: '10 Classes Package'
+            };
+
+            // DOM Elements
+            const bookingSection = document.getElementById('bookingSection');
+            const successMessage = document.getElementById('successMessage');
+            const buyCreditsBtn = document.getElementById('buyCreditsBtn');
+
+            // Credit/Payment elements
+            const packageInfo = document.getElementById('packageInfo');
+            const selectedClassName = document.getElementById('selectedClassName');
+            const selectedClassDateTime = document.getElementById('selectedClassDateTime');
+            const selectedClassInstructor = document.getElementById('selectedClassInstructor');
+            const selectedClassSpots = document.getElementById('selectedClassSpots');
+
+            // Payment elements
+            const packageMethod = document.getElementById('packageMethod');
+            const creditCardMethod = document.getElementById('creditCardMethod');
+            const ewalletMethod = document.getElementById('ewalletMethod');
+            const classFee = document.getElementById('classFee');
+            const creditDiscountRow = document.getElementById('creditDiscountRow');
+            const creditApplied = document.getElementById('creditApplied');
+            const serviceFee = document.getElementById('serviceFee');
+            const totalAmount = document.getElementById('totalAmount');
+
+            // Buttons
+            const cancelBooking = document.getElementById('cancelBooking');
+            const confirmBooking = document.getElementById('confirmBooking');
+            const viewMyBookings = document.getElementById('viewMyBookings');
+            const bookAnotherClass = document.getElementById('bookAnotherClass');
+
+            let selectedClass = null;
+            let selectedPaymentMethod = 'package';
+            const CLASS_PRICE = 150000;
+
+            // Schedule data
+            const scheduleData = {
+                'Monday': [
+                    { name: 'BODY CAMP', time: '07:00', instructor: 'Alex', spots: 5, type: 'strength' },
+                    { name: 'MUAY THAI', time: '07:00', instructor: 'James', spots: 3, type: 'martial arts' },
+                    { name: 'BCB', subtext: 'BODY CONDITIONING BOOTCAMP', time: '09:00', instructor: 'Sarah', spots: 8, type: 'cardio' },
+                    { name: 'BODY CAMP', time: '09:00', instructor: 'Mike', spots: 6, type: 'strength' },
+                    { name: 'BODY CAMP', time: '17:00', instructor: 'Lisa', spots: 4, type: 'strength' },
+                    { name: 'SOULBARRE', time: '18:30', instructor: 'Emma', spots: 7, type: 'flexibility' },
+                    { name: 'TRX', subtext: 'TOTAL RESISTANCE EXERCISE', time: '19:30', instructor: 'John', spots: 2, type: 'strength' }
+                ],
+                'Tuesday': [
+                    { name: 'BODY CAMP', time: '07:00', instructor: 'Alex', spots: 4, type: 'strength' },
+                    { name: 'HIIT', subtext: 'HIGH INTENSITY INTERVAL TRAINING', time: '07:30', instructor: 'Tom', spots: 6, type: 'cardio' },
+                    { name: 'STRONG NATION', time: '18:00', instructor: 'Maria', spots: 3, type: 'cardio' },
+                    { name: 'YOGA FLOW', time: '19:00', instructor: 'Rachel', spots: 8, type: 'yoga' }
+                ],
+                'Wednesday': [
+                    { name: 'BODY CAMP', time: '07:00', instructor: 'Mike', spots: 5, type: 'strength' },
+                    { name: 'KETTLEBELL', time: '07:00', instructor: 'David', spots: 3, type: 'strength' },
+                    { name: 'ABS & CORE', time: '08:00', instructor: 'Sarah', spots: 7, type: 'core' },
+                    { name: 'PILATES', time: '18:00', instructor: 'Emma', spots: 4, type: 'flexibility' },
+                    { name: 'BOXING', time: '19:00', instructor: 'James', spots: 2, type: 'martial arts' }
+                ],
+                'Thursday': [
+                    { name: 'BODY CAMP', time: '07:00', instructor: 'Lisa', spots: 6, type: 'strength' },
+                    { name: 'CROSSFIT', time: '17:00', instructor: 'Tom', spots: 3, type: 'strength' },
+                    { name: 'DANCE', time: '18:00', instructor: 'Maria', spots: 8, type: 'dance' },
+                    { name: 'SPINNING', time: '19:00', instructor: 'Rachel', spots: 5, type: 'cardio' }
+                ],
+                'Friday': [
+                    { name: 'BODY CAMP', time: '07:00', instructor: 'Alex', spots: 4, type: 'strength' },
+                    { name: 'CIRCUIT', time: '09:00', instructor: 'David', spots: 7, type: 'cardio' },
+                    { name: 'ZUMBA', time: '18:00', instructor: 'Emma', spots: 6, type: 'dance' },
+                    { name: 'MARTIAL ARTS', time: '19:00', instructor: 'James', spots: 2, type: 'martial arts' }
+                ],
+                'Saturday': [
+                    { name: 'BODY CAMP', time: '08:00', instructor: 'Mike', spots: 5, type: 'strength' },
+                    { name: 'YOGA', time: '09:00', instructor: 'Sarah', spots: 8, type: 'yoga' },
+                    { name: 'HIIT', time: '10:00', instructor: 'Tom', spots: 4, type: 'cardio' },
+                    { name: 'PILATES', time: '11:00', instructor: 'Rachel', spots: 6, type: 'flexibility' }
+                ],
+                'Sunday': [
+                    { name: 'YOGA FLOW', time: '08:00', instructor: 'Emma', spots: 7, type: 'yoga' },
+                    { name: 'MEDITATION', time: '09:00', instructor: 'Lisa', spots: 10, type: 'wellness' },
+                    { name: 'STRETCHING', time: '10:00', instructor: 'David', spots: 8, type: 'flexibility' },
+                    { name: 'WELLNESS', time: '11:00', instructor: 'Maria', spots: 5, type: 'wellness' }
+                ]
+            };
+
+            // Get class types and instructors for filters
+            function getClassTypes() {
+                const types = new Set();
+                Object.values(scheduleData).flat().forEach(cls => {
+                    types.add(cls.type);
+                });
+                return Array.from(types);
+            }
+
+            function getInstructors() {
+                const instructors = new Set();
+                Object.values(scheduleData).flat().forEach(cls => {
+                    instructors.add(cls.instructor);
+                });
+                return Array.from(instructors);
+            }
+
+            // Generate day navigation tabs
+            function generateDayNavigation() {
+                const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                const dayNavigation = document.getElementById('dayNavigation');
+                const today = new Date().getDay();
+                const adjustedToday = today === 0 ? 6 : today - 1; // Adjust for Monday=0
+
+                dayNavigation.innerHTML = '';
+
+                daysOfWeek.forEach((day, index) => {
+                    const dayTab = document.createElement('div');
+                    dayTab.className = 'day-tab';
+                    if (index === adjustedToday) {
+                        dayTab.classList.add('active');
+                    }
+
+                    const dayClasses = scheduleData[day] || [];
+                    const classCount = dayClasses.length;
+
+                    dayTab.innerHTML = `
+                        <div class="day-tab-name">${day.substring(0, 3).toUpperCase()}</div>
+                        <div class="day-tab-date">${getClassDate(index)}</div>
+                        ${classCount > 0 ? `<div class="day-tab-class-count">${classCount}</div>` : ''}
+                    `;
+
+                    dayTab.addEventListener('click', () => selectDay(day, dayTab));
+                    dayNavigation.appendChild(dayTab);
+                });
+            }
+
+            // Get formatted date for day
+            function getClassDate(dayIndex) {
+                const today = new Date();
+                const mondayIndex = today.getDay() === 0 ? 6 : today.getDay() - 1;
+                const targetDate = new Date(today);
+                targetDate.setDate(today.getDate() - mondayIndex + dayIndex);
+
+                return targetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+
+            // Generate class type filters
+            function generateClassTypeFilters() {
+                const classTypeFilters = document.getElementById('classTypeFilters');
+                const types = getClassTypes();
+
+                classTypeFilters.innerHTML = '';
+
+                types.forEach(type => {
+                    const filterOption = document.createElement('div');
+                    filterOption.className = 'filter-option';
+                    filterOption.innerHTML = `
+                        <input type="checkbox" id="${type}TypeFilter" value="${type}">
+                        <label for="${type}TypeFilter">${type.charAt(0).toUpperCase() + type.slice(1)}</label>
+                    `;
+                    classTypeFilters.appendChild(filterOption);
+                });
+            }
+
+            // Generate instructor filters
+            function generateInstructorFilters() {
+                const instructorFilters = document.getElementById('instructorFilters');
+                const instructors = getInstructors();
+
+                instructorFilters.innerHTML = '';
+
+                instructors.forEach(instructor => {
+                    const filterOption = document.createElement('div');
+                    filterOption.className = 'filter-option';
+                    filterOption.innerHTML = `
+                        <input type="checkbox" id="${instructor}InstructorFilter" value="${instructor}">
+                        <label for="${instructor}InstructorFilter">${instructor}</label>
+                    `;
+                    instructorFilters.appendChild(filterOption);
+                });
+            }
+
+            // Generate day content
+            function generateDayContent() {
+                const dayContentContainer = document.getElementById('dayContentContainer');
+                const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+                dayContentContainer.innerHTML = '';
+
+                daysOfWeek.forEach(day => {
+                    const dayContent = document.createElement('div');
+                    dayContent.className = 'day-content';
+                    dayContent.id = `${day.toLowerCase()}-content`;
+
+                    const dayClasses = scheduleData[day] || [];
+
+                    dayContent.innerHTML = `
+                        <div class="day-header">
+                            <div class="day-title">${day}</div>
+                            <div class="day-stats">
+                                <span>${dayClasses.length} classes</span>
+                                <span>${dayClasses.reduce((sum, cls) => sum + cls.spots, 0)} total spots</span>
+                            </div>
+                        </div>
+                        <div class="class-list" id="${day.toLowerCase()}-classes">
+                            ${dayClasses.length > 0 ? generateClassItems(dayClasses, day) : generateEmptyState(day)}
+                        </div>
+                    `;
+
+                    dayContentContainer.appendChild(dayContent);
+                });
+
+                // Show today's content by default
+                const today = new Date().getDay();
+                const adjustedToday = today === 0 ? 6 : today - 1;
+                const todayContent = document.getElementById(`${daysOfWeek[adjustedToday].toLowerCase()}-content`);
+                if (todayContent) {
+                    todayContent.classList.add('active');
+                }
+            }
+
+            // Generate class items HTML
+            function generateClassItems(classes, day) {
+                return classes.map(classInfo => `
+                    <div class="class-item" data-day="${day}" data-time="${classInfo.time}" data-name="${classInfo.name}" data-instructor="${classInfo.instructor}" data-spots="${classInfo.spots}" data-type="${classInfo.type}">
+                        <div class="class-main-info">
+                            <div class="class-header-row">
+                                <div class="class-name">${classInfo.name}</div>
+                                <div class="class-type-badge">${classInfo.type}</div>
+                            </div>
+                            ${classInfo.subtext ? `<div class="class-subtext">${classInfo.subtext}</div>` : ''}
+                            <div class="class-meta">
+                                <div class="class-time"><i class="fas fa-clock"></i> ${classInfo.time}</div>
+                                <div class="class-instructor"><i class="fas fa-user"></i> ${classInfo.instructor}</div>
+                                <div class="class-spots">${classInfo.spots} spots</div>
+                            </div>
+                        </div>
+                        <div class="class-actions">
+                            <button class="quick-book-btn">Book Now</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Generate empty state
+            function generateEmptyState(day) {
+                return `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-calendar-xmark"></i>
+                        </div>
+                        <div class="empty-state-title">No classes on ${day}</div>
+                        <div class="empty-state-text">Check another day for available classes</div>
+                    </div>
+                `;
+            }
+
+            // Select day
+            function selectDay(day, tabElement) {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.day-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.day-content').forEach(content => content.classList.remove('active'));
+
+                // Add active class to selected tab and content
+                tabElement.classList.add('active');
+                const contentElement = document.getElementById(`${day.toLowerCase()}-content`);
+                if (contentElement) {
+                    contentElement.classList.add('active');
+                }
+
+                // Apply current filters to the new day
+                applyFilters();
+            }
+
+            // Toggle search and filter section
+            function toggleSearchFilter() {
+                const searchFilterSection = document.getElementById('searchFilterSection');
+                searchFilterSection.classList.toggle('active');
+            }
+
+            // Get current filters
+            function getCurrentFilters() {
+                const filters = {
+                    search: document.getElementById('searchInput').value.toLowerCase(),
+                    classTypes: [],
+                    times: [],
+                    instructors: [],
+                    availableOnly: document.getElementById('availableOnlyFilter').checked
+                };
+
+                // Get selected class types
+                document.querySelectorAll('#classTypeFilters input:checked').forEach(input => {
+                    filters.classTypes.push(input.value);
+                });
+
+                // Get selected times
+                document.querySelectorAll('#timeFilters input:checked').forEach(input => {
+                    filters.times.push(input.value);
+                });
+
+                // Get selected instructors
+                document.querySelectorAll('#instructorFilters input:checked').forEach(input => {
+                    filters.instructors.push(input.value);
+                });
+
+                return filters;
+            }
+
+            // Get time category from time string
+            function getTimeCategory(time) {
+                const hour = parseInt(time.split(':')[0]);
+                if (hour >= 6 && hour < 12) return 'morning';
+                if (hour >= 12 && hour < 18) return 'afternoon';
+                return 'evening';
+            }
+
+            // Apply filters
+            function applyFilters() {
+                const filters = getCurrentFilters();
+                const activeContent = document.querySelector('.day-content.active');
+                if (!activeContent) return;
+
+                const dayClasses = activeContent.querySelectorAll('.class-item');
+                let visibleCount = 0;
+
+                dayClasses.forEach(classItem => {
+                    const className = classItem.dataset.name.toLowerCase();
+                    const classType = classItem.dataset.type;
+                    const classTime = classItem.dataset.time;
+                    const classInstructor = classItem.dataset.instructor;
+                    const classSpots = parseInt(classItem.dataset.spots);
+
+                    let visible = true;
+
+                    // Search filter
+                    if (filters.search && !className.includes(filters.search)) {
+                        visible = false;
+                    }
+
+                    // Class type filter
+                    if (filters.classTypes.length > 0 && !filters.classTypes.includes(classType)) {
+                        visible = false;
+                    }
+
+                    // Time filter
+                    if (filters.times.length > 0 && !filters.times.includes(getTimeCategory(classTime))) {
+                        visible = false;
+                    }
+
+                    // Instructor filter
+                    if (filters.instructors.length > 0 && !filters.instructors.includes(classInstructor)) {
+                        visible = false;
+                    }
+
+                    // Available only filter
+                    if (filters.availableOnly && classSpots === 0) {
+                        visible = false;
+                    }
+
+                    classItem.style.display = visible ? 'grid' : 'none';
+                    if (visible) visibleCount++;
+                });
+
+                // Show empty state if no classes match filters
+                const classList = activeContent.querySelector('.class-list');
+                if (visibleCount === 0) {
+                    if (!classList.querySelector('.empty-state')) {
+                        const emptyState = document.createElement('div');
+                        emptyState.className = 'empty-state';
+                        emptyState.innerHTML = `
+                            <div class="empty-state-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="empty-state-title">No classes match your filters</div>
+                            <div class="empty-state-text">Try adjusting your search criteria or filters</div>
+                        `;
+                        classList.appendChild(emptyState);
+                    }
+                } else {
+                    const emptyState = classList.querySelector('.empty-state');
+                    if (emptyState) {
+                        emptyState.remove();
+                    }
+                }
+            }
+
+            // Clear all filters
+            function clearAllFilters() {
+                document.getElementById('searchInput').value = '';
+                document.querySelectorAll('#searchFilterSection input[type="checkbox"]').forEach(input => {
+                    input.checked = false;
+                });
+                applyFilters();
+            }
+
+            // Select a class
+            function selectClass(element, classInfo, day) {
+                // Remove previous selection
+                document.querySelectorAll('.class-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+
+                // Add selection to clicked class with animation
+                element.classList.add('selected');
+                element.classList.add('success-animation');
+                setTimeout(() => {
+                    element.classList.remove('success-animation');
+                }, 600);
+
+                selectedClass = {
+                    ...classInfo,
+                    day: day
+                };
+
+                // Update booking section
+                selectedClassName.textContent = classInfo.name;
+                selectedClassDateTime.textContent = `${day}, ${classInfo.time}`;
+                selectedClassInstructor.textContent = `with ${classInfo.instructor}`;
+                selectedClassSpots.textContent = `${classInfo.spots} spots available`;
+
+                // Show booking section with animation
+                successMessage.style.display = 'none';
+                bookingSection.style.display = 'block';
+                setTimeout(() => {
+                    bookingSection.classList.add('visible');
+                }, 10);
+
+                // Scroll to booking section
+                bookingSection.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Add ripple effect to buttons
+            function addRippleEffect(e) {
+                const button = e.currentTarget;
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple-effect');
+
+                button.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+
+            // Add loading state to elements
+            function addLoadingState(element, duration = 1000) {
+                element.classList.add('loading');
+                setTimeout(() => {
+                    element.classList.remove('loading');
+                }, duration);
+            }
+
+            // Show notification
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+
+                Object.assign(notification.style, {
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    padding: '15px 20px',
+                    borderRadius: '8px',
+                    color: '#fff',
+                    fontWeight: '500',
+                    zIndex: '1000',
+                    transform: 'translateX(100%)',
+                    transition: 'transform 0.3s ease'
+                });
+
+                // Set background based on type
+                switch(type) {
+                    case 'success':
+                        notification.style.background = 'linear-gradient(135deg, #D4AF37, #B8941F)';
+                        break;
+                    case 'error':
+                        notification.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+                        break;
+                    default:
+                        notification.style.background = 'linear-gradient(135deg, #2196F3, #1976D2)';
+                }
+
+                document.body.appendChild(notification);
+
+                // Slide in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 10);
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Initialize app
+            function initializeApp() {
+                // Generate UI components
+                generateDayNavigation();
+                generateClassTypeFilters();
+                generateInstructorFilters();
+                generateDayContent();
+                updateUserCredits();
+                selectPaymentMethod('package');
+
+                // Add event listeners for class items (using event delegation)
+                document.addEventListener('click', function(e) {
+                    // Handle class item clicks
+                    if (e.target.closest('.class-item') && !e.target.closest('.quick-book-btn')) {
+                        const classItem = e.target.closest('.class-item');
+                        const classInfo = {
+                            name: classItem.dataset.name,
+                            time: classItem.dataset.time,
+                            instructor: classItem.dataset.instructor,
+                            spots: parseInt(classItem.dataset.spots),
+                            type: classItem.dataset.type
+                        };
+                        const day = classItem.dataset.day;
+                        selectClass(classItem, classInfo, day);
+                    }
+
+                    // Handle quick book button clicks
+                    if (e.target.closest('.quick-book-btn')) {
+                        const classItem = e.target.closest('.class-item');
+                        const classInfo = {
+                            name: classItem.dataset.name,
+                            time: classItem.dataset.time,
+                            instructor: classItem.dataset.instructor,
+                            spots: parseInt(classItem.dataset.spots),
+                            type: classItem.dataset.type
+                        };
+                        const day = classItem.dataset.day;
+
+                        // Set as selected and proceed to booking
+                        selectClass(classItem, classInfo, day);
+
+                        // Auto-confirm booking after a short delay for UX
+                        setTimeout(() => {
+                            if (selectedClass) {
+                                processBooking();
+                            }
+                        }, 500);
+                    }
+                });
+            }
+
+            // Payment method selection
+            function selectPaymentMethod(method) {
+                // Remove previous selection
+                document.querySelectorAll('.payment-method').forEach(item => {
+                    item.classList.remove('selected');
+                });
+
+                // Add selection to clicked method
+                const methodElement = document.querySelector(`[data-method="${method}"]`);
+                methodElement.classList.add('selected');
+
+                selectedPaymentMethod = method;
+                updatePaymentDetails();
+            }
+
+            // Update payment details based on selected method
+            function updatePaymentDetails() {
+                const classFeeElement = document.getElementById('classFee');
+                const totalElement = document.getElementById('totalAmount');
+
+                classFeeElement.textContent = `Rp ${CLASS_PRICE.toLocaleString('id-ID')}`;
+
+                switch(selectedPaymentMethod) {
+                    case 'package':
+                        if (userData.packageClasses > 0) {
+                            creditDiscountRow.style.display = 'flex';
+                            creditApplied.textContent = `-Rp ${CLASS_PRICE.toLocaleString('id-ID')} (1 class)`;
+                            serviceFee.textContent = 'Rp 0';
+                            totalElement.textContent = 'Rp 0';
+                            totalElement.style.color = '#D4AF37';
+                        } else {
+                            creditDiscountRow.style.display = 'none';
+                            serviceFee.textContent = 'Rp 5,000';
+                            totalElement.textContent = `Rp ${(CLASS_PRICE + 5000).toLocaleString('id-ID')}`;
+                            totalElement.style.color = '#fff';
+                        }
+                        break;
+
+                    default:
+                        creditDiscountRow.style.display = 'none';
+                        serviceFee.textContent = 'Rp 5,000';
+                        totalElement.textContent = `Rp ${(CLASS_PRICE + 5000).toLocaleString('id-ID')}`;
+                        totalElement.style.color = '#fff';
+                        break;
+                }
+            }
+
+        // Update user credits display
+            function updateUserCredits() {
+                packageInfo.querySelector('.package-name').textContent = userData.packageName;
+                packageInfo.querySelector('.package-remaining').textContent = `${userData.packageClasses} classes remaining`;
+            }
+
+            // Process booking (extracted from confirmBooking)
+            function processBooking() {
+                if (!selectedClass) {
+                    showNotification('Please select a class first', 'error');
+                    return;
+                }
+
+                // Process booking based on payment method
+                switch(selectedPaymentMethod) {
+                    case 'package':
+                        if (userData.packageClasses > 0) {
+                            userData.packageClasses--;
+                        } else {
+                            showNotification('No classes remaining in your package', 'error');
+                            return;
+                        }
+                        break;
+                }
+
+                // Update display
+                updateUserCredits();
+
+                // Show success message
+                bookingSection.classList.remove('visible');
+                setTimeout(() => {
+                    bookingSection.style.display = 'none';
+                    successMessage.style.display = 'block';
+                }, 300);
+
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Event Listeners - add after initializeApp call in the first DOMContentLoaded
+            // Initialize app
+            initializeApp();
+
+            // Payment method listeners with ripple effect
+            [packageMethod, creditCardMethod, ewalletMethod].forEach(button => {
+                button.addEventListener('click', (e) => {
+                    addRippleEffect(e);
+                    selectPaymentMethod(button.dataset.method);
+                });
+            });
+
+            // Filter and search listeners
+            document.getElementById('filterToggle').addEventListener('click', function(e) {
+                addRippleEffect(e);
+                toggleSearchFilter();
+            });
+
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+            document.getElementById('clearFiltersBtn').addEventListener('click', function(e) {
+                addRippleEffect(e);
+                clearAllFilters();
+                showNotification('All filters cleared', 'info');
+            });
+
+            // Add listeners to all filter checkboxes
+            document.querySelectorAll('#searchFilterSection input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    applyFilters();
+                    // Show notification for first filter selection
+                    const checkedCount = document.querySelectorAll('#searchFilterSection input[type="checkbox"]:checked').length;
+                    if (checkedCount === 1) {
+                        showNotification('Filter applied', 'success');
+                    }
+                });
+            });
+
+            // Booking section listeners
+            cancelBooking.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                bookingSection.classList.remove('visible');
+                setTimeout(() => {
+                    bookingSection.style.display = 'none';
+                }, 300);
+                document.querySelectorAll('.class-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                selectedClass = null;
+            });
+
+            confirmBooking.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                // Add loading state
+                const button = e.currentTarget;
+                addLoadingState(button, 2000);
+
+                setTimeout(() => {
+                    processBooking();
+                    showNotification('Booking confirmed successfully!', 'success');
+                }, 1000);
+            });
+
+            // Success message listeners
+            viewMyBookings.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                showNotification('Redirecting to My Bookings...', 'info');
+                // In a real app, this would redirect to bookings page
+            });
+
+            bookAnotherClass.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                successMessage.style.display = 'none';
+                document.querySelectorAll('.class-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                selectedClass = null;
+                bookingSection.classList.remove('visible');
+                setTimeout(() => {
+                    bookingSection.style.display = 'none';
+                }, 300);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            buyCreditsBtn.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                showNotification('Redirecting to packages page...', 'info');
+                // Redirect to packages page
+                window.location.href = 'packages.html';
+            });
+
+            // Add ripple effects to all buttons
+            setTimeout(() => {
+                document.querySelectorAll('.btn, .quick-book-btn, .buy-credits-btn').forEach(button => {
+                    button.classList.add('ripple');
+                    button.addEventListener('click', addRippleEffect);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Workout Display - Clean</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Background Image - Multiple Fallbacks */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100vh !important;
+            color: white !important;
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+        body {
+            /* Primary background */
+            background: url('https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4718fead-38ab-4948-9e3c-ac4353392941/f5f5e4dbfcbc9230c703887a055e2aa4.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1763104338&Signature=RN/b6aPxix3PWfSCQ+DYpVPC5Vw=') center center/cover no-repeat fixed,
+                        /* Fallback gradient */
+                        linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+            background-size: cover, cover !important;
+            background-position: center center, center center !important;
+            background-attachment: fixed, fixed !important;
+            background-repeat: no-repeat, no-repeat !important;
+        }
+
+        body::before {
+            content: '' !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(18, 18, 18, 0.7) !important;
+            z-index: -1 !important;
+            pointer-events: none !important;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1800px !important;
+            margin: 0 auto !important;
+            padding: 20px !important;
+            min-height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Header - Left Title, Right Logo */
+        header {
+            margin-bottom: 40px !important;
+            padding: 30px 20px !important;
+        }
+
+        .header-content {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            max-width: 100% !important;
+        }
+
+        .header-left {
+            flex: 1 !important;
+            text-align: left !important;
+        }
+
+        .header-right {
+            flex: 0 0 auto !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .workout-title {
+            font-size: clamp(48px, 8vw, 120px) !important;
+            font-weight: 900 !important;
+            color: #FFFFFF !important;
+            text-transform: uppercase !important;
+            letter-spacing: -2px !important;
+            margin: 0 0 16px 0 !important;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7) !important;
+            line-height: 0.9 !important;
+        }
+
+        .workout-header-coach {
+            display: flex !important;
+            align-items: center !important;
+            gap: 20px !important;
+            margin-top: 10px !important;
+        }
+
+        .soulbox-logo {
+            height: clamp(60px, 8vw, 100px) !important;
+            width: auto !important;
+            object-fit: contain !important;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .soulbox-logo:hover {
+            transform: scale(1.05) !important;
+            filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.3)) !important;
+        }
+
+        .header-coach-photo {
+            width: 80px !important;
+            height: 80px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            border: 3px solid #d4af37 !important;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3) !important;
+            background: #444 !important;
+        }
+
+        .workout-subtitle {
+            font-size: clamp(18px, 3vw, 32px) !important;
+            color: #d4af37 !important;
+            margin: 0 !important;
+            font-weight: 600 !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center !important;
+            padding: 80px 20px !important;
+            color: #FFFFFF !important;
+        }
+
+        .loading-spinner {
+            width: 60px !important;
+            height: 60px !important;
+            border: 4px solid rgba(212, 175, 55, 0.3) !important;
+            border-top: 4px solid #d4af37 !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            margin: 0 auto 30px !important;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Workout Sections */
+        .workout-sections {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 30px !important;
+            margin-bottom: 40px !important;
+        }
+
+        .workout-section {
+            background: rgba(26, 26, 26, 0.95) !important;
+            border: 2px solid rgba(212, 175, 55, 0.3) !important;
+            border-radius: 20px !important;
+            overflow: hidden !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .workout-section:hover {
+            transform: translateY(-5px) !important;
+            border-color: rgba(212, 175, 55, 0.6) !important;
+            box-shadow: 0 15px 50px rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, rgba(33, 33, 33, 0.95), rgba(51, 51, 51, 0.95)) !important;
+            padding: 25px 30px !important;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3) !important;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 48px) !important;
+            font-weight: 800 !important;
+            color: #d4af37 !important;
+            margin: 0 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+        }
+
+        .exercises-container {
+            padding: 30px !important;
+        }
+
+        .exercise-item {
+            background: rgba(38, 38, 38, 0.95) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+            border-radius: 16px !important;
+            padding: 25px !important;
+            margin-bottom: 20px !important;
+            transition: all 0.3s ease !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .exercise-item::before {
+            content: '' !important;
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            width: 6px !important;
+            background: linear-gradient(to bottom, #d4af37, #b8941f) !important;
+        }
+
+        .exercise-item:hover {
+            background: rgba(45, 45, 45, 0.98) !important;
+            border-color: rgba(212, 175, 55, 0.5) !important;
+            transform: translateX(5px) !important;
+        }
+
+        .exercise-item:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .exercise-name {
+            font-size: clamp(20px, 3vw, 28px) !important;
+            font-weight: 700 !important;
+            color: #FFFFFF !important;
+            margin: 0 0 15px 0 !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+        }
+
+        .exercise-details {
+            display: flex !important;
+            gap: 20px !important;
+            flex-wrap: wrap !important;
+            margin-top: 15px !important;
+        }
+
+        .exercise-detail {
+            background: rgba(33, 33, 33, 0.8) !important;
+            padding: 8px 16px !important;
+            border-radius: 20px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #d4af37 !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .exercise-detail strong {
+            color: #FFFFFF !important;
+            margin-right: 6px !important;
+        }
+
+        /* Coach Section */
+        .coach-section {
+            background: rgba(26, 26, 26, 0.95) !important;
+            border: 2px solid rgba(212, 175, 55, 0.3) !important;
+            border-radius: 20px !important;
+            padding: 30px !important;
+            text-align: center !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+            margin-bottom: 30px !important;
+        }
+
+        .coach-photo {
+            width: 120px !important;
+            height: 120px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            border: 4px solid #d4af37 !important;
+            margin-bottom: 20px !important;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3) !important;
+            background: #444 !important;
+        }
+
+        .coach-name {
+            font-size: 28px !important;
+            font-weight: 700 !important;
+            color: #d4af37 !important;
+            margin: 0 !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Footer - Transparent */
+        footer {
+            text-align: center !important;
+            padding: 30px 20px !important;
+            margin-top: auto !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .footer-actions {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 20px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .action-btn {
+            background: transparent !important;
+            border: 2px solid rgba(212, 175, 55, 0.6) !important;
+            color: #d4af37 !important;
+            padding: 12px 24px !important;
+            border-radius: 12px !important;
+            cursor: pointer !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            backdrop-filter: blur(5px) !important;
+        }
+
+        .action-btn:hover {
+            background: rgba(212, 175, 55, 0.1) !important;
+            border-color: #d4af37 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .action-btn i {
+            font-size: 18px !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px !important;
+            }
+
+            .workout-title {
+                font-size: clamp(36px, 10vw, 72px) !important;
+            }
+
+            .section-title {
+                font-size: clamp(24px, 6vw, 36px) !important;
+            }
+
+            .exercise-details {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+
+            .header-content {
+                flex-direction: column !important;
+                gap: 20px !important;
+                text-align: center !important;
+            }
+
+            .header-left {
+                text-align: center !important;
+            }
+
+            .workout-header-coach {
+                flex-direction: column !important;
+                gap: 15px !important;
+                justify-content: center !important;
+            }
+
+            .header-coach-photo {
+                width: 60px !important;
+                height: 60px !important;
+            }
+
+            .soulbox-logo {
+                height: 60px !important;
+            }
+
+            .footer-actions {
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            .action-btn {
+                width: 100% !important;
+                max-width: 300px !important;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Title and Logo -->
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="workout-title" id="workout-title">Loading Workout...</h1>
+                    <div class="workout-header-coach">
+                        <img class="header-coach-photo" id="header-coach-photo" src="" alt="Coach" style="display: none;">
+                        <p class="workout-subtitle" id="workout-subtitle">Please wait</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <img class="soulbox-logo" src="assets/images/soulboxlogo.png" alt="SOULBOX Logo">
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Loading State -->
+            <div class="loading-state" id="loading-state">
+                <div class="loading-spinner"></div>
+                <h2>Loading Workout...</h2>
+                <p>Please wait while we prepare your workout plan.</p>
+            </div>
+
+            <!-- Workout Sections -->
+            <div class="workout-sections" id="workout-sections" style="display: none;">
+                <!-- Workout sections will be added here -->
+            </div>
+
+          </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-actions">
+                <button class="action-btn" onclick="showModifications()">
+                    <i class="fas fa-edit"></i> Modifications
+                </button>
+                <button class="action-btn" onclick="forceShowWorkout()">
+                    <i class="fas fa-power-off"></i> Force Show
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Trainer photo mapping
+        const trainerPhotos = {
+            'John': 'assets/images/john.jpeg',
+            'Abas': 'assets/images/abas.jpeg',
+            'Aldi': 'assets/images/aldi.jpeg',
+            'Ankie': 'assets/images/ankie.jpeg',
+            'Delpas': 'assets/images/delpas.jpeg',
+            'Ian': 'assets/images/ian.jpeg'
+        };
+
+        // Main function to display workout
+        function displayWorkout(workout) {
+            if (!workout) {
+                showError('No workout data found');
+                return;
+            }
+
+            console.log('Displaying workout:', workout);
+
+            // Update header
+            document.getElementById('workout-title').textContent = workout.className || 'Workout';
+            document.getElementById('workout-subtitle').textContent = `with ${workout.coachName || 'Trainer'}`;
+
+            // Display workout sections
+            displayWorkoutSections(workout.sections || []);
+
+            // Display coach information
+            displayCoachInfo(workout.coachName);
+
+            // Hide loading state and show content
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('workout-sections').style.display = 'flex';
+        }
+
+        function displayWorkoutSections(sections) {
+            const container = document.getElementById('workout-sections');
+            container.innerHTML = '';
+
+            sections.forEach((section, index) => {
+                const sectionElement = createSectionElement(section, index);
+                container.appendChild(sectionElement);
+            });
+        }
+
+        function createSectionElement(section, index) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'workout-section';
+            sectionDiv.innerHTML = `
+                <div class="section-header">
+                    <h2 class="section-title">${section.name || 'Section'}</h2>
+                </div>
+                <div class="exercises-container">
+                    ${section.exercises ? section.exercises.map(exercise => createExerciseHTML(exercise)).join('') : '<p>No exercises in this section.</p>'}
+                </div>
+            `;
+            return sectionDiv;
+        }
+
+        function createExerciseHTML(exercise) {
+            const details = [];
+            if (exercise.duration) details.push(`<span class="exercise-detail"><strong>Duration:</strong>${exercise.duration}</span>`);
+            if (exercise.reps) details.push(`<span class="exercise-detail"><strong>Reps:</strong>${exercise.reps}</span>`);
+            if (exercise.sets) details.push(`<span class="exercise-detail"><strong>Sets:</strong>${exercise.sets}</span>`);
+            if (exercise.weight) details.push(`<span class="exercise-detail"><strong>Weight:</strong>${exercise.weight}</span>`);
+            if (exercise.rest) details.push(`<span class="exercise-detail"><strong>Rest:</strong>${exercise.rest}</span>`);
+
+            return `
+                <div class="exercise-item">
+                    <h3 class="exercise-name">${exercise.name || 'Exercise'}</h3>
+                    <div class="exercise-details">
+                        ${details.join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayCoachInfo(coachName) {
+            const headerCoachPhoto = document.getElementById('header-coach-photo');
+            const workoutSubtitle = document.getElementById('workout-subtitle');
+
+            if (coachName) {
+                workoutSubtitle.textContent = `with ${coachName}`;
+
+                // Set trainer photo
+                const photoPath = trainerPhotos[coachName];
+                if (photoPath) {
+                    headerCoachPhoto.src = photoPath;
+                    headerCoachPhoto.alt = `${coachName} - SOULBOX Trainer`;
+                    headerCoachPhoto.style.display = 'block';
+                } else {
+                    // Use placeholder if no specific photo
+                    headerCoachPhoto.src = `https://via.placeholder.com/80x80/d4af37/000000?text=${coachName.charAt(0)}`;
+                    headerCoachPhoto.alt = `${coachName} - SOULBOX Trainer`;
+                    headerCoachPhoto.style.display = 'block';
+                }
+            } else {
+                workoutSubtitle.textContent = 'SOULBOX Trainer';
+                headerCoachPhoto.src = 'https://via.placeholder.com/80x80/d4af37/000000?text=SB';
+                headerCoachPhoto.alt = 'SOULBOX Trainer';
+                headerCoachPhoto.style.display = 'block';
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loading-state').innerHTML = `
+                <div style="color: #f44336; text-align: center; padding: 40px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                    <h2>Error Loading Workout</h2>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function showModifications() {
+            alert('Exercise modifications and alternatives would appear here!');
+        }
+
+        function forceShowWorkout() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const workoutId = urlParams.get('id');
+
+            if (workoutId) {
+                const stored = sessionStorage.getItem('workingTrainerWorkouts');
+                if (stored) {
+                    try {
+                        const workouts = JSON.parse(stored);
+                        const workout = workouts.find(w => w.id === workoutId);
+                        if (workout) {
+                            displayWorkout(workout);
+                            return;
+                        }
+                    } catch (e) {
+                        console.error('Error loading workout:', e);
+                    }
+                }
+            }
+
+            // Show emergency workout if no specific workout found
+            const emergencyWorkout = {
+                id: 'emergency',
+                className: 'EMERGENCY WORKOUT',
+                coachName: 'SOULBOX Trainer',
+                sections: [
+                    {
+                        name: 'EMERGENCY SECTION',
+                        exercises: [
+                            { name: 'Emergency Exercise 1', duration: '30s', reps: '10', rest: '30s' },
+                            { name: 'Emergency Exercise 2', duration: '30s', reps: '12', rest: '30s' }
+                        ]
+                    }
+                ]
+            };
+            displayWorkout(emergencyWorkout);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, initializing workout display...');
+
+            // Get workout ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const workoutId = urlParams.get('id');
+
+            if (workoutId) {
+                console.log('Workout ID found in URL:', workoutId);
+
+                // Try to load workout from sessionStorage
+                const stored = sessionStorage.getItem('workingTrainerWorkouts');
+                if (stored) {
+                    try {
+                        const workouts = JSON.parse(stored);
+                        const workout = workouts.find(w => w.id === workoutId);
+
+                        if (workout) {
+                            console.log('Workout found, displaying:', workout);
+                            displayWorkout(workout);
+                        } else {
+                            console.log('Workout not found in storage');
+                            showError(`Workout with ID ${workoutId} not found. Please create a new workout.`);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing workout data:', e);
+                        showError('Error loading workout data. Please try again.');
+                    }
+                } else {
+                    console.log('No workouts found in storage');
+                    showError('No workouts found. Please create a workout first.');
+                }
+            } else {
+                console.log('No workout ID provided in URL');
+                showError('No workout selected. Please select a workout from the trainer menu.');
+            }
+        });
+    </script>
+</body>
+</html>

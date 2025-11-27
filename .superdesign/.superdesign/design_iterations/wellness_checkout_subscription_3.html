@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Subscription Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .plan-card { transition: all 0.3s ease; cursor: pointer; }
+        .plan-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .plan-card.selected { border-color: #000; background: #fafafa; }
+        .toggle-switch { transition: all 0.3s ease; }
+        .toggle-switch.active { background: #000; }
+        .feature-item { transition: all 0.2s ease; }
+        .feature-item:hover { transform: translateX(4px); }
+        .progress-step { transition: all 0.3s ease; }
+        .progress-step.active { background: #000; color: white; }
+        .progress-step.completed { background: #000; }
+        .pulse-badge { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .slide-up { animation: slideUp 0.5s ease-out; }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-white to-blue-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">Z</span>
+                    </div>
+                    <span class="font-bold text-xl">ZenFlow</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="hidden sm:flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-500 rounded-full pulse-badge"></div>
+                        <span class="text-sm text-gray-600">Join 50,000+ members</span>
+                    </div>
+                    <button class="text-sm text-gray-600 hover:text-black transition-colors">Need Help?</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="bg-white/60 backdrop-blur-sm border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-center space-x-4">
+                <div class="flex items-center">
+                    <div class="progress-step active w-10 h-10 rounded-full border-2 border-black flex items-center justify-center text-sm font-semibold">1</div>
+                    <span class="ml-3 font-medium hidden sm:inline">Choose Plan</span>
+                </div>
+                <div class="flex-1 h-1 bg-gray-300 max-w-20"></div>
+                <div class="flex items-center">
+                    <div class="progress-step w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-sm font-medium text-gray-500">2</div>
+                    <span class="ml-3 text-gray-500 hidden sm:inline">Account</span>
+                </div>
+                <div class="flex-1 h-1 bg-gray-300 max-w-20"></div>
+                <div class="flex items-center">
+                    <div class="progress-step w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-sm font-medium text-gray-500">3</div>
+                    <span class="ml-3 text-gray-500 hidden sm:inline">Payment</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-10 slide-up">
+            <h1 class="text-4xl font-bold mb-4">Start Your Wellness Journey</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Choose the perfect plan for your lifestyle and begin your transformation today</p>
+
+            <!-- Billing Toggle -->
+            <div class="flex items-center justify-center space-x-4 mt-6">
+                <span class="font-medium">Monthly</span>
+                <button onclick="toggleBilling()" class="toggle-switch w-14 h-7 bg-gray-300 rounded-full relative">
+                    <div class="toggle-switch-handle w-5 h-5 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
+                </button>
+                <span class="font-medium">Yearly</span>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">Save 30%</span>
+            </div>
+        </div>
+
+        <!-- Subscription Plans -->
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+            <!-- Basic Plan -->
+            <div class="plan-card bg-white rounded-2xl p-6 border-2 border-gray-200" onclick="selectPlan('basic')">
+                <div class="text-center mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Basic</h3>
+                    <p class="text-sm text-gray-600 mb-4">Perfect for getting started</p>
+                    <div class="mb-4">
+                        <span class="text-4xl font-bold">$19</span>
+                        <span class="text-gray-600">/month</span>
+                    </div>
+                    <div class="text-xs text-gray-500 line-through">Yearly: $228</div>
+                    <div class="text-sm font-medium text-green-600 hidden" id="basic-yearly">Yearly: $159</div>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Daily meditations (10 min)</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Basic yoga flows</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Progress tracking</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Mobile app access</span>
+                    </div>
+                </div>
+
+                <button class="w-full py-3 border-2 border-gray-300 rounded-xl font-medium hover:border-black transition-colors">
+                    Choose Basic
+                </button>
+            </div>
+
+            <!-- Premium Plan (Popular) -->
+            <div class="plan-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-500 relative selected" onclick="selectPlan('premium')">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span class="bg-purple-600 text-white text-xs font-medium px-3 py-1 rounded-full">MOST POPULAR</span>
+                </div>
+
+                <div class="text-center mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Premium</h3>
+                    <p class="text-sm text-gray-600 mb-4">Complete wellness experience</p>
+                    <div class="mb-4">
+                        <span class="text-4xl font-bold">$39</span>
+                        <span class="text-gray-600">/month</span>
+                    </div>
+                    <div class="text-xs text-gray-500 line-through">Yearly: $468</div>
+                    <div class="text-sm font-medium text-green-600 hidden" id="premium-yearly">Yearly: $327</div>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Everything in Basic</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Unlimited meditation sessions</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Personalized nutrition plans</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Live weekly group sessions</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">1-on-1 coaching (monthly)</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-purple-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Exclusive content library</span>
+                    </div>
+                </div>
+
+                <button class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-colors">
+                    Choose Premium
+                </button>
+            </div>
+
+            <!-- Elite Plan -->
+            <div class="plan-card bg-white rounded-2xl p-6 border-2 border-gray-200" onclick="selectPlan('elite')">
+                <div class="text-center mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Elite</h3>
+                    <p class="text-sm text-gray-600 mb-4">Ultimate transformation</p>
+                    <div class="mb-4">
+                        <span class="text-4xl font-bold">$79</span>
+                        <span class="text-gray-600">/month</span>
+                    </div>
+                    <div class="text-xs text-gray-500 line-through">Yearly: $948</div>
+                    <div class="text-sm font-medium text-green-600 hidden" id="elite-yearly">Yearly: $663</div>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Everything in Premium</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Weekly 1-on-1 coaching</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Custom meal planning</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Priority support</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Advanced analytics</span>
+                    </div>
+                    <div class="flex items-center space-x-3 feature-item">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm">Family sharing (up to 4)</span>
+                    </div>
+                </div>
+
+                <button class="w-full py-3 border-2 border-gray-300 rounded-xl font-medium hover:border-black transition-colors">
+                    Choose Elite
+                </button>
+            </div>
+        </div>
+
+        <!-- Create Account Section -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg mb-8">
+            <h2 class="text-2xl font-bold mb-6">Create Your Account</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Personal Information -->
+                <div class="space-y-4">
+                    <h3 class="font-semibold text-lg">Personal Information</h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">First Name</label>
+                            <input type="text" placeholder="John" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Last Name</label>
+                            <input type="text" placeholder="Doe" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email Address</label>
+                        <input type="email" placeholder="john@example.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Phone Number</label>
+                        <input type="tel" placeholder="+1 (555) 123-4567" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Date of Birth</label>
+                        <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <!-- Wellness Goals -->
+                <div class="space-y-4">
+                    <h3 class="font-semibold text-lg">Your Wellness Goals</h3>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Primary Goal</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option>Stress Reduction</option>
+                            <option>Weight Management</option>
+                            <option>Better Sleep</option>
+                            <option>Increased Energy</option>
+                            <option>Mindfulness Practice</option>
+                            <option>Overall Wellness</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Experience Level</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Preferred Session Time</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option>Morning (6AM - 9AM)</option>
+                            <option>Midday (12PM - 2PM)</option>
+                            <option>Evening (6PM - 9PM)</option>
+                            <option>Flexible</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Health Conditions (Optional)</label>
+                        <textarea placeholder="Any health conditions we should know about..." rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Section -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <h3 class="font-semibold text-lg mb-4">Set Your Password</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Password</label>
+                        <input type="password" placeholder="Create a strong password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Confirm Password</label>
+                        <input type="password" placeholder="Confirm your password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="mt-6 space-y-3">
+                <label class="flex items-start space-x-3">
+                    <input type="checkbox" class="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                    <span class="text-sm text-gray-600">I agree to the <a href="#" class="text-purple-600 hover:underline">Terms of Service</a> and <a href="#" class="text-purple-600 hover:underline">Privacy Policy</a></span>
+                </label>
+                <label class="flex items-start space-x-3">
+                    <input type="checkbox" class="mt-1 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                    <span class="text-sm text-gray-600">I'd like to receive wellness tips and special offers via email</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <h2 class="text-2xl font-bold mb-6">Payment Method</h2>
+
+            <!-- Payment Method Tabs -->
+            <div class="flex space-x-4 mb-6">
+                <button class="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium">Credit Card</button>
+                <button class="px-6 py-3 border border-gray-300 rounded-lg font-medium hover:border-purple-600 transition-colors">PayPal</button>
+                <button class="px-6 py-3 border border-gray-300 rounded-lg font-medium hover:border-purple-600 transition-colors">Apple Pay</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Card Information -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Card Number</label>
+                        <div class="relative">
+                            <input type="text" placeholder="1234 5678 9012 3456" class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <div class="absolute right-3 top-3 flex space-x-2">
+                                <div class="w-8 h-5 bg-gradient-to-r from-blue-600 to-blue-400 rounded"></div>
+                                <div class="w-8 h-5 bg-gradient-to-r from-red-500 to-orange-400 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Cardholder Name</label>
+                        <input type="text" placeholder="John Doe" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <!-- Expiry and CVC -->
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Expiry Date</label>
+                            <input type="text" placeholder="MM/YY" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">CVC</label>
+                            <input type="text" placeholder="123" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Billing Address</label>
+                        <input type="text" placeholder="123 Main St, City, State 12345" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
+                <h3 class="font-semibold text-lg mb-4">Order Summary</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Selected Plan</span>
+                        <span class="font-medium">Premium Monthly</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Monthly Price</span>
+                        <span>$39.00</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-green-600">
+                        <span>First Month Discount</span>
+                        <span>-$10.00</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Tax</span>
+                        <span>$2.34</span>
+                    </div>
+                    <div class="border-t border-purple-200 pt-3">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-lg">Today's Total</span>
+                            <span class="font-bold text-2xl">$31.34</span>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-1">Then $39.00/month. Cancel anytime.</p>
+                    </div>
+                </div>
+
+                <!-- Complete Button -->
+                <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-semibold text-lg mt-6 hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-[1.02]">
+                    Start Your Wellness Journey • $31.34
+                </button>
+
+                <!-- Trust Indicators -->
+                <div class="flex items-center justify-center space-x-6 mt-4 text-xs text-gray-600">
+                    <div class="flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>SSL Encrypted</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>30-Day Guarantee</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Cancel Anytime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 bg-white border-t border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold">Z</span>
+                    </div>
+                    <span class="font-semibold">ZenFlow</span>
+                </div>
+                <div class="flex space-x-6 text-sm text-gray-600">
+                    <a href="#" class="hover:text-purple-600 transition-colors">Terms</a>
+                    <a href="#" class="hover:text-purple-600 transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-purple-600 transition-colors">Support</a>
+                    <a href="#" class="hover:text-purple-600 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let isYearly = false;
+
+        function toggleBilling() {
+            isYearly = !isYearly;
+            const toggle = document.querySelector('.toggle-switch');
+            const handle = document.querySelector('.toggle-switch-handle');
+            const yearlyPrices = document.querySelectorAll('[id$="-yearly"]');
+
+            if (isYearly) {
+                toggle.classList.add('active');
+                handle.style.transform = 'translateX(28px)';
+                yearlyPrices.forEach(el => el.classList.remove('hidden'));
+            } else {
+                toggle.classList.remove('active');
+                handle.style.transform = 'translateX(0)';
+                yearlyPrices.forEach(el => el.classList.add('hidden'));
+            }
+        }
+
+        function selectPlan(plan) {
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+    </script>
+</body>
+</html>

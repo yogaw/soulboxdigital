@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAL TEST - Find the Problem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .test-box {
+            background: #333;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 2px solid #666;
+        }
+        .test-box.active {
+            border-color: #4caf50;
+        }
+        .test-box.error {
+            border-color: #f44336;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button.secondary {
+            background: #2196f3;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        .status.info {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid #2196f3;
+            color: #2196f3;
+        }
+        .data-display {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .steps {
+            background: #444;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .steps h3 {
+            margin-top: 0;
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 REAL TEST - Let's Find the Actual Problem</h1>
+
+    <div class="test-box" id="storage-test">
+        <h2>Step 1: Test Session Storage</h2>
+        <button onclick="testStorage()">Test Storage</button>
+        <button onclick="clearStorage()" class="danger">Clear Storage</button>
+        <div id="storage-result"></div>
+    </div>
+
+    <div class="test-box" id="create-test">
+        <h2>Step 2: Create EXACT Workout Data</h2>
+        <button onclick="createExactWorkout()">Create Workout with Exact Structure</button>
+        <div id="create-result"></div>
+    </div>
+
+    <div class="test-box" id="simulate-test">
+        <h2>Step 3: Simulate Display Page Loading</h2>
+        <button onclick="simulateDisplayLoading()">Simulate Display Page</button>
+        <div id="simulate-result"></div>
+    </div>
+
+    <div class="test-box" id="real-test">
+        <h2>Step 4: Test Real Pages</h2>
+        <button onclick="testRealPages()">Test Both Real Pages</button>
+        <div id="real-result"></div>
+    </div>
+
+    <div class="test-box" id="debug-section">
+        <h2>🔍 Debug Information</h2>
+        <button onclick="showFullDebug()" class="secondary">Show Full Debug Info</button>
+        <div id="debug-display" class="data-display" style="display: none;"></div>
+    </div>
+
+    <div class="steps">
+        <h3>📋 What This Test Does:</h3>
+        <ol>
+            <li><strong>Tests Session Storage</strong> - Makes sure browser storage works</li>
+            <li><strong>Creates Exact Workout</strong> - Uses the exact structure the trainer menu expects</li>
+            <li><strong>Simulates Display Page</strong> - Runs the same code as the real display page</li>
+            <li><strong>Tests Real Pages</strong> - Opens both pages to verify the workflow</li>
+        </ol>
+    </div>
+
+    <script>
+        function updateStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const testBox = element.closest('.test-box');
+
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+            testBox.className = `test-box ${type}`;
+        }
+
+        function testStorage() {
+            console.log('🧪 Testing session storage...');
+
+            try {
+                // Test basic storage
+                sessionStorage.setItem('test', 'hello');
+                const result = sessionStorage.getItem('test');
+                sessionStorage.removeItem('test');
+
+                if (result === 'hello') {
+                    updateStatus('storage-result', '✅ Session storage works perfectly', 'success');
+                    console.log('✅ Session storage test passed');
+                } else {
+                    updateStatus('storage-result', '❌ Session storage failed - unexpected result', 'error');
+                    console.error('❌ Session storage test failed');
+                }
+            } catch (e) {
+                updateStatus('storage-result', `❌ Session storage error: ${e.message}`, 'error');
+                console.error('❌ Session storage error:', e);
+            }
+        }
+
+        function clearStorage() {
+            try {
+                sessionStorage.clear();
+                updateStatus('storage-result', '🗑️ Storage cleared', 'info');
+                console.log('🗑️ Storage cleared');
+            } catch (e) {
+                updateStatus('storage-result', `❌ Error clearing storage: ${e.message}`, 'error');
+                console.error('❌ Error clearing storage:', e);
+            }
+        }
+
+        function createExactWorkout() {
+            console.log('🏋️‍♂️ Creating workout with EXACT structure...');
+
+            // This is the EXACT structure the trainer menu system expects
+            const workout = {
+                id: Date.now().toString(),
+                className: 'REAL TEST Workout',
+                coachName: 'REAL TEST Coach',
+                sections: [
+                    {
+                        name: 'REAL TEST Section',
+                        exercises: [
+                            {
+                                name: 'REAL TEST Exercise',
+                                sets: '3',
+                                reps: '12',
+                                weight: 'Medium'
+                            }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                // Save as array (this is crucial!)
+                const workouts = [workout];
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify(workouts));
+
+                console.log('💾 Saved workout:', workout);
+                console.log('💾 Saved as array:', workouts);
+
+                // Verify it was saved correctly
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                const parsed = JSON.parse(stored);
+
+                console.log('🔍 Retrieved from storage:', parsed);
+
+                if (parsed.length === 1 && parsed[0].className === 'REAL TEST Workout') {
+                    updateStatus('create-result', '✅ Workout created and verified in storage', 'success');
+                    console.log('✅ Workout creation test passed');
+                } else {
+                    updateStatus('create-result', '❌ Workout saved but verification failed', 'error');
+                    console.error('❌ Workout verification failed');
+                }
+
+            } catch (e) {
+                updateStatus('create-result', `❌ Error creating workout: ${e.message}`, 'error');
+                console.error('❌ Error creating workout:', e);
+            }
+        }
+
+        function simulateDisplayLoading() {
+            console.log('🎭 Simulating display page loading...');
+
+            try {
+                // This simulates EXACTLY what the display page does
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                console.log('📦 Raw data from storage:', stored);
+
+                if (!stored) {
+                    updateStatus('simulate-result', '❌ No workouts found in storage', 'error');
+                    console.error('❌ No workouts in storage');
+                    return;
+                }
+
+                // Parse the data
+                const workouts = JSON.parse(stored);
+                console.log('📊 Parsed workouts:', workouts);
+                console.log(`📊 Number of workouts: ${workouts.length}`);
+
+                if (!Array.isArray(workouts) || workouts.length === 0) {
+                    updateStatus('simulate-result', '❌ Invalid workout data in storage', 'error');
+                    console.error('❌ Invalid workout data');
+                    return;
+                }
+
+                // Simulate dropdown population
+                const dropdownOptions = workouts.map(workout => {
+                    const option = {
+                        value: workout.id,
+                        text: `${workout.className} - ${workout.coachName}`
+                    };
+                    console.log('📋 Created option:', option);
+                    return option;
+                });
+
+                console.log('📋 All dropdown options:', dropdownOptions);
+
+                if (dropdownOptions.length > 0) {
+                    updateStatus('simulate-result', `✅ Simulation successful! Would show ${dropdownOptions.length} options: ${dropdownOptions.map(o => o.text).join(', ')}`, 'success');
+                    console.log('✅ Display page simulation passed');
+                } else {
+                    updateStatus('simulate-result', '❌ Simulation created no dropdown options', 'error');
+                    console.error('❌ No dropdown options created');
+                }
+
+            } catch (e) {
+                updateStatus('simulate-result', `❌ Simulation error: ${e.message}`, 'error');
+                console.error('❌ Simulation error:', e);
+            }
+        }
+
+        function testRealPages() {
+            console.log('🌐 Testing real pages...');
+
+            updateStatus('real-result',
+                '📝 Opening both pages...<br>' +
+                '1. Input page will open in a new tab<br>' +
+                '2. Display page will open in another new tab<br>' +
+                '3. Check if the workout appears in the dropdown',
+                'info'
+            );
+
+            // Open both pages
+            setTimeout(() => {
+                window.open('trainer-menu-input.html', '_blank');
+            }, 100);
+
+            setTimeout(() => {
+                window.open('trainer-menu-display.html', '_blank');
+            }, 500);
+
+            setTimeout(() => {
+                updateStatus('real-result',
+                    '🚀 Both pages opened!<br>' +
+                    '<strong>Check the display page dropdown - the workout should be there.</strong><br>' +
+                    'If not, there\'s a real issue we need to fix.',
+                    'success'
+                );
+            }, 1000);
+        }
+
+        function showFullDebug() {
+            const debugDisplay = document.getElementById('debug-display');
+            const isVisible = debugDisplay.style.display !== 'none';
+
+            debugDisplay.style.display = isVisible ? 'none' : 'block';
+
+            if (!isVisible) {
+                console.log('🐛 Generating full debug report...');
+
+                let debugInfo = '=== FULL DEBUG REPORT ===\n';
+                debugInfo += `Timestamp: ${new Date().toISOString()}\n\n`;
+
+                // Browser info
+                debugInfo += '=== BROWSER INFO ===\n';
+                debugInfo += `User Agent: ${navigator.userAgent}\n`;
+                debugInfo += `Session Storage Available: ${typeof sessionStorage !== 'undefined'}\n\n`;
+
+                // Storage contents
+                debugInfo += '=== STORAGE CONTENTS ===\n';
+                debugInfo += `Total keys: ${Object.keys(sessionStorage).length}\n`;
+
+                Object.keys(sessionStorage).forEach(key => {
+                    const value = sessionStorage.getItem(key);
+                    debugInfo += `${key}: ${value ? value.length : 0} characters\n`;
+                });
+
+                debugInfo += '\n=== TRAINER WORKOUTS ===\n';
+                const trainerWorkouts = sessionStorage.getItem('trainerWorkouts');
+
+                if (trainerWorkouts) {
+                    debugInfo += 'Raw data found: YES\n';
+                    try {
+                        const workouts = JSON.parse(trainerWorkouts);
+                        debugInfo += `Parsed successfully: YES\n`;
+                        debugInfo += `Number of workouts: ${workouts.length}\n`;
+                        debugInfo += `Is array: ${Array.isArray(workouts)}\n\n`;
+
+                        workouts.forEach((workout, index) => {
+                            debugInfo += `Workout ${index + 1}:\n`;
+                            debugInfo += `  ID: ${workout.id}\n`;
+                            debugInfo += `  Class Name: ${workout.className}\n`;
+                            debugInfo += `  Coach: ${workout.coachName}\n`;
+                            debugInfo += `  Sections: ${workout.sections ? workout.sections.length : 'N/A'}\n`;
+                            debugInfo += `  Created: ${workout.createdAt}\n\n`;
+                        });
+                    } catch (e) {
+                        debugInfo += `Parse error: ${e.message}\n`;
+                    }
+                } else {
+                    debugInfo += 'No trainer workouts found in storage\n';
+                }
+
+                debugInfo += '\n=== RECOMMENDATIONS ===\n';
+
+                if (!trainerWorkouts) {
+                    debugInfo += '❌ No workouts in storage - create a workout first\n';
+                } else {
+                    try {
+                        const workouts = JSON.parse(trainerWorkouts);
+                        if (workouts.length === 0) {
+                            debugInfo += '❌ Empty workouts array - create a workout first\n';
+                        } else {
+                            debugInfo += '✅ Workouts found in storage\n';
+                            debugInfo += '✅ If they don\'t appear in display page, there\'s a loading issue\n';
+                        }
+                    } catch (e) {
+                        debugInfo += `❌ Storage data corrupted: ${e.message}\n`;
+                    }
+                }
+
+                debugInfo += '\n=== END REPORT ===';
+
+                debugDisplay.textContent = debugInfo;
+                console.log('✅ Debug report generated');
+            }
+        }
+
+        // Auto-test storage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Real test page loaded');
+            testStorage();
+        });
+    </script>
+</body>
+</html>

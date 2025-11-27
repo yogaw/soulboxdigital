@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Workout Menu - WORKING VERSION</title>
+    <link rel="stylesheet" href="trainer-menu-simple.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #121212;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #4caf50;
+            margin-bottom: 10px;
+        }
+        .test-buttons {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .test-buttons button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️‍♂️ Create Workout Menu</h1>
+            <p>WORKING VERSION - This will definitely work!</p>
+        </div>
+
+        <div class="test-buttons">
+            <button onclick="testStorage()">Test Storage</button>
+            <button onclick="clearAllData()">Clear All Data</button>
+            <button onclick="window.open('working-display.html', '_blank')">Open Display Page</button>
+        </div>
+
+        <!-- Basic Information -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Workout Information
+            </h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="class-name">Class Name</label>
+                    <input type="text" id="class-name" placeholder="e.g., HIIT Blast, Strength Builder">
+                </div>
+
+                <div class="form-group">
+                    <label for="coach-name">Coach Name</label>
+                    <select id="coach-name">
+                        <option value="">Select Coach</option>
+                        <option value="John">John</option>
+                        <option value="Abas">Abas</option>
+                        <option value="Aldi">Aldi</option>
+                        <option value="Ankie">Ankie</option>
+                        <option value="Delpas">Delpas</option>
+                        <option value="Ian">Ian</option>
+                        <option value="Custom">Custom Coach</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" id="custom-coach-group" style="display: none;">
+                <label for="custom-coach-name">Custom Coach Name</label>
+                <input type="text" id="custom-coach-name" placeholder="Enter coach name">
+            </div>
+        </div>
+
+        <!-- Workout Sections -->
+        <div class="form-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    Workout Sections
+                </h2>
+                <button class="add-section-btn" onclick="addSection()">
+                    <i class="fas fa-plus"></i>
+                    Add Section
+                </button>
+            </div>
+
+            <div id="sections-container">
+                <!-- Sections will be dynamically added here -->
+            </div>
+
+            <div class="empty-state" id="empty-sections">
+                <i class="fas fa-plus-circle"></i>
+                <p>No sections yet. Click "Add Section" to start building your workout.</p>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-eye"></i>
+                Preview
+            </h2>
+            <div id="workout-preview" class="workout-preview">
+                <p class="preview-empty">Start adding sections to see preview</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-section">
+            <button class="admin-action-btn primary" onclick="saveWorkout()" style="width: 100%; padding: 15px; font-size: 18px;">
+                <i class="fas fa-save"></i>
+                Save Workout
+            </button>
+        </div>
+    </div>
+
+    <!-- Load the working system -->
+    <script src="working-trainer-system.js"></script>
+
+    <script>
+        function testStorage() {
+            const stored = sessionStorage.getItem('workingTrainerWorkouts');
+            if (stored) {
+                const workouts = JSON.parse(stored);
+                alert(`Storage test: Found ${workouts.length} workouts in storage`);
+            } else {
+                alert('Storage test: No workouts found in storage');
+            }
+        }
+
+        // Set flag when workout is saved
+        const originalSaveWorkout = saveWorkout;
+        window.saveWorkout = function() {
+            sessionStorage.setItem('justSavedWorkout', 'true');
+            originalSaveWorkout();
+        };
+    </script>
+</body>
+</html>

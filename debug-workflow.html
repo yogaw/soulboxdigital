@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Workflow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #121212;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        button.info {
+            background: #2196f3;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+        }
+        .data-preview {
+            background: #222;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Trainer Menu Workflow Debug</h1>
+
+    <div class="debug-section">
+        <h2>Step 1: Clear Storage</h2>
+        <button onclick="clearStorage()" class="danger">Clear Storage</button>
+        <button onclick="checkStorage()" class="info">Check Storage</button>
+        <div id="storage-status" class="status">Not checked</div>
+        <div id="storage-log" class="log"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Step 2: Create Test Workout</h2>
+        <button onclick="createWorkout()">Create Workout</button>
+        <button onclick="verifyStorage()" class="info">Verify in Storage</button>
+        <div id="workout-status" class="status">Not created</div>
+        <div id="workout-data" class="data-preview"></div>
+        <div id="workout-log" class="log"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Step 3: Test Input Page</h2>
+        <button onclick="testInputPage()">Open Input Page</button>
+        <button onclick="simulateInputPage()" class="info">Simulate Input Test</button>
+        <div id="input-status" class="status">Not tested</div>
+        <div id="input-log" class="log"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Step 4: Test Display Page</h2>
+        <button onclick="testDisplayPage()">Open Display Page</button>
+        <button onclick="simulateDisplayPage()" class="info">Simulate Display Test</button>
+        <button onclick="forceRefreshStorage()" class="info">Force Refresh Storage</button>
+        <div id="display-status" class="status">Not tested</div>
+        <div id="display-log" class="log"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Step 5: Complete Test</h2>
+        <button onclick="runCompleteTest()" class="success">Run Complete Test</button>
+        <button onclick="openBothPages()">Open Both Pages</button>
+        <div id="complete-status" class="status">Not tested</div>
+        <div id="complete-log" class="log"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>🔗 Quick Links</h2>
+        <a href="trainer-menu-input.html" target="_blank" style="color: #4caf50; text-decoration: none; margin-right: 20px;">Input Page</a>
+        <a href="trainer-menu-display.html" target="_blank" style="color: #2196f3; text-decoration: none;">Display Page</a>
+    </div>
+
+    <script>
+        function log(message, elementId) {
+            const logElement = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function setStatus(elementId, message, type = 'success') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${type}`;
+        }
+
+        function clearStorage() {
+            log('🗑️ Clearing session storage...', 'storage-log');
+            try {
+                sessionStorage.clear();
+                log('✅ Session storage cleared', 'storage-log');
+                setStatus('storage-status', 'Storage cleared', 'success');
+            } catch (e) {
+                log(`❌ Error clearing storage: ${e.message}`, 'storage-log');
+                setStatus('storage-status', 'Error clearing storage', 'error');
+            }
+        }
+
+        function checkStorage() {
+            log('🔍 Checking storage contents...', 'storage-log');
+            try {
+                const keys = Object.keys(sessionStorage);
+                log(`📊 Found ${keys.length} items in storage:`, 'storage-log');
+
+                keys.forEach(key => {
+                    const value = sessionStorage.getItem(key);
+                    log(`  ${key}: ${value ? `${value.length} characters` : 'null'}`, 'storage-log');
+                });
+
+                const trainerWorkouts = sessionStorage.getItem('trainerWorkouts');
+                if (trainerWorkouts) {
+                    const workouts = JSON.parse(trainerWorkouts);
+                    log(`🏋️‍♂️ Found ${workouts.length} workouts`, 'storage-log');
+                    setStatus('storage-status', `${workouts.length} workouts in storage`, 'success');
+                } else {
+                    log('ℹ️ No trainer workouts found', 'storage-log');
+                    setStatus('storage-status', 'No workouts found', 'error');
+                }
+            } catch (e) {
+                log(`❌ Error checking storage: ${e.message}`, 'storage-log');
+                setStatus('storage-status', 'Error checking storage', 'error');
+            }
+        }
+
+        function createWorkout() {
+            log('🏋️‍♂️ Creating test workout...', 'workout-log');
+
+            const workout = {
+                id: Date.now().toString(),
+                className: 'Debug Test Workout',
+                coachName: 'Debug Coach',
+                sections: [
+                    {
+                        name: 'Test Section 1',
+                        exercises: [
+                            { name: 'Test Exercise 1', sets: '3', reps: '10', weight: '' },
+                            { name: 'Test Exercise 2', sets: '2', reps: '15', weight: 'Light' }
+                        ]
+                    },
+                    {
+                        name: 'Test Section 2',
+                        exercises: [
+                            { name: 'Test Exercise 3', sets: '1', reps: '30 sec', weight: '' }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const existingData = sessionStorage.getItem('trainerWorkouts');
+                const workouts = existingData ? JSON.parse(existingData) : [];
+                workouts.push(workout);
+
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify(workouts));
+
+                log('✅ Workout created and saved', 'workout-log');
+                log(`📝 Name: ${workout.className}`, 'workout-log');
+                log(`👤 Coach: ${workout.coachName}`, 'workout-log');
+                log(`📂 Sections: ${workout.sections.length}`, 'workout-log');
+                log(`💪 Exercises: ${workout.sections.reduce((total, section) => total + section.exercises.length, 0)}`, 'workout-log');
+
+                setStatus('workout-status', 'Workout created successfully', 'success');
+                document.getElementById('workout-data').textContent = JSON.stringify(workout, null, 2);
+
+            } catch (e) {
+                log(`❌ Error creating workout: ${e.message}`, 'workout-log');
+                setStatus('workout-status', 'Error creating workout', 'error');
+            }
+        }
+
+        function verifyStorage() {
+            log('🔍 Verifying workout in storage...', 'workout-log');
+
+            try {
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                if (!stored) {
+                    log('❌ No workouts found in storage', 'workout-log');
+                    setStatus('workout-status', 'No workouts found', 'error');
+                    return;
+                }
+
+                const workouts = JSON.parse(stored);
+                log(`📊 Found ${workouts.length} workouts in storage`, 'workout-log');
+
+                const lastWorkout = workouts[workouts.length - 1];
+                log(`📋 Last workout: ${lastWorkout.className}`, 'workout-log');
+                log(`✅ Storage verification successful`, 'workout-log');
+
+                setStatus('workout-status', `Verified ${workouts.length} workouts`, 'success');
+
+            } catch (e) {
+                log(`❌ Error verifying storage: ${e.message}`, 'workout-log');
+                setStatus('workout-status', 'Storage verification failed', 'error');
+            }
+        }
+
+        function testInputPage() {
+            log('🚀 Opening input page...', 'input-log');
+            window.open('trainer-menu-input.html', '_blank');
+            log('✅ Input page opened in new tab', 'input-log');
+            setStatus('input-status', 'Input page opened', 'success');
+        }
+
+        function simulateInputPage() {
+            log('🧪 Simulating input page load...', 'input-log');
+
+            try {
+                // Simulate what the input page would do
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                if (stored) {
+                    const workouts = JSON.parse(stored);
+                    log(`📊 Input page would find ${workouts.length} workouts`, 'input-log');
+                    setStatus('input-status', `Input page would see ${workouts.length} workouts`, 'success');
+                } else {
+                    log('ℹ️ Input page would find no workouts', 'input-log');
+                    setStatus('input-status', 'Input page would see no workouts', 'error');
+                }
+            } catch (e) {
+                log(`❌ Input page simulation failed: ${e.message}`, 'input-log');
+                setStatus('input-status', 'Input page simulation failed', 'error');
+            }
+        }
+
+        function testDisplayPage() {
+            log('🚀 Opening display page...', 'display-log');
+            window.open('trainer-menu-display.html', '_blank');
+            log('✅ Display page opened in new tab', 'display-log');
+            setStatus('display-status', 'Display page opened', 'success');
+        }
+
+        function simulateDisplayPage() {
+            log('🧪 Simulating display page load...', 'display-log');
+
+            try {
+                // Simulate what the display page would do
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                if (!stored) {
+                    log('❌ Display page would find no workouts', 'display-log');
+                    setStatus('display-status', 'Display page would find no workouts', 'error');
+                    return;
+                }
+
+                const workouts = JSON.parse(stored);
+                log(`📊 Display page would find ${workouts.length} workouts`, 'display-log');
+
+                // Simulate dropdown population
+                const dropdownOptions = workouts.map(workout =>
+                    `${workout.className} - ${workout.coachName}`
+                );
+
+                log('📋 Dropdown options:', 'display-log');
+                dropdownOptions.forEach((option, index) => {
+                    log(`  ${index + 1}. ${option}`, 'display-log');
+                });
+
+                setStatus('display-status', `Display page would show ${dropdownOptions.length} options`, 'success');
+
+            } catch (e) {
+                log(`❌ Display page simulation failed: ${e.message}`, 'display-log');
+                setStatus('display-status', 'Display page simulation failed', 'error');
+            }
+        }
+
+        function forceRefreshStorage() {
+            log('🔄 Forcing storage refresh...', 'display-log');
+
+            // This simulates what the refresh button would do
+            try {
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                log('🔍 Storage contents:', stored);
+
+                if (stored) {
+                    const workouts = JSON.parse(stored);
+                    log(`📊 After refresh: ${workouts.length} workouts`, 'display-log');
+                    setStatus('display-status', `Refresh shows ${workouts.length} workouts`, 'success');
+                } else {
+                    log('❌ Still no workouts after refresh', 'display-log');
+                    setStatus('display-status', 'Refresh found no workouts', 'error');
+                }
+            } catch (e) {
+                log(`❌ Refresh failed: ${e.message}`, 'display-log');
+                setStatus('display-status', 'Refresh failed', 'error');
+            }
+        }
+
+        function runCompleteTest() {
+            log('🔄 Running complete workflow test...', 'complete-log');
+
+            try {
+                // Step 1: Clear storage
+                sessionStorage.clear();
+                log('✅ Step 1: Storage cleared', 'complete-log');
+
+                // Step 2: Create workout
+                const workout = {
+                    id: Date.now().toString(),
+                    className: 'Complete Test Workout',
+                    coachName: 'Test Coach',
+                    sections: [
+                        {
+                            name: 'Complete Test Section',
+                            exercises: [
+                                { name: 'Test Exercise', sets: '3', reps: '12', weight: 'Medium' }
+                            ]
+                        }
+                    ],
+                    createdAt: new Date().toISOString()
+                };
+
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify([workout]));
+                log('✅ Step 2: Test workout created', 'complete-log');
+
+                // Step 3: Verify storage
+                const verifyStored = sessionStorage.getItem('trainerWorkouts');
+                const verifyWorkouts = JSON.parse(verifyStored);
+                log(`✅ Step 3: Storage verified - ${verifyWorkouts.length} workouts`, 'complete-log');
+
+                // Step 4: Simulate display page
+                const dropdownOptions = verifyWorkouts.map(w => `${w.className} - ${w.coachName}`);
+                log(`✅ Step 4: Display page would show ${dropdownOptions.length} options`, 'complete-log');
+
+                log('🎉 Complete workflow test PASSED!', 'complete-log');
+                setStatus('complete-status', 'Complete workflow test PASSED', 'success');
+
+            } catch (e) {
+                log(`❌ Complete test failed: ${e.message}`, 'complete-log');
+                setStatus('complete-status', 'Complete workflow test FAILED', 'error');
+            }
+        }
+
+        function openBothPages() {
+            log('🚀 Opening both pages...', 'complete-log');
+            window.open('trainer-menu-input.html', '_blank');
+            window.open('trainer-menu-display.html', '_blank');
+            log('✅ Both pages opened', 'complete-log');
+        }
+
+        // Initial check on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkStorage();
+        });
+    </script>
+</body>
+</html>

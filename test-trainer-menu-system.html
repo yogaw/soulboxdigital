@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Menu System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #121212;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        button.info {
+            background: #2196f3;
+        }
+        .log-output {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+        }
+        .quick-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .quick-links a {
+            color: #4caf50;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Trainer Menu System Test</h1>
+
+    <div class="test-section">
+        <h2>System Status</h2>
+        <div id="system-status" class="status">Checking system...</div>
+        <button onclick="checkSystem()" class="info">Check System</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Storage Test</h2>
+        <p>Test session storage functionality with correct data structure</p>
+        <button onclick="testStorageStructure()">Test Storage Structure</button>
+        <button onclick="createSampleWorkout()">Create Sample Workout</button>
+        <button onclick="checkStoredWorkouts()">Check Stored Workouts</button>
+        <button onclick="clearAllStorage()" class="danger">Clear All Storage</button>
+        <div id="storage-log" class="log-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Quick Links</h2>
+        <div class="quick-links">
+            <a href="trainer-menu-input.html" target="_blank">Open Input Page</a>
+            <a href="trainer-menu-display.html" target="_blank">Open Display Page</a>
+            <a href="test-workout-creation.html" target="_blank">Original Test Page</a>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Data Structure Verification</h2>
+        <p>This test creates workout data with the EXACT structure that the trainer menu system expects:</p>
+        <pre style="background: #000; color: #0f0; padding: 10px; border-radius: 4px; font-size: 12px;">
+{
+  "id": "1736778000000",
+  "className": "HIIT Blast",
+  "coachName": "John",
+  "sections": [
+    {
+      "name": "Warm-up",
+      "exercises": [
+        {
+          "name": "Jumping Jacks",
+          "sets": "1 min",
+          "reps": "",
+          "weight": ""
+        }
+      ]
+    }
+  ],
+  "createdAt": "2025-01-13T10:00:00.000Z"
+}
+        </pre>
+    </div>
+
+    <script>
+        function log(message, elementId = 'storage-log') {
+            const logElement = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'success') {
+            const statusElement = document.getElementById('system-status');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+        }
+
+        function checkSystem() {
+            log('🔍 Checking trainer menu system...');
+
+            // Check if sessionStorage is available
+            if (typeof sessionStorage === 'undefined') {
+                updateStatus('❌ SessionStorage not available', 'error');
+                log('❌ SessionStorage is not available in this browser');
+                return;
+            }
+
+            // Check if trainer menu pages exist
+            log('✅ SessionStorage is available');
+
+            // Check current storage state
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            if (stored) {
+                try {
+                    const workouts = JSON.parse(stored);
+                    log(`✅ Found ${workouts.length} workouts in storage`);
+                    updateStatus(`✅ System OK - ${workouts.length} workouts stored`, 'success');
+                } catch (e) {
+                    log(`❌ Error parsing stored workouts: ${e.message}`);
+                    updateStatus('❌ Storage data corrupted', 'error');
+                }
+            } else {
+                log('ℹ️ No workouts found in storage');
+                updateStatus('✅ System OK - No workouts stored yet', 'success');
+            }
+        }
+
+        function testStorageStructure() {
+            log('🧪 Testing storage structure...');
+
+            try {
+                // Create test workout with EXACT structure expected by trainer menu system
+                const testWorkout = {
+                    id: Date.now().toString(),
+                    className: 'Test HIIT Workout',
+                    coachName: 'Test Coach',
+                    sections: [
+                        {
+                            name: 'Warm-up',
+                            exercises: [
+                                {
+                                    name: 'Jumping Jacks',
+                                    sets: '1 min',
+                                    reps: '',
+                                    weight: ''
+                                },
+                                {
+                                    name: 'High Knees',
+                                    sets: '1 min',
+                                    reps: '',
+                                    weight: ''
+                                }
+                            ]
+                        },
+                        {
+                            name: 'Main Workout',
+                            exercises: [
+                                {
+                                    name: 'Burpees',
+                                    sets: '10 min EMOM',
+                                    reps: '',
+                                    weight: ''
+                                },
+                                {
+                                    name: 'Push-ups',
+                                    sets: '3',
+                                    reps: '15',
+                                    weight: ''
+                                },
+                                {
+                                    name: 'Squats',
+                                    sets: '3',
+                                    reps: '20',
+                                    weight: ''
+                                }
+                            ]
+                        }
+                    ],
+                    createdAt: new Date().toISOString()
+                };
+
+                // Save to session storage
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify([testWorkout]));
+
+                log('✅ Test workout created with correct structure');
+                log(`📝 Workout: ${testWorkout.className} - ${testWorkout.coachName}`);
+                log(`📊 Sections: ${testWorkout.sections.length}`);
+                log(`💪 Exercises: ${testWorkout.sections.reduce((total, section) => total + section.exercises.length, 0)}`);
+
+                // Verify it was saved correctly
+                const verifyStored = sessionStorage.getItem('trainerWorkouts');
+                const verifyParsed = JSON.parse(verifyStored);
+                log('✅ Verification successful - data structure matches');
+                log(`🔍 Stored data: ${JSON.stringify(verifyParsed, null, 2)}`);
+
+                updateStatus('✅ Storage test successful - Workout created!', 'success');
+
+            } catch (e) {
+                log(`❌ Storage test failed: ${e.message}`);
+                updateStatus('❌ Storage test failed', 'error');
+            }
+        }
+
+        function createSampleWorkout() {
+            log('🏋️‍♂️ Creating sample workout...');
+
+            const sampleWorkout = {
+                id: Date.now().toString(),
+                className: 'Sample Strength Class',
+                coachName: 'Sample Coach',
+                sections: [
+                    {
+                        name: 'Activation',
+                        exercises: [
+                            { name: 'Arm Circles', sets: '2', reps: '30 sec', weight: '' },
+                            { name: 'Leg Swings', sets: '2', reps: '15 each', weight: '' }
+                        ]
+                    },
+                    {
+                        name: 'Strength',
+                        exercises: [
+                            { name: 'Deadlifts', sets: '4', reps: '8', weight: 'Heavy' },
+                            { name: 'Pull-ups', sets: '3', reps: '10', weight: 'Bodyweight' },
+                            { name: 'Plank', sets: '3', reps: '1 min', weight: '' }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            // Get existing workouts
+            const existing = sessionStorage.getItem('trainerWorkouts');
+            const workouts = existing ? JSON.parse(existing) : [];
+
+            // Add new workout
+            workouts.push(sampleWorkout);
+            sessionStorage.setItem('trainerWorkouts', JSON.stringify(workouts));
+
+            log(`✅ Sample workout created: ${sampleWorkout.className}`);
+            log(`📊 Total workouts now stored: ${workouts.length}`);
+            updateStatus(`✅ Sample workout created! Total: ${workouts.length}`, 'success');
+        }
+
+        function checkStoredWorkouts() {
+            log('📋 Checking stored workouts...');
+
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            if (!stored) {
+                log('ℹ️ No workouts found in storage');
+                updateStatus('ℹ️ No workouts stored', 'success');
+                return;
+            }
+
+            try {
+                const workouts = JSON.parse(stored);
+                log(`📊 Found ${workouts.length} workouts in storage:`);
+
+                workouts.forEach((workout, index) => {
+                    log(`  ${index + 1}. ${workout.className} - ${workout.coachName}`);
+                    log(`     📅 Created: ${new Date(workout.createdAt).toLocaleString()}`);
+                    log(`     📂 Sections: ${workout.sections.length}`);
+
+                    workout.sections.forEach((section, sectionIndex) => {
+                        log(`       ${sectionIndex + 1}. ${section.name} (${section.exercises.length} exercises)`);
+                    });
+                });
+
+                updateStatus(`✅ Found ${workouts.length} workouts`, 'success');
+
+            } catch (e) {
+                log(`❌ Error reading workouts: ${e.message}`);
+                updateStatus('❌ Error reading workouts', 'error');
+            }
+        }
+
+        function clearAllStorage() {
+            if (confirm('Are you sure you want to clear all stored workouts?')) {
+                sessionStorage.removeItem('trainerWorkouts');
+                log('🗑️ All workouts cleared from storage');
+                updateStatus('✅ Storage cleared', 'success');
+            }
+        }
+
+        // Auto-check system on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystem();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Display Test</title>
+    <link rel="stylesheet" href="trainer-menu-simple.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #121212;
+            color: white;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status.success { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+        .status.error { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+        .status.info { background: rgba(33, 150, 243, 0.2); color: #2196f3; }
+        .debug-info {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 15px 0;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .menu-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+        }
+        .menu-selector select {
+            background: #444;
+            color: white;
+            border: 1px solid #666;
+            padding: 10px;
+            border-radius: 4px;
+            min-width: 300px;
+        }
+        .workout-display {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 Minimal Display Test</h1>
+        <p>This page tests ONLY the trainer menu system without any other JavaScript conflicts.</p>
+
+        <div class="status info" id="status">Initializing...</div>
+
+        <div class="menu-selector">
+            <label for="menu-select">Select Workout:</label>
+            <select id="menu-select" onchange="displayWorkout()">
+                <option value="">Choose a workout menu...</option>
+            </select>
+            <button onclick="refreshWorkoutMenu()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+            <button onclick="debugStorage()">
+                <i class="fas fa-bug"></i> Debug
+            </button>
+        </div>
+
+        <div id="empty-state" class="workout-display">
+            <h3>No Workout Selected</h3>
+            <p>Select a workout from the dropdown above, or create one first.</p>
+            <button onclick="createTestWorkout()">Create Test Workout</button>
+        </div>
+
+        <div id="workout-display" class="workout-display" style="display: none;">
+            <h2 id="display-class-name"></h2>
+            <p><strong>Coach:</strong> <span id="display-coach-name"></span></p>
+            <div id="workout-content"></div>
+        </div>
+
+        <div class="debug-info" id="debug-log" style="display: none;"></div>
+
+        <div style="margin-top: 30px;">
+            <h3>Quick Links:</h3>
+            <button onclick="openInputPage()">Open Input Page</button>
+            <button onclick="openRealDisplayPage()">Open Real Display Page</button>
+        </div>
+    </div>
+
+    <!-- Only load the trainer menu system, no other scripts -->
+    <script src="trainer-menu-simple.js"></script>
+
+    <script>
+        let debugMode = false;
+
+        function log(message) {
+            if (debugMode) {
+                const debugLog = document.getElementById('debug-log');
+                const timestamp = new Date().toLocaleTimeString();
+                debugLog.innerHTML += `[${timestamp}] ${message}\n`;
+                debugLog.scrollTop = debugLog.scrollHeight;
+            }
+            console.log(message);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusElement = document.getElementById('status');
+            statusElement.className = `status ${type}`;
+            statusElement.textContent = message;
+        }
+
+        function createTestWorkout() {
+            log('🏋️‍♂️ Creating test workout...');
+
+            const workout = {
+                id: Date.now().toString(),
+                className: 'Minimal Test Workout ' + new Date().toLocaleTimeString(),
+                coachName: 'Minimal Test Coach',
+                sections: [
+                    {
+                        name: 'Test Section',
+                        exercises: [
+                            { name: 'Test Exercise', sets: '3', reps: '12', weight: '' }
+                        ]
+                    }
+                ],
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const existing = sessionStorage.getItem('trainerWorkouts');
+                const workouts = existing ? JSON.parse(existing) : [];
+                workouts.push(workout);
+                sessionStorage.setItem('trainerWorkouts', JSON.stringify(workouts));
+
+                log('✅ Test workout created');
+                updateStatus('Test workout created! Refresh the dropdown.', 'success');
+                refreshWorkoutMenu();
+
+            } catch (e) {
+                log(`❌ Error creating test workout: ${e.message}`);
+                updateStatus(`Error: ${e.message}`, 'error');
+            }
+        }
+
+        function displayWorkout() {
+            const select = document.getElementById('menu-select');
+            const workoutId = select.value;
+
+            if (!workoutId) {
+                document.getElementById('empty-state').style.display = 'block';
+                document.getElementById('workout-display').style.display = 'none';
+                return;
+            }
+
+            // Get workout from storage
+            const stored = sessionStorage.getItem('trainerWorkouts');
+            if (!stored) return;
+
+            try {
+                const workouts = JSON.parse(stored);
+                const workout = workouts.find(w => w.id === workoutId);
+
+                if (!workout) return;
+
+                document.getElementById('empty-state').style.display = 'none';
+                document.getElementById('workout-display').style.display = 'block';
+
+                document.getElementById('display-class-name').textContent = workout.className;
+                document.getElementById('display-coach-name').textContent = workout.coachName;
+
+                let content = '';
+                workout.sections.forEach((section, index) => {
+                    content += `<h3>Section ${index + 1}: ${section.name}</h3>`;
+                    content += '<ul>';
+                    section.exercises.forEach(exercise => {
+                        const details = [exercise.sets, exercise.reps, exercise.weight].filter(Boolean);
+                        content += `<li><strong>${exercise.name}</strong> - ${details.join(' • ')}</li>`;
+                    });
+                    content += '</ul>';
+                });
+
+                document.getElementById('workout-content').innerHTML = content;
+
+                log(`✅ Displayed workout: ${workout.className}`);
+                updateStatus(`Displaying: ${workout.className}`, 'success');
+
+            } catch (e) {
+                log(`❌ Error displaying workout: ${e.message}`);
+                updateStatus(`Error: ${e.message}`, 'error');
+            }
+        }
+
+        function refreshWorkoutMenu() {
+            log('🔄 Refreshing workout menu...');
+
+            const select = document.getElementById('menu-select');
+            select.innerHTML = '<option value="">Choose a workout menu...</option>';
+
+            try {
+                const stored = sessionStorage.getItem('trainerWorkouts');
+
+                if (!stored) {
+                    log('⚠️ No workouts found in storage');
+                    updateStatus('No workouts found. Create one first.', 'info');
+                    return;
+                }
+
+                const workouts = JSON.parse(stored);
+                log(`📊 Found ${workouts.length} workouts in storage`);
+
+                if (workouts.length === 0) {
+                    updateStatus('No workouts found. Create one first.', 'info');
+                    return;
+                }
+
+                workouts.forEach(workout => {
+                    const option = document.createElement('option');
+                    option.value = workout.id;
+                    option.textContent = `${workout.className} - ${workout.coachName}`;
+                    select.appendChild(option);
+                });
+
+                updateStatus(`Found ${workouts.length} workouts. Select one from dropdown.`, 'success');
+                log(`✅ Loaded ${workouts.length} workouts into dropdown`);
+
+            } catch (e) {
+                log(`❌ Error refreshing menu: ${e.message}`);
+                updateStatus(`Error: ${e.message}`, 'error');
+            }
+        }
+
+        function debugStorage() {
+            debugMode = !debugMode;
+            const debugLog = document.getElementById('debug-log');
+            debugLog.style.display = debugMode ? 'block' : 'none';
+
+            if (debugMode) {
+                log('🐛 Debug mode enabled');
+                log('SessionStorage keys: ' + Object.keys(sessionStorage).join(', '));
+
+                const stored = sessionStorage.getItem('trainerWorkouts');
+                if (stored) {
+                    try {
+                        const workouts = JSON.parse(stored);
+                        log(`Found ${workouts.length} workouts in storage`);
+                        workouts.forEach((workout, index) => {
+                            log(`  ${index + 1}. ${workout.className} - ${workout.coachName}`);
+                        });
+                    } catch (e) {
+                        log(`Error parsing workouts: ${e.message}`);
+                    }
+                } else {
+                    log('No workouts found in storage');
+                }
+            }
+        }
+
+        function openInputPage() {
+            window.open('trainer-menu-input.html', '_blank');
+        }
+
+        function openRealDisplayPage() {
+            window.open('trainer-menu-display.html', '_blank');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Minimal display page loaded');
+            updateStatus('Page loaded. Checking for workouts...', 'info');
+
+            setTimeout(() => {
+                refreshWorkoutMenu();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
