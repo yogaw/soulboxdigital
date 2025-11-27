@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Soulbox Admin - Bookings Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: 0 0% 3.9%;
+            --foreground: 0 0% 100%;
+            --card: 0 0% 6%;
+            --card-foreground: 0 0% 100%;
+            --popover: 0 0% 6%;
+            --popover-foreground: 0 0% 100%;
+            --primary: 0 0% 98%;
+            --primary-foreground: 0 0% 3.9%;
+            --secondary: 0 0% 12%;
+            --secondary-foreground: 0 0% 100%;
+            --muted: 0 0% 12%;
+            --muted-foreground: 0 0% 70%;
+            --accent: 0 0% 12%;
+            --accent-foreground: 0 0% 100%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 0 0% 15%;
+            --input: 0 0% 15%;
+            --ring: 0 0% 98%;
+            --radius: 0.75rem;
+            --chart-1: 0 0% 90%;
+            --chart-2: 0 0% 75%;
+            --chart-3: 0 0% 60%;
+            --chart-4: 0 0% 45%;
+            --chart-5: 0 0% 30%;
+            --success: 120 100% 40%;
+            --warning: 45 100% 50%;
+            --info: 210 100% 50%;
+            --danger: 0 84.2% 60.2%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+            min-height: 100vh;
+            font-feature-settings: "rlig" 1, "calt" 1;
+            font-optical-sizing: auto;
+        }
+
+        /* Navigation */
+        .navbar {
+            border-bottom: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            text-decoration: none;
+            color: hsl(var(--foreground));
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(255,255,255,0.1), 0 2px 4px -1px rgba(255,255,255,0.06);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border-radius: calc(var(--radius) - 2px);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+            cursor: pointer;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            padding: 0.5rem 1rem;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: hsl(var(--accent));
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+
+        .btn-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: var(--radius);
+        }
+
+        .btn-primary {
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
+        }
+
+        .btn-primary:hover {
+            background: hsl(var(--muted));
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header Section */
+        .admin-header {
+            margin-bottom: 2rem;
+        }
+
+        .admin-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-subtitle {
+            color: hsl(var(--muted-foreground));
+            font-size: 1.125rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: hsl(var(--foreground));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: hsl(var(--foreground));
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: hsl(var(--success));
+        }
+
+        .stat-change.negative {
+            color: hsl(var(--danger));
+        }
+
+        /* Filters */
+        .filters-section {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: hsl(var(--foreground));
+        }
+
+        .filter-input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px hsl(var(--ring));
+        }
+
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) - 2px);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        /* Bookings Table */
+        .bookings-container {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid hsl(var(--border));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: hsl(var(--muted));
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: hsl(var(--foreground));
+            border-bottom: 1px solid hsl(var(--border));
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid hsl(var(--border));
+            font-size: 0.875rem;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: hsl(var(--accent));
+        }
+
+        /* Booking Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-confirmed {
+            background: hsl(var(--success));
+            color: white;
+        }
+
+        .badge-pending {
+            background: hsl(var(--warning));
+            color: white;
+        }
+
+        .badge-cancelled {
+            background: hsl(var(--danger));
+            color: white;
+        }
+
+        .badge-waitlist {
+            background: hsl(var(--info));
+            color: white;
+        }
+
+        /* Member Info */
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .member-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: hsl(var(--muted));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            font-size: 0.875rem;
+        }
+
+        .member-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        .member-email {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Class Info */
+        .class-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .class-name {
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        .class-details {
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+        }
+
+        .action-btn:hover {
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
+        }
+
+        .action-btn.approve {
+            border-color: hsl(var(--success));
+        }
+
+        .action-btn.approve:hover {
+            background: hsl(var(--success));
+            color: white;
+        }
+
+        .action-btn.reject {
+            border-color: hsl(var(--danger));
+        }
+
+        .action-btn.reject:hover {
+            background: hsl(var(--danger));
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .table-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .member-avatar {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .navbar, .filters-section, .table-actions, .action-buttons {
+                display: none;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .bookings-container {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="group-class.html" class="nav-brand">
+                <img src="https://soulbox.id/wp-content/themes/soulbox/assets/images/logo-soulbox.png" alt="Soulbox" style="width: 120px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="display: none; font-weight: 600; font-size: 1.125rem; color: hsl(var(--foreground));">Soulbox</div>
+            </a>
+            <div class="nav-actions">
+                <a href="group-class.html" class="btn btn-icon">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <button class="btn btn-icon">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Admin Header -->
+        <div class="admin-header">
+            <h1 class="admin-title">
+                <i class="fas fa-calendar-check"></i>
+                Bookings Management
+            </h1>
+            <p class="admin-subtitle">Manage and monitor all class bookings in real-time</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Today's Bookings</div>
+                <div class="stat-value">47</div>
+                <div class="stat-change positive">↑ 12% from yesterday</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending Approval</div>
+                <div class="stat-value">8</div>
+                <div class="stat-change">Awaiting confirmation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Waitlist</div>
+                <div class="stat-value">15</div>
+                <div class="stat-change">Across 5 classes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Revenue Today</div>
+                <div class="stat-value">2.35M</div>
+                <div class="stat-change positive">↑ 8% from average</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Search</label>
+                    <input type="text" class="filter-input" placeholder="Search by name, email, or class..." id="searchInput">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Date</label>
+                    <input type="date" class="filter-input" id="dateFilter" value="">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="pending">Pending</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="waitlist">Waitlist</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Class Type</label>
+                    <select class="filter-select" id="classFilter">
+                        <option value="">All Classes</option>
+                        <option value="bodycamp">BodyCamp</option>
+                        <option value="hyrox">Hyrox</option>
+                        <option value="rbt">RBT</option>
+                        <option value="trx">TRX</option>
+                        <option value="abs-core">Abs & Core</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="bookings-container">
+            <div class="table-header">
+                <h2 class="table-title">Recent Bookings</h2>
+                <div class="table-actions">
+                    <button class="btn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Booking
+                    </button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Member</th>
+                            <th>Class</th>
+                            <th>Date & Time</th>
+                            <th>Trainer</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock booking data
+        const mockBookings = [
+            {
+                id: 'BK-2024-001',
+                member: {
+                    name: 'Sarah Johnson',
+                    email: 'sarah.j@email.com',
+                    phone: '+62 812-3456-7890',
+                    avatar: 'SJ'
+                },
+                class: {
+                    name: 'BODYCAMP HYPERTROPHY',
+                    type: 'bodycamp',
+                    subtext: 'High-intensity strength training'
+                },
+                dateTime: '2024-11-27T07:00:00',
+                trainer: 'Aldi',
+                status: 'confirmed',
+                payment: 'Paid',
+                spots: 1,
+                totalPrice: 150000,
+                bookingDate: '2024-11-26T14:30:00'
+            },
+            {
+                id: 'BK-2024-002',
+                member: {
+                    name: 'Michael Chen',
+                    email: 'm.chen@email.com',
+                    phone: '+62 813-9876-5432',
+                    avatar: 'MC'
+                },
+                class: {
+                    name: 'HYROX',
+                    type: 'hyrox',
+                    subtext: 'Functional fitness competition'
+                },
+                dateTime: '2024-11-27T09:00:00',
+                trainer: 'Delpas',
+                status: 'confirmed',
+                payment: 'Paid',
+                spots: 1,
+                totalPrice: 180000,
+                bookingDate: '2024-11-25T16:45:00'
+            },
+            {
+                id: 'BK-2024-003',
+                member: {
+                    name: 'Amanda Santoso',
+                    email: 'amanda.s@email.com',
+                    phone: '+62 811-2345-6789',
+                    avatar: 'AS'
+                },
+                class: {
+                    name: 'RBT',
+                    type: 'rbt',
+                    subtext: 'Resistance Band Training'
+                },
+                dateTime: '2024-11-27T10:00:00',
+                trainer: 'Ian',
+                status: 'pending',
+                payment: 'Pending',
+                spots: 1,
+                totalPrice: 130000,
+                bookingDate: '2024-11-26T09:15:00'
+            },
+            {
+                id: 'BK-2024-004',
+                member: {
+                    name: 'David Lee',
+                    email: 'd.lee@email.com',
+                    phone: '+62 815-6789-0123',
+                    avatar: 'DL'
+                },
+                class: {
+                    name: 'BODYCAMP',
+                    type: 'bodycamp',
+                    subtext: 'Full body workout'
+                },
+                dateTime: '2024-11-27T17:00:00',
+                trainer: 'John',
+                status: 'waitlist',
+                payment: 'Paid',
+                spots: 1,
+                totalPrice: 120000,
+                bookingDate: '2024-11-26T11:20:00'
+            },
+            {
+                id: 'BK-2024-005',
+                member: {
+                    name: 'Jessica Park',
+                    email: 'j.park@email.com',
+                    phone: '+62 814-5678-9012',
+                    avatar: 'JP'
+                },
+                class: {
+                    name: 'TRX',
+                    type: 'trx',
+                    subtext: 'Total Resistance Exercise'
+                },
+                dateTime: '2024-11-27T18:00:00',
+                trainer: 'Ankie',
+                status: 'confirmed',
+                payment: 'Paid',
+                spots: 1,
+                totalPrice: 160000,
+                bookingDate: '2024-11-24T13:45:00'
+            },
+            {
+                id: 'BK-2024-006',
+                member: {
+                    name: 'Robert Wijaya',
+                    email: 'r.wijaya@email.com',
+                    phone: '+62 816-7890-1234',
+                    avatar: 'RW'
+                },
+                class: {
+                    name: 'ABS & CORE',
+                    type: 'abs-core',
+                    subtext: 'Core strengthening workout'
+                },
+                dateTime: '2024-11-27T19:00:00',
+                trainer: 'Delpas',
+                status: 'cancelled',
+                payment: 'Refunded',
+                spots: 1,
+                totalPrice: 100000,
+                bookingDate: '2024-11-25T10:30:00'
+            },
+            {
+                id: 'BK-2024-007',
+                member: {
+                    name: 'Lisa Anderson',
+                    email: 'l.anderson@email.com',
+                    phone: '+62 812-3456-7890',
+                    avatar: 'LA'
+                },
+                class: {
+                    name: 'BODYCAMP',
+                    type: 'bodycamp',
+                    subtext: 'Strength and conditioning'
+                },
+                dateTime: '2024-11-28T07:00:00',
+                trainer: 'Abas',
+                status: 'confirmed',
+                payment: 'Paid',
+                spots: 1,
+                totalPrice: 120000,
+                bookingDate: '2024-11-26T15:20:00'
+            },
+            {
+                id: 'BK-2024-008',
+                member: {
+                    name: 'Thomas Smith',
+                    email: 't.smith@email.com',
+                    phone: '+62 813-9876-5432',
+                    avatar: 'TS'
+                },
+                class: {
+                    name: 'HYROX',
+                    type: 'hyrox',
+                    subtext: 'Endurance and strength'
+                },
+                dateTime: '2024-11-28T09:00:00',
+                trainer: 'John',
+                status: 'pending',
+                payment: 'Pending',
+                spots: 1,
+                totalPrice: 180000,
+                bookingDate: '2024-11-27T08:45:00'
+            }
+        ];
+
+        // Function to format date and time
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            const dateStr = date.toLocaleDateString('en-ID', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            const timeStr = date.toLocaleTimeString('en-ID', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            return `${dateStr} • ${timeStr}`;
+        }
+
+        // Function to format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Function to get status badge HTML
+        function getStatusBadge(status) {
+            const badges = {
+                confirmed: '<span class="badge badge-confirmed"><i class="fas fa-check-circle"></i> Confirmed</span>',
+                pending: '<span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>',
+                cancelled: '<span class="badge badge-cancelled"><i class="fas fa-times-circle"></i> Cancelled</span>',
+                waitlist: '<span class="badge badge-waitlist"><i class="fas fa-users"></i> Waitlist</span>'
+            };
+            return badges[status] || status;
+        }
+
+        // Function to get payment status HTML
+        function getPaymentStatus(payment) {
+            const colors = {
+                'Paid': 'color: hsl(var(--success));',
+                'Pending': 'color: hsl(var(--warning));',
+                'Refunded': 'color: hsl(var(--info));'
+            };
+            return `<span style="${colors[payment] || 'color: hsl(var(--muted-foreground));'}">${payment}</span>`;
+        }
+
+        // Function to render table rows
+        function renderBookings(bookings) {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = '';
+
+            bookings.forEach(booking => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">${booking.id}</td>
+                    <td>
+                        <div class="member-info">
+                            <div class="member-avatar">${booking.member.avatar}</div>
+                            <div class="member-details">
+                                <div class="member-name">${booking.member.name}</div>
+                                <div class="member-email">${booking.member.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="class-info">
+                            <div class="class-name">${booking.class.name}</div>
+                            <div class="class-details">${booking.class.subtext}</div>
+                        </div>
+                    </td>
+                    <td>${formatDateTime(booking.dateTime)}</td>
+                    <td>${booking.trainer}</td>
+                    <td>${getStatusBadge(booking.status)}</td>
+                    <td>${getPaymentStatus(booking.payment)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="viewBooking('${booking.id}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${booking.status === 'pending' ? `
+                                <button class="action-btn approve" onclick="approveBooking('${booking.id}')" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="action-btn reject" onclick="rejectBooking('${booking.id}')" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Function to filter bookings
+        function filterBookings() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const classFilter = document.getElementById('classFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            let filteredBookings = mockBookings.filter(booking => {
+                const matchesSearch = !searchTerm ||
+                    booking.member.name.toLowerCase().includes(searchTerm) ||
+                    booking.member.email.toLowerCase().includes(searchTerm) ||
+                    booking.class.name.toLowerCase().includes(searchTerm) ||
+                    booking.trainer.toLowerCase().includes(searchTerm) ||
+                    booking.id.toLowerCase().includes(searchTerm);
+
+                const matchesStatus = !statusFilter || booking.status === statusFilter;
+                const matchesClass = !classFilter || booking.class.type === classFilter;
+
+                let matchesDate = true;
+                if (dateFilter) {
+                    const bookingDate = new Date(booking.dateTime).toISOString().split('T')[0];
+                    matchesDate = bookingDate === dateFilter;
+                }
+
+                return matchesSearch && matchesStatus && matchesClass && matchesDate;
+            });
+
+            renderBookings(filteredBookings);
+        }
+
+        // Event handlers
+        function viewBooking(bookingId) {
+            const booking = mockBookings.find(b => b.id === bookingId);
+            alert(`Booking Details:\n\nID: ${booking.id}\nMember: ${booking.member.name}\nClass: ${booking.class.name}\nDate: ${formatDateTime(booking.dateTime)}\nStatus: ${booking.status}\nPayment: ${booking.payment}\nPrice: ${formatCurrency(booking.totalPrice)}`);
+        }
+
+        function approveBooking(bookingId) {
+            const booking = mockBookings.find(b => b.id === bookingId);
+            if (confirm(`Approve booking for ${booking.member.name} in ${booking.class.name}?`)) {
+                booking.status = 'confirmed';
+                booking.payment = 'Paid';
+                filterBookings();
+                alert('Booking approved successfully!');
+            }
+        }
+
+        function rejectBooking(bookingId) {
+            const booking = mockBookings.find(b => b.id === bookingId);
+            if (confirm(`Reject booking for ${booking.member.name} in ${booking.class.name}?`)) {
+                booking.status = 'cancelled';
+                booking.payment = 'Refunded';
+                filterBookings();
+                alert('Booking rejected and refunded.');
+            }
+        }
+
+        // Set today's date as default
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateFilter').value = today;
+
+            // Add event listeners
+            document.getElementById('searchInput').addEventListener('input', filterBookings);
+            document.getElementById('dateFilter').addEventListener('change', filterBookings);
+            document.getElementById('statusFilter').addEventListener('change', filterBookings);
+            document.getElementById('classFilter').addEventListener('change', filterBookings);
+
+            // Initial render
+            filterBookings();
+        });
+    </script>
+</body>
+</html>
