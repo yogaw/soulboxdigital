@@ -420,39 +420,6 @@
             animation: pulse-glow 2s infinite;
         }
 
-    
-        /* Subtle shimmer effect */
-        @keyframes shimmer {
-            0% {
-                background-position: -1000px 0;
-            }
-            100% {
-                background-position: 1000px 0;
-            }
-        }
-
-        .timeline-item:nth-child(4) .timeline-content::before {
-            background: linear-gradient(135deg,
-                rgba(0,0,0,0.9) 0%,
-                rgba(0,0,0,0.8) 30%,
-                rgba(255,255,255,0.05) 50%,
-                rgba(0,0,0,0.8) 70%,
-                rgba(0,0,0,0.9) 100%),
-                linear-gradient(90deg,
-                    transparent 0%,
-                    rgba(255,255,255,0.03) 50%,
-                    transparent 100%);
-            background-size: 2000px 100%, 2000px 100%;
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        /* Special hover state for the brand ecosystem card */
-        .timeline-item:nth-child(4) .timeline-content:hover {
-            border-color: hsl(var(--foreground));
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
-            transform: translateX(8px) scale(1.02);
-        }
-
         @keyframes pulse-glow {
             0%, 100% {
                 box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
@@ -916,11 +883,11 @@
                             </div>
                             <div class="feature">
                                 <div class="feature-icon">
-                                    <i class="fas fa-calendar-check"></i>
+                                    <i class="fas fa-chart-pie"></i>
                                 </div>
                                 <div class="feature-content">
-                                    <h4>Booking Module</h4>
-                                    <p>Seamless class booking and schedule management system</p>
+                                    <h4>Behavioral Analytics <span class="coming-soon-tag prominent">Coming Soon</span></h4>
+                                    <p>Capture fitness goals, preferences, and lifestyle patterns</p>
                                 </div>
                             </div>
                         </div>
@@ -985,11 +952,11 @@
                         <div class="timeline-features">
                             <div class="feature">
                                 <div class="feature-icon">
-                                    <i class="fas fa-user-tie"></i>
+                                    <i class="fas fa-chart-pie"></i>
                                 </div>
                                 <div class="feature-content">
-                                    <h4>Trainer Menu</h4>
-                                    <p>Complete trainer management system with class assignment and performance tracking</p>
+                                    <h4>Behavioral Analytics <span class="coming-soon-tag prominent">Coming Soon</span></h4>
+                                    <p>Capture in-class performance patterns, movement efficiency, and engagement metrics</p>
                                 </div>
                             </div>
                             <div class="feature">
@@ -1050,7 +1017,7 @@
                                 </div>
                                 <div class="feature-content">
                                     <h4>Ecosystem Gateway</h4>
-                                    <p>Integrated platform featuring Soulbox Recharge and other Soulbox's Sisters</p>
+                                    <p>Integrating platform featuring Soulbox Recharge and other Soulbox's Sisters</p>
                                 </div>
                             </div>
                         </div>
@@ -1215,7 +1182,7 @@
             <div class="cta-cards">
                 <div class="cta-card">
                     <div class="cta-card-image">
-                        <img src="https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/10553eec-2abe-4002-b5cc-1732a5c7a09c/2643acf2f200aa7e89192fb13056236c.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1764217957&Signature=VuS6j6IHp7KkTA4QkB0fCPAO4D8=" alt="Energizing Group Classes" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&crop=entropy&auto=format" alt="Group Fitness Class" loading="lazy">
                         <div class="image-overlay"></div>
                     </div>
                     <div class="cta-card-content">
@@ -1228,7 +1195,7 @@
 
                 <div class="cta-card">
                     <div class="cta-card-image">
-                        <img src="https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/10553eec-2abe-4002-b5cc-1732a5c7a09c/b104a7f22cb1c14b8d608b0f80fe67ee.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1764217957&Signature=NflC7VV/xwyEELWPdFIAw2gq6DM=" alt="Personalized Training" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999176f?w=600&h=400&fit=crop&crop=entropy&auto=format" alt="Personal Training Session" loading="lazy">
                         <div class="image-overlay"></div>
                     </div>
                     <div class="cta-card-content">
@@ -1241,7 +1208,7 @@
 
                 <div class="cta-card">
                     <div class="cta-card-image">
-                        <img src="https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/10553eec-2abe-4002-b5cc-1732a5c7a09c/d7595a24b55f95e6700168aaaccb6db3.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1764217957&Signature=W6nJhN31HS/94Fg2Q1qv8Dq7v44=" alt="Recovery & Wellness" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1506629905359-35798857c519?w=600&h=400&fit=crop&crop=entropy&auto=format" alt="Recovery & Wellness" loading="lazy">
                         <div class="image-overlay"></div>
                     </div>
                     <div class="cta-card-content">
@@ -1252,7 +1219,6 @@
                     </div>
                 </div>
             </div>
-            <a href="collaboration.html" class="btn btn-primary" style="margin-top: 3rem;">Let's Collaborate</a>
         </div>
     </section>
 
@@ -1299,7 +1265,11 @@
             });
         });
 
-        // CTA button interaction removed - now redirects directly via href
+        // CTA button interaction
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            // In a real app, this would open a contact form or redirect
+            alert('Thank you for your interest! Our partnership team will contact you within 24 hours.');
+        });
 
         // Navigation back button
         document.querySelector('.btn-icon').addEventListener('click', function() {

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soulbox Platform – Workshop Summary</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Theme -->
+  <link rel="stylesheet" href="soulbox_workshop_theme.css">
+
+  <style>
+    /* PAGE LAYOUT - A4 Print Style */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      max-height: 297mm;
+      padding: 20mm 18mm;
+      margin: 0 auto;
+      background: var(--background);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 2rem;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+      }
+      .page {
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-after: always;
+        min-height: 297mm !important;
+      }
+    }
+
+    /* SCREEN VIEW */
+    body {
+      background: var(--muted);
+      padding: 2rem 0;
+    }
+
+    /* COVER PAGE */
+    .cover-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .cover-tagline {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .cover-title {
+      font-size: 4rem;
+      line-height: 1.1;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .cover-subtitle {
+      font-family: var(--font-sans);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--muted-foreground);
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: 4rem !important;
+    }
+
+    .cover-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      margin-bottom: 3rem;
+    }
+
+    .cover-summary {
+      max-width: 480px;
+      padding: 2rem;
+      background: var(--card);
+      border-left: 3px solid var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cover-summary p {
+      font-size: 0.9375rem;
+      color: var(--card-foreground);
+    }
+
+    /* SECTION HEADER */
+    .section-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-number {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .section-subtitle {
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      color: var(--muted-foreground);
+    }
+
+    /* TWO COLUMN LAYOUT */
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    /* VISION CARD */
+    .vision-card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+    }
+
+    .vision-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem !important;
+      font-family: var(--font-sans);
+    }
+
+    .vision-list {
+      list-style: none;
+      padding: 0 !important;
+    }
+
+    .vision-list li {
+      padding: 0.75rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0 !important;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vision-list li:last-child {
+      border-bottom: none;
+    }
+
+    .vision-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* PAIN POINT CARD */
+    .pain-card {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border-left: 3px solid var(--destructive);
+    }
+
+    .pain-list {
+      list-style: none;
+      padding: 0 !important;
+    }
+
+    .pain-list li {
+      padding: 0.75rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0 !important;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pain-list li:last-child {
+      border-bottom: none;
+    }
+
+    .pain-list li::before {
+      content: '⚠';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+    }
+
+    /* ROADMAP VISUAL */
+    .roadmap-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 3rem;
+      gap: 1.5rem;
+    }
+
+    .roadmap-phase {
+      flex: 1;
+      text-align: center;
+    }
+
+    .roadmap-badge {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .roadmap-phase:nth-child(1) .roadmap-badge { background: var(--primary); color: var(--primary-foreground); }
+    .roadmap-phase:nth-child(2) .roadmap-badge { background: var(--secondary); color: var(--secondary-foreground); }
+    .roadmap-phase:nth-child(3) .roadmap-badge { background: var(--muted); color: var(--muted-foreground); }
+    .roadmap-phase:nth-child(4) .roadmap-badge { background: var(--border); color: var(--foreground); }
+
+    .roadmap-label {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .roadmap-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .roadmap-desc {
+      font-size: 0.8125rem;
+      color: var(--muted-foreground);
+      line-height: 1.5;
+    }
+
+    .roadmap-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      font-size: 1.25rem;
+    }
+
+    /* PHASE 1 SCOPE GRID */
+    .scope-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .scope-card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .scope-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .scope-badge {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 600;
+    }
+
+    .scope-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+    }
+
+    .scope-list {
+      list-style: none;
+      padding: 0 !important;
+    }
+
+    .scope-list li {
+      font-size: 0.8125rem;
+      padding: 0.5rem 0;
+      padding-left: 1rem;
+      position: relative;
+      margin-bottom: 0 !important;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scope-list li:last-child {
+      border-bottom: none;
+    }
+
+    .scope-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--muted-foreground);
+    }
+
+    /* IN/OUT SECTION */
+    .in-out-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .in-out-col {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .in-out-col.in {
+      border-top: 3px solid var(--accent);
+    }
+
+    .in-out-col.out {
+      border-top: 3px solid var(--muted-foreground);
+      opacity: 0.7;
+    }
+
+    .in-out-title {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .in-out-list {
+      list-style: none;
+      padding: 0 !important;
+    }
+
+    .in-out-list li {
+      padding: 0.75rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0 !important;
+    }
+
+    .in-out-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .in-out-col.in .in-out-list li::before {
+      background: var(--accent);
+    }
+
+    .in-out-col.out .in-out-list li::before {
+      background: var(--muted-foreground);
+    }
+
+    /* NEXT STEPS */
+    .next-steps {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .next-steps-title {
+      color: var(--primary-foreground) !important;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem !important;
+      font-family: var(--font-sans);
+    }
+
+    .next-steps-list {
+      list-style: none;
+      padding: 0 !important;
+    }
+
+    .next-steps-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0 !important;
+    }
+
+    .next-steps-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      font-weight: 600;
+    }
+
+    .decision-box {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      margin-top: 1.5rem;
+    }
+
+    .decision-title {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1rem !important;
+    }
+
+    .decision-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+    }
+
+    .decision-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    /* FOOTER */
+    .page-footer {
+      position: absolute;
+      bottom: 18mm;
+      left: 18mm;
+      right: 18mm;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--muted-foreground);
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .page {
+        width: 100%;
+        padding: 1.5rem;
+        min-height: auto;
+        max-height: none;
+      }
+
+      .two-column,
+      .scope-grid,
+      .in-out-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .roadmap-container {
+        flex-direction: column;
+      }
+
+      .roadmap-arrow {
+        transform: rotate(90deg);
+      }
+
+      .cover-title {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: COVER -->
+  <div class="page cover-page">
+    <div>
+      <div class="cover-tagline">Workshop Summary</div>
+      <h1 class="cover-title">Soulbox Platform<br>From Vision to Phase 1<br>Execution</h1>
+      <p class="cover-subtitle">Menyamakan visi, mengidentifikasi pain point, dan menyepakati fokus Phase 1 platform</p>
+
+      <div class="cover-meta">
+        Tanggal Workshop: January 2026<br>
+        Peserta: Owner, Operations, CS, Coach Representative
+      </div>
+
+      <div class="cover-summary">
+        <p>Workshop ini bertujuan menyamakan visi Soulbox ke depan, mengidentifikasi pain point utama operasional hari ini, dan menyepakati fokus Phase 1 platform agar operasional lebih rapi, tenang, dan scalable.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: VISION & PAIN POINTS -->
+  <div class="page">
+    <header class="section-header">
+      <div class="section-number">01</div>
+      <h2 class="section-title">Shared Vision & Key Pain Points</h2>
+      <p class="section-subtitle">Keputusan Phase 1 berangkat dari realita operasional hari ini</p>
+    </header>
+
+    <div class="two-column">
+      <!-- SHARED VISION -->
+      <div class="vision-card">
+        <h3 class="vision-title">Soulbox Ke Depan Ingin Dikenal Sebagai:</h3>
+        <ul class="vision-list">
+          <li><strong>Performance-focused & intentional</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Setiap program dan fasilitas dirancang dengan tujuan jelas</span></li>
+          <li><strong>Community-driven</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Membangun ekosistem yang saling terhubung dan mendukung</span></li>
+          <li><strong>Coach & member experience oriented</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Prioritas pada kualitas pengalaman untuk semua stakeholder</span></li>
+          <li><strong>Premium but human</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Fasilitas premium dengan sentuhan personal dan hangat</span></li>
+        </ul>
+      </div>
+
+      <!-- KEY PAIN POINTS -->
+      <div class="pain-card">
+        <h3 class="vision-title">Pain Point Operasional Utama Hari Ini:</h3>
+        <ul class="pain-list">
+          <li><strong>Booking & cancel sering tidak konsisten</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Last minute cancel, schedule bentrok, waitlist tidak terkelola</span></li>
+          <li><strong>CS jadi bottleneck informasi</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Chat berulang, info beda-beda antar tim</span></li>
+          <li><strong>Data tersebar & manual</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Payment, dealpos, pivot data di tempat berbeda, struktur tidak seragam</span></li>
+          <li><strong>Jadwal & perubahan kelas rawan miskomunikasi</strong><br><span style="font-size: 0.8125rem; color: var(--muted-foreground);">Coach assignment tidak transparan, member sering complain</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <span>Soulbox Platform – Workshop Summary</span>
+      <span>Page 2 of 6</span>
+    </footer>
+  </div>
+
+  <!-- PAGE 3: ROADMAP -->
+  <div class="page">
+    <header class="section-header">
+      <div class="section-number">02</div>
+      <h2 class="section-title">Phased Platform Roadmap</h2>
+      <p class="section-subtitle">Perjalanan menuju platform yang scalable—satu fase dalam satu waktu</p>
+    </header>
+
+    <div class="roadmap-container">
+      <div class="roadmap-phase">
+        <div class="roadmap-badge">1</div>
+        <div class="roadmap-label">Phase 1</div>
+        <h4 class="roadmap-name">RAPIH</h4>
+        <p class="roadmap-desc">Operasional tenang. Booking jelas, data tidak tercecer, aturan main tegas.</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-phase">
+        <div class="roadmap-badge">2</div>
+        <div class="roadmap-label">Phase 2</div>
+        <h4 class="roadmap-name">TERUKUR</h4>
+        <p class="roadmap-desc">Keputusan berbasis data. Semua aktivitas terbaca, owner & manager tahu apa yang terjadi.</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-phase">
+        <div class="roadmap-badge">3</div>
+        <div class="roadmap-label">Phase 3</div>
+        <h4 class="roadmap-name">PINTAR</h4>
+        <p class="roadmap-desc">Personalisasi & optimasi. Sistem bantu ambil keputusan, antisipatif bukan reaktif.</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-phase">
+        <div class="roadmap-badge">4</div>
+        <div class="roadmap-label">Phase 4</div>
+        <h4 class="roadmap-name">BERDAYA</h4>
+        <p class="roadmap-desc">Ecosystem & scale. Value lebih tinggi untuk brand & community, siap kolaborasi.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 4rem; padding: 2rem; background: var(--muted); border-radius: var(--radius-lg);">
+      <h4 style="font-size: 1rem; margin-bottom: 1rem !important;">Kenapa Bertahap?</h4>
+      <p style="font-size: 0.9375rem; color: var(--muted-foreground);">Mem-build platform sekaligus berisiko tinggi. Dengan pendekatan phased, kita bisa:</p>
+      <ul style="margin-top: 1rem; font-size: 0.9375rem; color: var(--muted-foreground);">
+        <li>Fokus pada stabilitas operasional dulu (Phase 1)</li>
+        <li>Belajar dari realita penggunaan sebelum scale up</li>
+        <li>Investasi teknologi yang tepat di waktu yang tepat</li>
+        <li>Mengurangi risk of failure dan perubahan besar di tengah jalan</li>
+      </ul>
+    </div>
+
+    <footer class="page-footer">
+      <span>Soulbox Platform – Workshop Summary</span>
+      <span>Page 3 of 6</span>
+    </footer>
+  </div>
+
+  <!-- PAGE 4: PHASE 1 SCOPE (PART 1) -->
+  <div class="page">
+    <header class="section-header">
+      <div class="section-number">03</div>
+      <h2 class="section-title">Phase 1 – Agreed Scope</h2>
+      <p class="section-subtitle">Fokus Phase 1: Membuat operasional rapi, tenang, dan scalable</p>
+    </header>
+
+    <div class="scope-grid">
+      <!-- A. BOOKING & SCHEDULE -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <div class="scope-badge">A</div>
+          <h4 class="scope-title">Booking & Schedule</h4>
+        </div>
+        <ul class="scope-list">
+          <li>Booking & slot real-time dengan cek kapasitas otomatis</li>
+          <li>Aturan cancel & waiting list jelas dan transparan</li>
+          <li>Reminder otomatis (H-12 jam, H-2 jam, perubahan kelas)</li>
+          <li>CS hanya handle exception, bukan transaksi rutin</li>
+          <li>Status kelas: available, full, waitlist, cancelled</li>
+        </ul>
+      </div>
+
+      <!-- B. MEMBER & BASIC DATA -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <div class="scope-badge">B</div>
+          <h4 class="scope-title">Member & Basic Data</h4>
+        </div>
+        <ul class="scope-list">
+          <li>Profil member & status paket jelas dan terpusat</li>
+          <li>Eligibility booking otomatis berdasarkan paket aktif</li>
+          <li>Riwayat kelas basic (hadir, cancel, no-show)</li>
+          <li>Satu sumber data bersama untuk semua tim</li>
+          <li>Status member: aktif, non-aktif, cuti, dormant</li>
+        </ul>
+      </div>
+
+      <!-- C. COACH & CLASS VISIBILITY -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <div class="scope-badge">C</div>
+          <h4 class="scope-title">Coach & Class Visibility</h4>
+        </div>
+        <ul class="scope-list">
+          <li>Jadwal & kapasitas kelas jelas untuk semua pihak</li>
+          <li>Coach assignment transparan, update real-time</li>
+          <li>Status perubahan kelas tercatat dan terkomunikasi</li>
+          <li>Semua pihak lihat info yang sama (single source)</li>
+          <li>Coach bisa akses jadwal & update perubahan</li>
+        </ul>
+      </div>
+
+      <!-- D. PAYMENT & BASIC TRACKING -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <div class="scope-badge">D</div>
+          <h4 class="scope-title">Payment & Basic Tracking</h4>
+        </div>
+        <ul class="scope-list">
+          <li>Status payment & paket jelas dan terhubung</li>
+          <li>Booking otomatis terblokir jika paket expired/habis</li>
+          <li>Reminder masa berlaku paket</li>
+          <li>Basic tracking untuk CS & management</li>
+          <li>Bukan full accounting system (boundary jelas)</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <span>Soulbox Platform – Workshop Summary</span>
+      <span>Page 4 of 6</span>
+    </footer>
+  </div>
+
+  <!-- PAGE 5: WHAT'S IN / WHAT'S OUT -->
+  <div class="page">
+    <header class="section-header">
+      <div class="section-number">04</div>
+      <h2 class="section-title">What's In vs What's Out</h2>
+      <p class="section-subtitle">Menjaga scope tetap fokus dan mencegah ekspektasi yang salah</p>
+    </header>
+
+    <div class="in-out-grid">
+      <!-- INCLUDED -->
+      <div class="in-out-col in">
+        <h3 class="in-out-title">Included in Phase 1</h3>
+        <ul class="in-out-list">
+          <li><strong>Booking & ops stability</strong><br>Real-time booking, clear rules, automated reminders, CS exception handling only</li>
+          <li><strong>Basic visibility & reporting</strong>Member profile, package status, class history, basic tracking</li>
+          <li><strong>Clear rules & boundaries</strong>Cancel policy, no-show rules, waiting list automation, eligibility checks</li>
+          <li><strong>Single source of truth</strong>Satu sistem untuk booking, member data, coach schedule, payment status</li>
+          <li><strong>Basic notifications</strong>Email/WhatsApp confirmations & reminders (manual/semi-automated)</li>
+        </ul>
+      </div>
+
+      <!-- NOT INCLUDED -->
+      <div class="in-out-col out">
+        <h3 class="in-out-title">Not Included (Next Phases)</h3>
+        <ul class="in-out-list">
+          <li><strong>Advanced analytics</strong>Deep insights, predictive analytics, cohort analysis, retention modeling</li>
+          <li><strong>AI / automation</strong>Smart scheduling, personalized recommendations, auto-upsell, chatbot</li>
+          <li><strong>Performance scoring</strong>Coach KPI tracking, member progress scoring, achievement system</li>
+          <li><strong>Complex finance features</strong>Full accounting, auto-reconciliation, multi-currency, advanced reporting</li>
+          <li><strong>Community features</strong>Social features, events management, community engagement tools</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem; padding: 1.5rem; background: var(--muted); border-radius: var(--radius-lg); border-left: 3px solid var(--accent);">
+      <p style="font-size: 0.875rem;"><strong>Kenapa boundary ini penting?</strong> Phase 1 fokus pada stabilitas operasional. Fitur lanjutan akan ditambahkan berdasarkan learnings dari Phase 1 dan sesuai prioritas bisnis.</p>
+    </div>
+
+    <footer class="page-footer">
+      <span>Soulbox Platform – Workshop Summary</span>
+      <span>Page 5 of 6</span>
+    </footer>
+  </div>
+
+  <!-- PAGE 6: NEXT STEPS -->
+  <div class="page">
+    <header class="section-header">
+      <div class="section-number">05</div>
+      <h2 class="section-title">Next Steps & Owner Decision Point</h2>
+      <p class="section-subtitle">Langkah konkret untuk memulai implementasi Phase 1</p>
+    </header>
+
+    <div class="next-steps">
+      <h3 class="next-steps-title">Immediate Next Steps (Proposed)</h3>
+      <ul class="next-steps-list">
+        <li>Final confirmation Phase 1 scope dengan tim internal</li>
+        <li>Translate Phase 1 requirements ke solution design & estimation</li>
+        <li>Alignment on timeline & development approach (waterfall vs agile hybrid)</li>
+        <li>Define success metrics & KPI untuk Phase 1</li>
+      </ul>
+    </div>
+
+    <div class="decision-box">
+      <h4 class="decision-title">Decision Needed from Owner</h4>
+      <div class="decision-item">
+        <div class="decision-checkbox"></div>
+        <span>Approve Phase 1 scope seperti yang terdokumentasi di sini</span>
+      </div>
+      <div class="decision-item">
+        <div class="decision-checkbox"></div>
+        <span>Confirm priority apakah perlu penyesuaian urutan modul</span>
+      </div>
+      <div class="decision-item">
+        <div class="decision-checkbox"></div>
+        <span>Confirm timeline target untuk go-live Phase 1</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+      <h4 style="font-size: 1rem; margin-bottom: 1rem !important; font-family: var(--font-sans);">Estimate Timeline (Rough)</h4>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+        <div style="padding: 1rem; background: var(--card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+          <div style="font-family: var(--font-mono); font-size: 0.625rem; color: var(--muted-foreground); margin-bottom: 0.5rem;">BULAN 1-2</div>
+          <p style="font-size: 0.875rem; font-weight: 500;">Solution Design & Development Setup</p>
+        </div>
+        <div style="padding: 1rem; background: var(--card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+          <div style="font-family: var(--font-mono); font-size: 0.625rem; color: var(--muted-foreground); margin-bottom: 0.5rem;">BULAN 3-4</div>
+          <p style="font-size: 0.875rem; font-weight: 500;">Core Module Development (Booking, Member, Coach)</p>
+        </div>
+        <div style="padding: 1rem; background: var(--card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+          <div style="font-family: var(--font-mono); font-size: 0.625rem; color: var(--muted-foreground); margin-bottom: 0.5rem;">BULAN 5-6</div>
+          <p style="font-size: 0.875rem; font-weight: 500;">Testing, Training & Go-Live</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem; padding: 2rem; background: var(--card); border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-sm);">
+      <p style="font-family: var(--font-serif); font-size: 1.25rem;">"Rapi dulu, ukur kemudian, pintar setelahnya."</p>
+      <p style="font-size: 0.875rem; color: var(--muted-foreground); margin-top: 0.5rem;">— Pendekatan bertahap untuk Soulbox Platform</p>
+    </div>
+
+    <footer class="page-footer">
+      <span>Soulbox Platform – Workshop Summary</span>
+      <span>Page 6 of 6</span>
+    </footer>
+  </div>
+
+</body>
+</html>

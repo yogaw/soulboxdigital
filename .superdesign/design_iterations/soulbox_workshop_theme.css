@@ -1,0 +1,244 @@
+/**
+ * SOULBOX WORKSHOP DOCUMENT THEME
+ * Premium but Human - Editorial, Clean, Minimalist
+ *
+ * Color Philosophy:
+ * - Warm neutrals for approachability (not cold/techy)
+ * - Deep charcoal for premium feel (not harsh black)
+ * - Subtle terracotta accent for warmth & energy (wellness vibe)
+ * - Soft creams for warmth (not clinical white)
+ *
+ * Typography:
+ * - Editorial serif for headings (sophisticated, premium)
+ * - Clean sans-serif for body (readable, modern)
+ * - Generous letter-spacing for elegance
+ *
+ * Spacing & Scale:
+ * - Generous white space (editorial feel)
+ * - Subtle shadows (depth without clutter)
+ * - Rounded corners (approachable, human)
+ */
+
+:root {
+  /* BASE COLORS - Warm neutrals, not cold */
+  --background: oklch(0.98 0.005 85);
+  --foreground: oklch(0.25 0.015 70);
+
+  /* CARD & SURFACES */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.015 70);
+
+  /* PRIMARY - Deep charcoal, premium feel */
+  --primary: oklch(0.28 0.018 70);
+  --primary-foreground: oklch(0.99 0.005 85);
+
+  /* SECONDARY - Warm gray */
+  --secondary: oklch(0.94 0.008 75);
+  --secondary-foreground: oklch(0.28 0.018 70);
+
+  /* MUTED - Soft beige */
+  --muted: oklch(0.96 0.008 80);
+  --muted-foreground: oklch(0.50 0.012 70);
+
+  /* ACCENT - Terracotta warmth (wellness energy) */
+  --accent: oklch(0.65 0.12 45);
+  --accent-foreground: oklch(0.99 0 0);
+
+  /* DESTRUCTIVE - Soft red */
+  --destructive: oklch(0.55 0.20 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  /* BORDERS & INPUTS - Warm gray */
+  --border: oklch(0.90 0.008 75);
+  --input: oklch(0.90 0.008 75);
+
+  /* RING - Focus states */
+  --ring: oklch(0.65 0.12 45);
+
+  /* CHART COLORS - Muted, sophisticated palette */
+  --chart-1: oklch(0.65 0.12 45);
+  --chart-2: oklch(0.55 0.10 70);
+  --chart-3: oklch(0.70 0.08 50);
+  --chart-4: oklch(0.50 0.08 75);
+  --chart-5: oklch(0.60 0.10 40);
+
+  /* SIDEBAR */
+  --sidebar: oklch(0.97 0.005 85);
+  --sidebar-foreground: oklch(0.25 0.015 70);
+  --sidebar-primary: oklch(0.28 0.018 70);
+  --sidebar-primary-foreground: oklch(0.99 0.005 85);
+  --sidebar-accent: oklch(0.65 0.12 45);
+  --sidebar-accent-foreground: oklch(0.99 0 0);
+  --sidebar-border: oklch(0.90 0.008 75);
+  --sidebar-ring: oklch(0.65 0.12 45);
+
+  /* TYPOGRAPHY - Editorial feel */
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* SPACING - Generous */
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* SHADOWS - Subtle, editorial */
+  --shadow-2xs: 0 1px 2px 0 hsl(70 10% 10% / 0.03);
+  --shadow-xs: 0 1px 3px 0 hsl(70 10% 10% / 0.05);
+  --shadow-sm: 0 2px 4px -1px hsl(70 10% 10% / 0.06), 0 1px 2px -1px hsl(70 10% 10% / 0.04);
+  --shadow: 0 4px 6px -1px hsl(70 10% 10% / 0.08), 0 2px 4px -2px hsl(70 10% 10% / 0.04);
+  --shadow-md: 0 6px 12px -2px hsl(70 10% 10% / 0.10), 0 3px 6px -3px hsl(70 10% 10% / 0.05);
+  --shadow-lg: 0 12px 24px -4px hsl(70 10% 10% / 0.10), 0 4px 8px -4px hsl(70 10% 10% / 0.04);
+  --shadow-xl: 0 20px 40px -8px hsl(70 10% 10% / 0.10), 0 8px 12px -6px hsl(70 10% 10% / 0.04);
+  --shadow-2xl: 0 32px 64px -8px hsl(70 10% 10% / 0.12);
+
+  /* TRACKING - Generous for editorial feel */
+  --tracking-normal: 0.01em;
+  --tracking-tight: -0.01em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* SPACING SCALE */
+  --spacing: 0.5rem;
+}
+
+/* DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.20 0.015 70);
+    --foreground: oklch(0.95 0.005 85);
+    --card: oklch(0.25 0.015 70);
+    --card-foreground: oklch(0.95 0.005 85);
+    --primary: oklch(0.70 0.08 45);
+    --primary-foreground: oklch(0.20 0.015 70);
+    --secondary: oklch(0.30 0.015 70);
+    --secondary-foreground: oklch(0.95 0.005 85);
+    --muted: oklch(0.30 0.015 70);
+    --muted-foreground: oklch(0.65 0.01 70);
+    --accent: oklch(0.70 0.12 45);
+    --accent-foreground: oklch(0.99 0 0);
+    --destructive: oklch(0.60 0.22 25);
+    --destructive-foreground: oklch(0.99 0 0);
+    --border: oklch(0.35 0.015 70);
+    --input: oklch(0.35 0.015 70);
+    --ring: oklch(0.70 0.12 45);
+    --sidebar: oklch(0.22 0.015 70);
+    --sidebar-foreground: oklch(0.95 0.005 85);
+    --sidebar-primary: oklch(0.70 0.08 45);
+    --sidebar-primary-foreground: oklch(0.20 0.015 70);
+    --sidebar-accent: oklch(0.70 0.12 45);
+    --sidebar-accent-foreground: oklch(0.99 0 0);
+    --sidebar-border: oklch(0.35 0.015 70);
+    --sidebar-ring: oklch(0.70 0.12 45);
+  }
+}
+
+/* BASE STYLES - IMPORTANT! overrides */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans) !important;
+  line-height: 1.6 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* HEADINGS - Editorial serif */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif) !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: var(--tracking-tight) !important;
+  color: var(--foreground) !important;
+  margin: 0 !important;
+}
+
+h1 {
+  font-size: 2.75rem !important;
+  letter-spacing: -0.02em !important;
+}
+
+h2 {
+  font-size: 2rem !important;
+}
+
+h3 {
+  font-size: 1.5rem !important;
+}
+
+h4 {
+  font-size: 1.25rem !important;
+}
+
+/* PARAGRAPHS */
+p {
+  margin: 0 !important;
+  line-height: 1.7 !important;
+}
+
+/* LINKS */
+a {
+  color: var(--accent) !important;
+  text-decoration: none !important;
+  transition: opacity 0.2s ease !important;
+}
+
+a:hover {
+  opacity: 0.8 !important;
+}
+
+/* LISTS - Editorial spacing */
+ul, ol {
+  margin: 0 !important;
+  padding-left: 1.5rem !important;
+}
+
+li {
+  margin-bottom: 0.5rem !important;
+  line-height: 1.6 !important;
+}
+
+/* SELECTION */
+::selection {
+  background-color: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+/* SCROLLBAR - Minimal */
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground) !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground) !important;
+}
+
+/* PRINT STYLES */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
