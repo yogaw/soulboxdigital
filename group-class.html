@@ -615,6 +615,32 @@
             font-weight: 500;
         }
 
+        .class-spots.full {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .class-spots.low {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+        }
+
+        .waitlist-count {
+            background: rgba(156, 39, 176, 0.2);
+            color: #ce93d8;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .waitlist-count i {
+            font-size: 9px;
+        }
+
         .class-actions {
             display: flex;
             flex-direction: row;
@@ -654,6 +680,60 @@
         .quick-book-btn:active {
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .quick-book-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .waitlist-btn {
+            background: transparent;
+            border: 1px solid #ce93d8;
+            color: #ce93d8;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .waitlist-btn:hover,
+        .waitlist-btn:active {
+            background: rgba(156, 39, 176, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .waitlist-btn i {
+            font-size: 10px;
+        }
+
+        .class-item.class-full {
+            opacity: 0.85;
+        }
+
+        .class-item.class-full .class-name {
+            position: relative;
+        }
+
+        .class-item.class-full .class-name::after {
+            content: 'FULL';
+            font-size: 9px;
+            font-weight: 600;
+            color: #f44336;
+            margin-left: 8px;
+            padding: 2px 6px;
+            background: rgba(244, 67, 54, 0.15);
+            border-radius: 4px;
         }
 
         /* Empty States */
@@ -1169,6 +1249,119 @@
             margin-bottom: 20px;
         }
 
+        /* Waitlist Section Styles */
+        .waitlist-section {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.3) 0%, rgba(103, 58, 183, 0.3) 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(156, 39, 176, 0.4);
+        }
+
+        .waitlist-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(156, 39, 176, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #ce93d8;
+        }
+
+        .waitlist-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .waitlist-class-info {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .waitlist-class-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .waitlist-class-details {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+        }
+
+        .waitlist-class-details span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .waitlist-class-details i {
+            font-size: 11px;
+            color: #ce93d8;
+        }
+
+        .waitlist-position {
+            font-size: 14px;
+            color: #ce93d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .waitlist-note {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .waitlist-note i {
+            color: #ce93d8;
+        }
+
+        .waitlist-success {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.2) 0%, rgba(103, 58, 183, 0.2) 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(156, 39, 176, 0.3);
+        }
+
+        .waitlist-success h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .waitlist-success .success-details {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .waitlist-success .success-details p {
+            margin-bottom: 5px;
+        }
+
         /* Mobile-First Approach - These are the default styles now */
 
         /* Additional optimization for very small screens */
@@ -1472,6 +1665,47 @@
                         <button class="btn btn-secondary" id="bookAnotherClass">Book Another Class</button>
                     </div>
                 </div>
+
+                <!-- Waitlist Section -->
+                <div class="waitlist-section" id="waitlistSection" style="display: none;">
+                    <div class="waitlist-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>JOIN WAITLIST</h3>
+                    <div class="waitlist-class-info">
+                        <div class="waitlist-class-name" id="waitlistClassName">-</div>
+                        <div class="waitlist-class-details">
+                            <span id="waitlistClassTime"><i class="fas fa-clock"></i> -</span>
+                            <span id="waitlistClassInstructor"><i class="fas fa-user"></i> -</span>
+                        </div>
+                        <div class="waitlist-position" id="waitlistPosition">
+                            <i class="fas fa-users"></i> <span>3 people waiting</span>
+                        </div>
+                    </div>
+                    <div class="waitlist-note">
+                        <i class="fas fa-info-circle"></i>
+                        You'll be notified automatically when a spot becomes available
+                    </div>
+                    <div class="action-buttons" style="margin-top: 20px; justify-content: center;">
+                        <button class="btn btn-primary" id="confirmWaitlist">Join Waitlist</button>
+                        <button class="btn btn-secondary" id="cancelWaitlist">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Waitlist Success Message -->
+                <div class="waitlist-success" id="waitlistSuccess" style="display: none;">
+                    <div class="success-icon" style="background: rgba(156, 39, 176, 0.2); color: #ce93d8;">
+                        <i class="fas fa-list-check"></i>
+                    </div>
+                    <h3>YOU'RE ON THE LIST!</h3>
+                    <div class="success-details">
+                        <p>You've been added to the waitlist.</p>
+                        <p>We'll notify you when a spot opens up.</p>
+                    </div>
+                    <div class="action-buttons" style="margin-top: 20px; justify-content: center;">
+                        <button class="btn btn-secondary" id="waitlistDone">Done</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1520,17 +1754,17 @@
             const scheduleData = {
                 'Monday': [
                     { name: 'BODY CAMP', time: '07:00', instructor: 'John', spots: 5, type: 'strength' },
-                    { name: 'BODYCAMP', time: '07:00', instructor: 'Abas', spots: 3, type: 'strength' },
+                    { name: 'BODYCAMP', time: '07:00', instructor: 'Abas', spots: 0, waitlist: 3, type: 'strength' },
                     { name: 'BODYCAMP', time: '09:00', instructor: 'Abas', spots: 8, type: 'strength' },
-                    { name: 'BODYCAMP HYPERTROPHY', time: '17:00', instructor: 'Aldi', spots: 4, type: 'strength' },
+                    { name: 'BODYCAMP HYPERTROPHY', time: '17:00', instructor: 'Aldi', spots: 0, waitlist: 5, type: 'strength' },
                     { name: 'SOULBARRE', time: '18:30', instructor: 'Ankie', spots: 7, type: 'flexibility' },
-                    { name: 'TRX', subtext: 'TOTAL RESISTANCE EXERCISE', time: '19:30', instructor: 'John', spots: 2, type: 'strength' }
+                    { name: 'TRX', subtext: 'TOTAL RESISTANCE EXERCISE', time: '19:30', instructor: 'John', spots: 1, type: 'strength' }
                 ],
                 'Tuesday': [
                     { name: 'BODY CAMP', time: '07:00', instructor: 'Abas', spots: 4, type: 'strength' },
-                    { name: 'HIIT', subtext: 'HIGH INTENSITY INTERVAL TRAINING', time: '07:30', instructor: 'Ian', spots: 6, type: 'cardio' },
+                    { name: 'HIIT', subtext: 'HIGH INTENSITY INTERVAL TRAINING', time: '07:30', instructor: 'Ian', spots: 0, waitlist: 2, type: 'cardio' },
                     { name: 'STRONG NATION', time: '18:00', instructor: 'Ankie', spots: 3, type: 'cardio' },
-                    { name: 'YOGA FLOW', time: '19:00', instructor: 'Ankie', spots: 8, type: 'yoga' }
+                    { name: 'YOGA FLOW', time: '19:00', instructor: 'Ankie', spots: 0, waitlist: 1, type: 'yoga' }
                 ],
                 'Wednesday': [
                     { name: 'BODY CAMP', time: '07:00', instructor: 'John', spots: 5, type: 'strength' },
@@ -1698,8 +1932,14 @@
 
             // Generate class items HTML
             function generateClassItems(classes, day) {
-                return classes.map(classInfo => `
-                    <div class="class-item" data-day="${day}" data-time="${classInfo.time}" data-name="${classInfo.name}" data-instructor="${classInfo.instructor}" data-spots="${classInfo.spots}" data-type="${classInfo.type}">
+                return classes.map(classInfo => {
+                    const isFull = classInfo.spots === 0;
+                    const isLow = classInfo.spots > 0 && classInfo.spots <= 2;
+                    const spotsClass = isFull ? 'full' : isLow ? 'low' : '';
+                    const spotsText = isFull ? 'Full' : `${classInfo.spots} spot${classInfo.spots === 1 ? '' : 's'}`;
+
+                    return `
+                    <div class="class-item ${isFull ? 'class-full' : ''}" data-day="${day}" data-time="${classInfo.time}" data-name="${classInfo.name}" data-instructor="${classInfo.instructor}" data-spots="${classInfo.spots}" data-type="${classInfo.type}" data-waitlist="${classInfo.waitlist || 0}">
                         <div class="class-main-info">
                             <div class="class-header-row">
                                 <div class="class-name">${classInfo.name}</div>
@@ -1709,14 +1949,18 @@
                             <div class="class-meta">
                                 <div class="class-time"><i class="fas fa-clock"></i> ${classInfo.time}</div>
                                 <div class="class-instructor"><i class="fas fa-user"></i> ${classInfo.instructor}</div>
-                                <div class="class-spots">${classInfo.spots} spots</div>
+                                <div class="class-spots ${spotsClass}">${spotsText}</div>
+                                ${isFull && classInfo.waitlist ? `<div class="waitlist-count"><i class="fas fa-clock"></i> ${classInfo.waitlist} waiting</div>` : ''}
                             </div>
                         </div>
                         <div class="class-actions">
-                            <button class="quick-book-btn">Book Now</button>
+                            ${isFull
+                                ? `<button class="waitlist-btn"><i class="fas fa-list"></i> Join Waitlist</button>`
+                                : `<button class="quick-book-btn">Book Now</button>`
+                            }
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
             }
 
             // Generate empty state
@@ -1984,6 +2228,32 @@
                 }, 3000);
             }
 
+            // Show waitlist modal
+            function showWaitlistModal(classInfo) {
+                const waitlistSection = document.getElementById('waitlistSection');
+                const bookingSection = document.getElementById('bookingSection');
+                const successMessage = document.getElementById('successMessage');
+                const waitlistSuccess = document.getElementById('waitlistSuccess');
+
+                // Hide other sections
+                bookingSection.style.display = 'none';
+                bookingSection.classList.remove('visible');
+                successMessage.style.display = 'none';
+                waitlistSuccess.style.display = 'none';
+
+                // Update waitlist info
+                document.getElementById('waitlistClassName').textContent = classInfo.name;
+                document.getElementById('waitlistClassTime').innerHTML = `<i class="fas fa-clock"></i> ${classInfo.time}`;
+                document.getElementById('waitlistClassInstructor').innerHTML = `<i class="fas fa-user"></i> ${classInfo.instructor}`;
+                document.getElementById('waitlistPosition').innerHTML = `<i class="fas fa-users"></i> <span>${classInfo.waitlist} people waiting</span>`;
+
+                // Show waitlist section
+                waitlistSection.style.display = 'block';
+                setTimeout(() => {
+                    waitlistSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+
             // Initialize app
             function initializeApp() {
                 // Generate UI components
@@ -2031,6 +2301,21 @@
                                 processBooking();
                             }
                         }, 500);
+                    }
+
+                    // Handle waitlist button clicks
+                    if (e.target.closest('.waitlist-btn')) {
+                        const classItem = e.target.closest('.class-item');
+                        const classInfo = {
+                            name: classItem.dataset.name,
+                            time: classItem.dataset.time,
+                            instructor: classItem.dataset.instructor,
+                            waitlist: parseInt(classItem.dataset.waitlist) || 0,
+                            type: classItem.dataset.type
+                        };
+
+                        // Show waitlist confirmation modal
+                        showWaitlistModal(classInfo);
                     }
                 });
             }
@@ -2212,9 +2497,49 @@
                 window.location.href = 'packages.html';
             });
 
+            // Waitlist section listeners
+            const confirmWaitlist = document.getElementById('confirmWaitlist');
+            const cancelWaitlist = document.getElementById('cancelWaitlist');
+            const waitlistSection = document.getElementById('waitlistSection');
+            const waitlistSuccess = document.getElementById('waitlistSuccess');
+            const waitlistDone = document.getElementById('waitlistDone');
+
+            confirmWaitlist.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                const button = e.currentTarget;
+                addLoadingState(button, 1500);
+
+                setTimeout(() => {
+                    // Hide waitlist section
+                    waitlistSection.style.display = 'none';
+                    // Show waitlist success
+                    waitlistSuccess.style.display = 'block';
+                    waitlistSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    showNotification('Added to waitlist!', 'success');
+                }, 1000);
+            });
+
+            cancelWaitlist.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                waitlistSection.style.display = 'none';
+                document.querySelectorAll('.class-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            waitlistDone.addEventListener('click', function(e) {
+                addRippleEffect(e);
+                waitlistSuccess.style.display = 'none';
+                document.querySelectorAll('.class-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
             // Add ripple effects to all buttons
             setTimeout(() => {
-                document.querySelectorAll('.btn, .quick-book-btn, .buy-credits-btn').forEach(button => {
+                document.querySelectorAll('.btn, .quick-book-btn, .waitlist-btn, .buy-credits-btn').forEach(button => {
                     button.classList.add('ripple');
                     button.addEventListener('click', addRippleEffect);
                 });
