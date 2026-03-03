@@ -16,138 +16,118 @@
             padding: 20px;
         }
 
-        /* Promo Banner / Carousel Styles */
-        .promo-carousel {
+        /* Promo Banner - Clean Modern Style */
+        .promo-banner {
             position: relative;
             width: 100%;
             margin-bottom: 24px;
             border-radius: var(--radius-secondary);
             overflow: hidden;
-            background: var(--surface-bg);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
         }
 
-        .promo-carousel-container {
+        .promo-slides {
             display: flex;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .promo-slide {
             min-width: 100%;
-            padding: 24px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            background: linear-gradient(135deg, var(--surface-bg) 0%, rgba(212, 175, 55, 0.08) 100%);
+            justify-content: space-between;
+            gap: 16px;
+            cursor: pointer;
         }
 
-        .promo-slide-content {
+        .promo-text {
             flex: 1;
+            min-width: 0;
         }
 
-        .promo-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: var(--accent-gold);
-            border: 1px solid var(--accent-gold-border);
-            border-radius: 20px;
-            font-size: 11px;
+        .promo-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
             font-weight: 600;
             color: #d4af37;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
-        }
-
-        .promo-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
+            letter-spacing: 1px;
             margin-bottom: 6px;
         }
 
-        .promo-description {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.4;
+        .promo-tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #d4af37;
+            border-radius: 50%;
         }
 
-        .promo-image {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius-tertiary);
+        .promo-headline {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .promo-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .promo-visual {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
             object-fit: cover;
             flex-shrink: 0;
-            border: 1px solid var(--border-color);
+            opacity: 0.9;
         }
 
-        .promo-dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .promo-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--border-color);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        .promo-dot.active {
-            background: #d4af37;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
-        }
-
-        .promo-nav {
+        .promo-indicators {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            cursor: pointer;
+            bottom: 10px;
+            right: 16px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-smooth);
-            z-index: 10;
+            gap: 6px;
         }
 
-        .promo-nav:hover {
-            background: rgba(0, 0, 0, 0.8);
-            border-color: var(--accent-gold-border);
+        .promo-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-dimmed);
+            opacity: 0.4;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .promo-nav.prev {
-            left: 10px;
-        }
-
-        .promo-nav.next {
-            right: 10px;
+        .promo-indicator.active {
+            background: #d4af37;
+            opacity: 1;
         }
 
         @media (max-width: 480px) {
             .promo-slide {
-                flex-direction: column;
-                text-align: center;
-                padding: 20px;
+                padding: 16px 20px;
             }
 
-            .promo-image {
-                width: 100%;
-                height: 120px;
+            .promo-visual {
+                width: 56px;
+                height: 56px;
             }
 
-            .promo-title {
-                font-size: 16px;
+            .promo-headline {
+                font-size: 14px;
             }
         }
     </style>
@@ -162,47 +142,38 @@
             <div class="brand-subtitle brand-subtitle-lg">Choose your training experience</div>
         </div>
 
-        <!-- Promo Banner / Carousel -->
-        <div class="promo-carousel">
-            <button class="promo-nav prev" onclick="changeSlide(-1)">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="promo-nav next" onclick="changeSlide(1)">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-            <div class="promo-carousel-container" id="promoContainer">
-                <!-- Slide 1 -->
-                <div class="promo-slide">
-                    <div class="promo-slide-content">
-                        <span class="promo-badge">Limited Offer</span>
-                        <div class="promo-title">First Class Free!</div>
-                        <div class="promo-description">Try your first group class on us. Book now and start your fitness journey.</div>
+        <!-- Promo Banner -->
+        <div class="promo-banner">
+            <div class="promo-slides" id="promoSlides">
+                <div class="promo-slide" onclick="window.location.href='group-class.html'">
+                    <div class="promo-text">
+                        <div class="promo-tag">Limited Offer</div>
+                        <div class="promo-headline">First Class Free</div>
+                        <div class="promo-sub">Start your fitness journey today</div>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop" alt="Promo" class="promo-image">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=150&h=150&fit=crop" alt="" class="promo-visual">
                 </div>
-                <!-- Slide 2 -->
-                <div class="promo-slide">
-                    <div class="promo-slide-content">
-                        <span class="promo-badge">New</span>
-                        <div class="promo-title">Personal Training Packages</div>
-                        <div class="promo-description">Get 20% off when you book 5 sessions. Transform with expert guidance.</div>
+                <div class="promo-slide" onclick="window.location.href='personal-training.html'">
+                    <div class="promo-text">
+                        <div class="promo-tag">Special</div>
+                        <div class="promo-headline">20% Off PT Packages</div>
+                        <div class="promo-sub">Book 5 sessions, save more</div>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop" alt="Promo" class="promo-image">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=150&h=150&fit=crop" alt="" class="promo-visual">
                 </div>
-                <!-- Slide 3 -->
-                <div class="promo-slide">
-                    <div class="promo-slide-content">
-                        <span class="promo-badge">Weekend Special</span>
-                        <div class="promo-title">Saturday HIIT Sessions</div>
-                        <div class="promo-description">Join our high-energy weekend classes. Limited spots available!</div>
+                <div class="promo-slide" onclick="window.location.href='group-class.html'">
+                    <div class="promo-text">
+                        <div class="promo-tag">Weekend</div>
+                        <div class="promo-headline">Saturday HIIT</div>
+                        <div class="promo-sub">Limited spots available</div>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop" alt="Promo" class="promo-image">
+                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=150&h=150&fit=crop" alt="" class="promo-visual">
                 </div>
             </div>
-            <div class="promo-dots">
-                <span class="promo-dot active" onclick="goToSlide(0)"></span>
-                <span class="promo-dot" onclick="goToSlide(1)"></span>
-                <span class="promo-dot" onclick="goToSlide(2)"></span>
+            <div class="promo-indicators">
+                <span class="promo-indicator active" data-slide="0"></span>
+                <span class="promo-indicator" data-slide="1"></span>
+                <span class="promo-indicator" data-slide="2"></span>
             </div>
         </div>
 
@@ -224,42 +195,20 @@
     </div>
 
     <script>
-        let currentSlide = 0;
-        const totalSlides = 3;
-        const container = document.getElementById('promoContainer');
-        const dots = document.querySelectorAll('.promo-dot');
-        let autoSlideInterval;
+        const slides = document.getElementById('promoSlides');
+        const indicators = document.querySelectorAll('.promo-indicator');
+        let current = 0;
+        const total = 3;
 
-        function updateCarousel() {
-            container.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
+        function goTo(n) {
+            current = n;
+            slides.style.transform = `translateX(-${current * 100}%)`;
+            indicators.forEach((ind, i) => ind.classList.toggle('active', i === current));
         }
 
-        function changeSlide(direction) {
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            updateCarousel();
-            resetAutoSlide();
-        }
+        indicators.forEach(ind => ind.addEventListener('click', () => goTo(parseInt(ind.dataset.slide))));
 
-        function goToSlide(index) {
-            currentSlide = index;
-            updateCarousel();
-            resetAutoSlide();
-        }
-
-        function resetAutoSlide() {
-            clearInterval(autoSlideInterval);
-            autoSlideInterval = setInterval(() => {
-                changeSlide(1);
-            }, 5000);
-        }
-
-        // Auto-advance slides every 5 seconds
-        autoSlideInterval = setInterval(() => {
-            changeSlide(1);
-        }, 5000);
+        setInterval(() => goTo((current + 1) % total), 4000);
     </script>
 </body>
 </html>
