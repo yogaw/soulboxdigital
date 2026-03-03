@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOULBOX - My Bookings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --text-primary: #FFFFFF;
+            --text-secondary: #bdbdbd;
+            --text-muted: #9e9e9e;
+            --text-dimmed: #8f8f8f;
+            --accent-gold: #d4af37;
+            --accent-gold-subtle: rgba(212, 175, 55, 0.08);
+            --accent-purple: #ce93d8;
+            --accent-purple-subtle: rgba(156, 39, 176, 0.15);
+            --accent-green: #81c784;
+            --accent-green-subtle: rgba(76, 175, 80, 0.15);
+            --accent-red: #e57373;
+            --accent-red-subtle: rgba(244, 67, 54, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            padding-top: 40px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--accent-gold-subtle);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 4px;
+            margin: 0 20px 24px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .tab .badge {
+            background: var(--accent-gold);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .tab.active .badge {
+            background: var(--accent-gold);
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+            padding: 0 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Class Card */
+        .class-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .class-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .class-info {
+            flex: 1;
+        }
+
+        .class-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .class-coach {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .class-coach i {
+            font-size: 11px;
+            color: var(--accent-gold);
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-upcoming {
+            background: var(--accent-gold-subtle);
+            color: var(--accent-gold);
+        }
+
+        .status-waitlist {
+            background: var(--accent-purple-subtle);
+            color: var(--accent-purple);
+        }
+
+        .status-completed {
+            background: var(--accent-green-subtle);
+            color: var(--accent-green);
+        }
+
+        .status-cancelled {
+            background: var(--accent-red-subtle);
+            color: var(--accent-red);
+        }
+
+        .card-details {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .detail-item i {
+            font-size: 11px;
+            width: 14px;
+            text-align: center;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .booking-id {
+            font-size: 11px;
+            color: var(--text-dimmed);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            border: none;
+        }
+
+        .action-btn-primary {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .action-btn-primary:hover {
+            background: #e5c04b;
+        }
+
+        .action-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-secondary);
+        }
+
+        .action-btn-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--text-primary);
+        }
+
+        .action-btn-danger {
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .action-btn-danger:hover {
+            background: var(--accent-red-subtle);
+        }
+
+        /* Waitlist Position */
+        .waitlist-position {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--accent-purple-subtle);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .waitlist-position i {
+            color: var(--accent-purple);
+            font-size: 14px;
+        }
+
+        .waitlist-position span {
+            font-size: 12px;
+            color: var(--accent-purple);
+            font-weight: 500;
+        }
+
+        /* History Card Extra */
+        .history-meta {
+            display: flex;
+            gap: 12px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .meta-item i {
+            font-size: 11px;
+        }
+
+        .meta-item.calories {
+            color: var(--accent-gold);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--text-dimmed);
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .empty-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .empty-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .empty-btn:hover {
+            background: #e5c04b;
+        }
+
+        /* Section Header */
+        .section-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Cancel Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 16px;
+            background: var(--accent-red-subtle);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--accent-red);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-actions .action-btn {
+            flex: 1;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-gold);
+            color: #000;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .class-card {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <a href="booking-entry.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="header-title">My Bookings</div>
+                <div class="logo">
+                    <img src="assets/images/soulboxlogo.png" alt="SOULBOX">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="upcoming">
+                Upcoming
+                <span class="badge">3</span>
+            </button>
+            <button class="tab" data-tab="waitlist">
+                Waitlist
+                <span class="badge">2</span>
+            </button>
+            <button class="tab" data-tab="history">
+                History
+            </button>
+        </div>
+
+        <!-- Upcoming Section -->
+        <div class="section active" id="upcoming">
+            <div class="section-header">This Week</div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">BODYCAMP</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Abas</div>
+                    </div>
+                    <span class="status-badge status-upcoming">Confirmed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Mon, 3 Mar</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>07:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio A</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="booking-id">#SBK-2025030301</span>
+                    <div class="card-actions">
+                        <button class="action-btn action-btn-danger" onclick="showCancelModal('BODYCAMP', 'Mon, 3 Mar 07:00')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">HIIT</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Ian</div>
+                    </div>
+                    <span class="status-badge status-upcoming">Confirmed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Tue, 4 Mar</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>07:30</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio B</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="booking-id">#SBK-2025030402</span>
+                    <div class="card-actions">
+                        <button class="action-btn action-btn-danger" onclick="showCancelModal('HIIT', 'Tue, 4 Mar 07:30')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">SOULBARRE</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Ankie</div>
+                    </div>
+                    <span class="status-badge status-upcoming">Confirmed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Wed, 5 Mar</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>18:30</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio A</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="booking-id">#SBK-2025030503</span>
+                    <div class="card-actions">
+                        <button class="action-btn action-btn-danger" onclick="showCancelModal('SOULBARRE', 'Wed, 5 Mar 18:30')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waitlist Section -->
+        <div class="section" id="waitlist">
+            <div class="section-header">Active Waitlist</div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">BODYCAMP HYPERTROPHY</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Aldi</div>
+                    </div>
+                    <span class="status-badge status-waitlist">Waitlist</span>
+                </div>
+                <div class="waitlist-position">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Position #3 in waitlist</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Mon, 3 Mar</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>17:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio B</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="booking-id">#WTL-2025030301</span>
+                    <div class="card-actions">
+                        <button class="action-btn action-btn-secondary" onclick="removeWaitlist('BODYCAMP HYPERTROPHY')">Leave</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">YOGA FLOW</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Ankie</div>
+                    </div>
+                    <span class="status-badge status-waitlist">Waitlist</span>
+                </div>
+                <div class="waitlist-position">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Position #1 in waitlist</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Tue, 4 Mar</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>19:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio A</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="booking-id">#WTL-2025030402</span>
+                    <div class="card-actions">
+                        <button class="action-btn action-btn-secondary" onclick="removeWaitlist('YOGA FLOW')">Leave</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="section" id="history">
+            <div class="section-header">March 2025</div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">BODY CAMP</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach John</div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Sat, 1 Mar</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>08:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio A</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="history-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-fire"></i>
+                            <span>420 cal</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>45 min</span>
+                        </div>
+                    </div>
+                    <span class="booking-id">#SBK-2025030101</span>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">TRX</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Ian</div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Thu, 27 Feb</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>19:30</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio B</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="history-meta">
+                        <div class="meta-item calories">
+                            <i class="fas fa-fire"></i>
+                            <span>380 cal</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>50 min</span>
+                        </div>
+                    </div>
+                    <span class="booking-id">#SBK-2025022701</span>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 24px;">February 2025</div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">HYROX</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Delpas</div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Sat, 22 Feb</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>10:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio A</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="history-meta">
+                        <div class="meta-item calories">
+                            <i class="fas fa-fire"></i>
+                            <span>520 cal</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>60 min</span>
+                        </div>
+                    </div>
+                    <span class="booking-id">#SBK-2025022201</span>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">STRONG NATION</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Ankie</div>
+                    </div>
+                    <span class="status-badge status-cancelled">Cancelled</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Wed, 19 Feb</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>18:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio A</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span style="font-size: 11px; color: var(--accent-red);">Cancelled by user</span>
+                    <span class="booking-id">#SBK-2025021901</span>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="card-header">
+                    <div class="class-info">
+                        <div class="class-name">ABS & CORE</div>
+                        <div class="class-coach"><i class="fas fa-user"></i> Coach Ankie</div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>Mon, 17 Feb</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>08:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Studio B</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="history-meta">
+                        <div class="meta-item calories">
+                            <i class="fas fa-fire"></i>
+                            <span>180 cal</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>30 min</span>
+                        </div>
+                    </div>
+                    <span class="booking-id">#SBK-2025021701</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Modal -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i class="fas fa-calendar-xmark"></i>
+            </div>
+            <div class="modal-title">Cancel Booking?</div>
+            <div class="modal-text">
+                Are you sure you want to cancel your <strong id="cancelClassName">-</strong> class on <strong id="cancelClassTime">-</strong>?
+                <br><br>
+                <span style="color: var(--accent-gold);">1 class credit will be refunded.</span>
+            </div>
+            <div class="modal-actions">
+                <button class="action-btn action-btn-secondary" onclick="hideCancelModal()">Keep Booking</button>
+                <button class="action-btn action-btn-danger" onclick="confirmCancel()">Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('.section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // Cancel modal
+        function showCancelModal(className, classTime) {
+            document.getElementById('cancelClassName').textContent = className;
+            document.getElementById('cancelClassTime').textContent = classTime;
+            document.getElementById('cancelModal').classList.add('active');
+        }
+
+        function hideCancelModal() {
+            document.getElementById('cancelModal').classList.remove('active');
+        }
+
+        function confirmCancel() {
+            hideCancelModal();
+            showToast('Booking cancelled. Credit refunded.');
+
+            // In real app, would remove the card and update counts
+            setTimeout(() => {
+                // Update badge count
+                const upcomingBadge = document.querySelector('[data-tab="upcoming"] .badge');
+                const currentCount = parseInt(upcomingBadge.textContent);
+                if (currentCount > 0) {
+                    upcomingBadge.textContent = currentCount - 1;
+                }
+            }, 500);
+        }
+
+        // Waitlist actions
+        function removeWaitlist(className) {
+            showToast(`Removed from ${className} waitlist`);
+
+            // In real app, would remove the card and update counts
+            setTimeout(() => {
+                const waitlistBadge = document.querySelector('[data-tab="waitlist"] .badge');
+                const currentCount = parseInt(waitlistBadge.textContent);
+                if (currentCount > 0) {
+                    waitlistBadge.textContent = currentCount - 1;
+                }
+            }, 500);
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('cancelModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                hideCancelModal();
+            }
+        });
+    </script>
+</body>
+</html>

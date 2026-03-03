@@ -293,28 +293,6 @@
             font-weight: 600;
         }
 
-        .filter-toggle {
-            background: #333;
-            border: 1px solid #444444;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            min-height: 40px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .filter-toggle:hover,
-        .filter-toggle:active {
-            background: #444;
-            transform: translateY(-1px);
-        }
-
         /* Day Navigation Tabs - Mobile Optimized */
         .day-navigation {
             display: flex;
@@ -415,84 +393,6 @@
         .search-container {
             position: relative;
             margin-bottom: 15px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: rgba(26, 26, 26, 0.8);
-            border: 1px solid #444444;
-            border-radius: 8px;
-            padding: 12px 40px 12px 15px;
-            color: #fff;
-            font-size: 14px;
-            min-height: 44px;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #D4AF37;
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-        }
-
-        .filters-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .filter-group {
-            background: rgba(26, 26, 26, 0.8);
-            border-radius: 8px;
-            padding: 12px;
-            border: 1px solid #444444;
-        }
-
-        .filter-group-title {
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .filter-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .filter-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            min-height: 32px;
-        }
-
-        .filter-option input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #D4AF37;
-            min-width: 18px;
-        }
-
-        .filter-option label {
-            color: #ccc;
-            font-size: 13px;
-            cursor: pointer;
-            flex: 1;
-            line-height: 1.3;
-        }
-
-        .filter-option label:hover {
-            color: #fff;
         }
 
         /* Day Content Container */
@@ -761,23 +661,6 @@
             line-height: 1.5;
         }
 
-        /* Clear Filters Button */
-        .clear-filters-btn {
-            background: transparent;
-            border: 1px solid #888;
-            color: #888;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .clear-filters-btn:hover {
-            border-color: #D4AF37;
-            color: #D4AF37;
-        }
-
         /* Smooth Transitions */
         .day-tab {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -800,20 +683,6 @@
         .day-content.active {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .search-filter-section {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            max-height: 0;
-            overflow: hidden;
-        }
-
-        .search-filter-section.active {
-            max-height: 1000px;
-        }
-
-        .filter-toggle {
-            transition: all 0.2s ease;
         }
 
         .quick-book-btn {
@@ -1486,8 +1355,8 @@
                 <img src="assets/images/soulboxlogo.png" alt="SOULBOX">
             </div>
             <div class="header-actions">
-                <button class="icon-btn"><i class="fas fa-bell"></i></button>
-                <button class="icon-btn"><i class="fas fa-user"></i></button>
+                <a href="my-bookings.html" class="icon-btn" title="My Bookings"><i class="fas fa-calendar-check"></i></a>
+                <a href="my-profile.html" class="icon-btn" title="My Profile"><i class="fas fa-user"></i></a>
             </div>
         </nav>
 
@@ -1527,70 +1396,11 @@
                 <div class="weekly-schedule">
                     <div class="schedule-header">
                         <div class="schedule-title">This Week's Classes</div>
-                        <button class="filter-toggle" id="filterToggle">
-                            <i class="fas fa-filter"></i> Filter & Search
-                        </button>
                     </div>
 
                     <!-- Day Navigation Tabs -->
                     <div class="day-navigation" id="dayNavigation">
                         <!-- Day tabs will be generated dynamically -->
-                    </div>
-
-                    <!-- Search and Filter Section -->
-                    <div class="search-filter-section" id="searchFilterSection">
-                        <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search classes...">
-                            <i class="fas fa-search search-icon"></i>
-                        </div>
-
-                        <div class="filters-container">
-                            <div class="filter-group">
-                                <div class="filter-group-title">Class Type</div>
-                                <div class="filter-options" id="classTypeFilters">
-                                    <!-- Class type filters will be generated dynamically -->
-                                </div>
-                            </div>
-
-                            <div class="filter-group">
-                                <div class="filter-group-title">Time</div>
-                                <div class="filter-options" id="timeFilters">
-                                    <div class="filter-option">
-                                        <input type="checkbox" id="morningFilter" value="morning">
-                                        <label for="morningFilter">Morning (6AM - 12PM)</label>
-                                    </div>
-                                    <div class="filter-option">
-                                        <input type="checkbox" id="afternoonFilter" value="afternoon">
-                                        <label for="afternoonFilter">Afternoon (12PM - 6PM)</label>
-                                    </div>
-                                    <div class="filter-option">
-                                        <input type="checkbox" id="eveningFilter" value="evening">
-                                        <label for="eveningFilter">Evening (6PM - 12AM)</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="filter-group">
-                                <div class="filter-group-title">Instructor</div>
-                                <div class="filter-options" id="instructorFilters">
-                                    <!-- Instructor filters will be generated dynamically -->
-                                </div>
-                            </div>
-
-                            <div class="filter-group">
-                                <div class="filter-group-title">Availability</div>
-                                <div class="filter-options">
-                                    <div class="filter-option">
-                                        <input type="checkbox" id="availableOnlyFilter">
-                                        <label for="availableOnlyFilter">Available classes only</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="text-align: center; margin-top: 15px;">
-                            <button class="clear-filters-btn" id="clearFiltersBtn">Clear All Filters</button>
-                        </div>
                     </div>
 
                     <!-- Day Content Containers -->
@@ -1798,23 +1608,6 @@
                 ]
             };
 
-            // Get class types and instructors for filters
-            function getClassTypes() {
-                const types = new Set();
-                Object.values(scheduleData).flat().forEach(cls => {
-                    types.add(cls.type);
-                });
-                return Array.from(types);
-            }
-
-            function getInstructors() {
-                const instructors = new Set();
-                Object.values(scheduleData).flat().forEach(cls => {
-                    instructors.add(cls.instructor);
-                });
-                return Array.from(instructors);
-            }
-
             // Generate day navigation tabs
             function generateDayNavigation() {
                 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -1853,42 +1646,6 @@
                 targetDate.setDate(today.getDate() - mondayIndex + dayIndex);
 
                 return targetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            }
-
-            // Generate class type filters
-            function generateClassTypeFilters() {
-                const classTypeFilters = document.getElementById('classTypeFilters');
-                const types = getClassTypes();
-
-                classTypeFilters.innerHTML = '';
-
-                types.forEach(type => {
-                    const filterOption = document.createElement('div');
-                    filterOption.className = 'filter-option';
-                    filterOption.innerHTML = `
-                        <input type="checkbox" id="${type}TypeFilter" value="${type}">
-                        <label for="${type}TypeFilter">${type.charAt(0).toUpperCase() + type.slice(1)}</label>
-                    `;
-                    classTypeFilters.appendChild(filterOption);
-                });
-            }
-
-            // Generate instructor filters
-            function generateInstructorFilters() {
-                const instructorFilters = document.getElementById('instructorFilters');
-                const instructors = getInstructors();
-
-                instructorFilters.innerHTML = '';
-
-                instructors.forEach(instructor => {
-                    const filterOption = document.createElement('div');
-                    filterOption.className = 'filter-option';
-                    filterOption.innerHTML = `
-                        <input type="checkbox" id="${instructor}InstructorFilter" value="${instructor}">
-                        <label for="${instructor}InstructorFilter">${instructor}</label>
-                    `;
-                    instructorFilters.appendChild(filterOption);
-                });
             }
 
             // Generate day content
@@ -1988,130 +1745,6 @@
                 if (contentElement) {
                     contentElement.classList.add('active');
                 }
-
-                // Apply current filters to the new day
-                applyFilters();
-            }
-
-            // Toggle search and filter section
-            function toggleSearchFilter() {
-                const searchFilterSection = document.getElementById('searchFilterSection');
-                searchFilterSection.classList.toggle('active');
-            }
-
-            // Get current filters
-            function getCurrentFilters() {
-                const filters = {
-                    search: document.getElementById('searchInput').value.toLowerCase(),
-                    classTypes: [],
-                    times: [],
-                    instructors: [],
-                    availableOnly: document.getElementById('availableOnlyFilter').checked
-                };
-
-                // Get selected class types
-                document.querySelectorAll('#classTypeFilters input:checked').forEach(input => {
-                    filters.classTypes.push(input.value);
-                });
-
-                // Get selected times
-                document.querySelectorAll('#timeFilters input:checked').forEach(input => {
-                    filters.times.push(input.value);
-                });
-
-                // Get selected instructors
-                document.querySelectorAll('#instructorFilters input:checked').forEach(input => {
-                    filters.instructors.push(input.value);
-                });
-
-                return filters;
-            }
-
-            // Get time category from time string
-            function getTimeCategory(time) {
-                const hour = parseInt(time.split(':')[0]);
-                if (hour >= 6 && hour < 12) return 'morning';
-                if (hour >= 12 && hour < 18) return 'afternoon';
-                return 'evening';
-            }
-
-            // Apply filters
-            function applyFilters() {
-                const filters = getCurrentFilters();
-                const activeContent = document.querySelector('.day-content.active');
-                if (!activeContent) return;
-
-                const dayClasses = activeContent.querySelectorAll('.class-item');
-                let visibleCount = 0;
-
-                dayClasses.forEach(classItem => {
-                    const className = classItem.dataset.name.toLowerCase();
-                    const classType = classItem.dataset.type;
-                    const classTime = classItem.dataset.time;
-                    const classInstructor = classItem.dataset.instructor;
-                    const classSpots = parseInt(classItem.dataset.spots);
-
-                    let visible = true;
-
-                    // Search filter
-                    if (filters.search && !className.includes(filters.search)) {
-                        visible = false;
-                    }
-
-                    // Class type filter
-                    if (filters.classTypes.length > 0 && !filters.classTypes.includes(classType)) {
-                        visible = false;
-                    }
-
-                    // Time filter
-                    if (filters.times.length > 0 && !filters.times.includes(getTimeCategory(classTime))) {
-                        visible = false;
-                    }
-
-                    // Instructor filter
-                    if (filters.instructors.length > 0 && !filters.instructors.includes(classInstructor)) {
-                        visible = false;
-                    }
-
-                    // Available only filter
-                    if (filters.availableOnly && classSpots === 0) {
-                        visible = false;
-                    }
-
-                    classItem.style.display = visible ? 'grid' : 'none';
-                    if (visible) visibleCount++;
-                });
-
-                // Show empty state if no classes match filters
-                const classList = activeContent.querySelector('.class-list');
-                if (visibleCount === 0) {
-                    if (!classList.querySelector('.empty-state')) {
-                        const emptyState = document.createElement('div');
-                        emptyState.className = 'empty-state';
-                        emptyState.innerHTML = `
-                            <div class="empty-state-icon">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <div class="empty-state-title">No classes match your filters</div>
-                            <div class="empty-state-text">Try adjusting your search criteria or filters</div>
-                        `;
-                        classList.appendChild(emptyState);
-                    }
-                } else {
-                    const emptyState = classList.querySelector('.empty-state');
-                    if (emptyState) {
-                        emptyState.remove();
-                    }
-                }
-            }
-
-            // Clear all filters
-            function clearAllFilters() {
-                document.getElementById('searchInput').value = '';
-                document.querySelectorAll('#searchFilterSection input[type="checkbox"]').forEach(input => {
-                    input.checked = false;
-                });
-                applyFilters();
             }
 
             // Select a class
@@ -2258,8 +1891,6 @@
             function initializeApp() {
                 // Generate UI components
                 generateDayNavigation();
-                generateClassTypeFilters();
-                generateInstructorFilters();
                 generateDayContent();
                 updateUserCredits();
                 selectPaymentMethod('package');
@@ -2418,32 +2049,6 @@
                 });
             });
 
-            // Filter and search listeners
-            document.getElementById('filterToggle').addEventListener('click', function(e) {
-                addRippleEffect(e);
-                toggleSearchFilter();
-            });
-
-            document.getElementById('searchInput').addEventListener('input', applyFilters);
-
-            document.getElementById('clearFiltersBtn').addEventListener('click', function(e) {
-                addRippleEffect(e);
-                clearAllFilters();
-                showNotification('All filters cleared', 'info');
-            });
-
-            // Add listeners to all filter checkboxes
-            document.querySelectorAll('#searchFilterSection input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    applyFilters();
-                    // Show notification for first filter selection
-                    const checkedCount = document.querySelectorAll('#searchFilterSection input[type="checkbox"]:checked').length;
-                    if (checkedCount === 1) {
-                        showNotification('Filter applied', 'success');
-                    }
-                });
-            });
-
             // Booking section listeners
             cancelBooking.addEventListener('click', function(e) {
                 addRippleEffect(e);
@@ -2472,8 +2077,7 @@
             // Success message listeners
             viewMyBookings.addEventListener('click', function(e) {
                 addRippleEffect(e);
-                showNotification('Redirecting to My Bookings...', 'info');
-                // In a real app, this would redirect to bookings page
+                window.location.href = 'my-bookings.html';
             });
 
             bookAnotherClass.addEventListener('click', function(e) {
