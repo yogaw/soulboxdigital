@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Operations - Schedule</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Operations Specific Styles */
+        .view-toggles {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #1a1a1a;
+            padding: 5px;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: #999;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .view-btn.active {
+            background: #4a00e0;
+            color: #fff;
+        }
+
+        /* List View Styles */
+        .day-group {
+            margin-bottom: 30px;
+        }
+
+        .day-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .day-summary {
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .schedule-item {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .schedule-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background: #222;
+        }
+
+        .schedule-item.group-class { border-left-color: #e74c3c; } /* Red for intense */
+        .schedule-item.pt-session { border-left-color: #3498db; } /* Blue for focus */
+        .schedule-item.yoga { border-left-color: #2ecc71; } /* Green for calm */
+
+        .time-col {
+            min-width: 120px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .info-col {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .class-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .badge.group { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+        .badge.pt { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stats-col {
+            display: flex;
+            gap: 20px;
+            margin: 0 30px;
+            text-align: right;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .stat-value.revenue {
+            color: #2ecc71;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .actions-col {
+            min-width: 100px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-details {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .btn-details:hover {
+            background: #4a00e0;
+        }
+
+        /* Map View Styles */
+        .gym-floor-plan {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 200px 200px;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .area-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .area-card.active {
+            border-color: #4a00e0;
+            box-shadow: 0 0 15px rgba(74, 0, 224, 0.1);
+        }
+
+        .area-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .area-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .area-capacity {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .current-class {
+            background: rgba(74, 0, 224, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            border-left: 3px solid #4a00e0;
+        }
+
+        .class-status {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #4a00e0;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        /* Trainer View Styles */
+        .trainer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .trainer-column {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .trainer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .trainer-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #333;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <!-- Admin Sidebar Navigation -->
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <span>SOULBOX</span>
+                <span class="admin-badge">OPS</span>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="operations-schedule.html" class="admin-nav-link active">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Ops Schedule</span>
+                </a>
+                <a href="trainer-management.html" class="admin-nav-link">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Trainers</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Classes & PT</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Clients</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Revenue</span>
+                </a>
+            </div>
+            
+            <div class="admin-user-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user-headset"></i>
+                </div>
+                <div class="admin-user-details">
+                    <div class="admin-username">Ops Team</div>
+                    <div class="admin-role">Manager</div>
+                </div>
+                <button class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Operations Schedule</h1>
+                    <p>Daily booking management and area allocation</p>
+                </div>
+                <div class="admin-header-actions">
+                    <div class="admin-search">
+                        <input type="text" placeholder="Search class, client or trainer...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="primary-action-btn">
+                        <i class="fas fa-plus"></i> New Booking
+                    </button>
+                </div>
+            </header>
+
+            <!-- Controls & Filters -->
+            <div class="operations-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="view-toggles">
+                    <button class="view-btn active" onclick="switchView('list')"><i class="fas fa-list"></i> Schedule</button>
+                    <button class="view-btn" onclick="switchView('map')"><i class="fas fa-map"></i> Area Map</button>
+                    <button class="view-btn" onclick="switchView('trainer')"><i class="fas fa-user-friends"></i> Trainer View</button>
+                </div>
+
+                <div class="calendar-navigation" style="display: flex; align-items: center; gap: 15px;">
+                    <button class="calendar-nav-btn" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fas fa-chevron-left"></i></button>
+                    <h2 style="font-size: 18px; margin:0;">Aug 7 - Aug 9, 2023</h2>
+                    <button class="calendar-nav-btn" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
+                    <button class="btn" style="background: #333; border: none; padding: 5px 10px; border-radius: 4px; color: #fff;">Today</button>
+                </div>
+            </div>
+
+            <!-- VIEW: LIST (TeamUp Style) -->
+            <div id="view-list" class="view-section">
+                <!-- Day 1 -->
+                <div class="day-group">
+                    <div class="day-header">
+                        <span>Monday, August 7</span>
+                        <span class="day-summary">4 Classes • 2 PT Sessions • $980 Est. Revenue</span>
+                    </div>
+                    <div class="schedule-list">
+                        <!-- Item 1 -->
+                        <div class="schedule-item yoga">
+                            <div class="time-col">09:00 - 10:30</div>
+                            <div class="info-col">
+                                <div class="class-title">Yoga Flow <span class="badge group">Group</span></div>
+                                <div class="meta-info">
+                                    <div class="meta-item"><i class="fas fa-user"></i> Ankie</div>
+                                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Studio A</div>
+                                </div>
+                            </div>
+                            <div class="stats-col">
+                                <div class="stat-box">
+                                    <span class="stat-value">12/15</span>
+                                    <span class="stat-label">Booked</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-value revenue">$240</span>
+                                    <span class="stat-label">Revenue</span>
+                                </div>
+                            </div>
+                            <div class="actions-col">
+                                <button class="btn-details" onclick="openDetails('yoga-flow')">Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Item 2 -->
+                        <div class="schedule-item pt-session">
+                            <div class="time-col">11:00 - 12:00</div>
+                            <div class="info-col">
+                                <div class="class-title">Private Session <span class="badge pt">PT</span></div>
+                                <div class="meta-info">
+                                    <div class="meta-item"><i class="fas fa-user"></i> John</div>
+                                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Gym Floor</div>
+                                    <div class="meta-item"><i class="fas fa-user-circle"></i> Client: Sarah Connor</div>
+                                </div>
+                            </div>
+                            <div class="stats-col">
+                                <div class="stat-box">
+                                    <span class="stat-value">1/1</span>
+                                    <span class="stat-label">Booked</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-value revenue">$100</span>
+                                    <span class="stat-label">Revenue</span>
+                                </div>
+                            </div>
+                            <div class="actions-col">
+                                <button class="btn-details" onclick="openDetails('private-session')">Details</button>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="schedule-item group-class">
+                            <div class="time-col">13:00 - 14:30</div>
+                            <div class="info-col">
+                                <div class="class-title">HIIT Blast <span class="badge group">Group</span></div>
+                                <div class="meta-info">
+                                    <div class="meta-item"><i class="fas fa-user"></i> John</div>
+                                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Studio B</div>
+                                </div>
+                            </div>
+                            <div class="stats-col">
+                                <div class="stat-box">
+                                    <span class="stat-value">8/10</span>
+                                    <span class="stat-label">Booked</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-value revenue">$160</span>
+                                    <span class="stat-label">Revenue</span>
+                                </div>
+                            </div>
+                            <div class="actions-col">
+                                <button class="btn-details" onclick="openDetails('hiit-blast')">Details</button>
+                            </div>
+                        </div>
+
+                         <!-- Item 4 -->
+                         <div class="schedule-item yoga">
+                            <div class="time-col">17:00 - 18:30</div>
+                            <div class="info-col">
+                                <div class="class-title">Sunset Yoga <span class="badge group">Group</span></div>
+                                <div class="meta-info">
+                                    <div class="meta-item"><i class="fas fa-user"></i> Ankie</div>
+                                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Studio A</div>
+                                </div>
+                            </div>
+                            <div class="stats-col">
+                                <div class="stat-box">
+                                    <span class="stat-value">15/15</span>
+                                    <span class="stat-label">Full</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-value revenue">$300</span>
+                                    <span class="stat-label">Revenue</span>
+                                </div>
+                            </div>
+                            <div class="actions-col">
+                                <button class="btn-details" onclick="openDetails('sunset-yoga')">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 2 -->
+                <div class="day-group">
+                    <div class="day-header">
+                        <span>Tuesday, August 8</span>
+                        <span class="day-summary">3 Classes • 1 PT Session • $750 Est. Revenue</span>
+                    </div>
+                    <div class="schedule-list">
+                         <!-- Item 1 -->
+                         <div class="schedule-item group-class">
+                            <div class="time-col">07:00 - 08:00</div>
+                            <div class="info-col">
+                                <div class="class-title">Morning Bootcamp <span class="badge group">Group</span></div>
+                                <div class="meta-info">
+                                    <div class="meta-item"><i class="fas fa-user"></i> Aldi</div>
+                                    <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Outdoor Area</div>
+                                </div>
+                            </div>
+                            <div class="stats-col">
+                                <div class="stat-box">
+                                    <span class="stat-value">20/25</span>
+                                    <span class="stat-label">Booked</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-value revenue">$400</span>
+                                    <span class="stat-label">Revenue</span>
+                                </div>
+                            </div>
+                            <div class="actions-col">
+                                <button class="btn-details" onclick="openDetails('morning-bootcamp')">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: AREA MAP -->
+            <div id="view-map" class="view-section" style="display:none;">
+                <div style="margin-bottom: 15px; color: #999;">Real-time view of gym areas at <strong style="color:white">09:00 AM</strong></div>
+                <div class="gym-floor-plan">
+                    <div class="area-card active">
+                        <div class="area-header">
+                            <span class="area-title">Studio A</span>
+                            <span class="area-capacity">Cap: 20</span>
+                        </div>
+                        <div class="current-class">
+                            <div class="class-status">IN PROGRESS</div>
+                            <div style="font-weight:600; margin-bottom:5px;">Yoga Flow</div>
+                            <div style="font-size:13px; color:#ccc;">09:00 - 10:30 • Ankie</div>
+                            <div style="margin-top:10px; font-size:12px; display:flex; justify-content:space-between;">
+                                <span>12 Attendees</span>
+                                <span style="color:#2ecc71;">$240</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="area-card">
+                        <div class="area-header">
+                            <span class="area-title">Studio B</span>
+                            <span class="area-capacity">Cap: 15</span>
+                        </div>
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
+                            Available
+                        </div>
+                    </div>
+
+                    <div class="area-card" style="grid-column: span 2;">
+                        <div class="area-header">
+                            <span class="area-title">Gym Floor (General Area)</span>
+                            <span class="area-capacity">Cap: 50</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="current-class" style="border-left-color: #3498db; flex: 1;">
+                                <div class="class-status" style="color: #3498db;">PT SESSION</div>
+                                <div style="font-weight:600;">John & Client</div>
+                                <div style="font-size:13px; color:#ccc;">09:00 - 10:00</div>
+                            </div>
+                            <div class="current-class" style="border-left-color: #3498db; flex: 1;">
+                                <div class="class-status" style="color: #3498db;">PT SESSION</div>
+                                <div style="font-weight:600;">Ian & Client</div>
+                                <div style="font-size:13px; color:#ccc;">09:30 - 10:30</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: TRAINER -->
+            <div id="view-trainer" class="view-section" style="display:none;">
+                <div class="trainer-grid">
+                    <!-- Trainer 1 -->
+                    <div class="trainer-column">
+                        <div class="trainer-header">
+                            <img src="assets/ankie.jpeg" class="trainer-img" alt="Ankie">
+                            <div>
+                                <div style="font-weight: 600;">Ankie</div>
+                                <div style="font-size: 12px; color: #999;">Yoga Specialist</div>
+                            </div>
+                        </div>
+                        <div class="schedule-list" style="gap: 8px;">
+                            <div class="schedule-item yoga" style="padding: 10px; flex-direction: column; align-items: flex-start;">
+                                <div style="font-size: 12px; color: #999;">09:00 - 10:30</div>
+                                <div style="font-weight: 600; margin-bottom: 4px;">Yoga Flow</div>
+                                <div style="font-size: 11px; color: #ccc;">Studio A • 12/15</div>
+                            </div>
+                            <div class="schedule-item yoga" style="padding: 10px; flex-direction: column; align-items: flex-start;">
+                                <div style="font-size: 12px; color: #999;">17:00 - 18:30</div>
+                                <div style="font-weight: 600; margin-bottom: 4px;">Sunset Yoga</div>
+                                <div style="font-size: 11px; color: #ccc;">Studio A • 15/15</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trainer 2 -->
+                    <div class="trainer-column">
+                        <div class="trainer-header">
+                            <img src="assets/john.jpeg" class="trainer-img" alt="John">
+                            <div>
+                                <div style="font-weight: 600;">John</div>
+                                <div style="font-size: 12px; color: #999;">HIIT & Strength</div>
+                            </div>
+                        </div>
+                        <div class="schedule-list" style="gap: 8px;">
+                            <div class="schedule-item pt-session" style="padding: 10px; flex-direction: column; align-items: flex-start;">
+                                <div style="font-size: 12px; color: #999;">11:00 - 12:00</div>
+                                <div style="font-weight: 600; margin-bottom: 4px;">PT Session</div>
+                                <div style="font-size: 11px; color: #ccc;">Gym Floor</div>
+                            </div>
+                            <div class="schedule-item group-class" style="padding: 10px; flex-direction: column; align-items: flex-start;">
+                                <div style="font-size: 12px; color: #999;">13:00 - 14:30</div>
+                                <div style="font-weight: 600; margin-bottom: 4px;">HIIT Blast</div>
+                                <div style="font-size: 11px; color: #ccc;">Studio B • 8/10</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal for Class Details -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Class Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4 id="modal-class-name" style="font-size: 20px; margin-bottom: 5px;">Class Name</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:14px; color:#ccc;">
+                    <span id="modal-time">Time</span>
+                    <span id="modal-location">Location</span>
+                </div>
+                
+                <div style="background:#222; padding:15px; border-radius:8px; margin-bottom:20px;">
+                    <h5 style="margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">Attendees</h5>
+                    <ul style="list-style:none; padding:0; font-size:13px; max-height:150px; overflow-y:auto;">
+                        <li style="padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
+                            <span>Sarah Connor</span>
+                            <span style="color:#2ecc71;">Paid</span>
+                        </li>
+                        <li style="padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
+                            <span>John Wick</span>
+                            <span style="color:#2ecc71;">Paid</span>
+                        </li>
+                        <li style="padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
+                            <span>Ellen Ripley</span>
+                            <span style="color:#2ecc71;">Paid</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Total Revenue</span>
+                    <span id="modal-revenue" style="font-size:18px; font-weight:700; color:#2ecc71;">$0</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeModal()">Close</button>
+                <button class="modal-btn confirm">Edit Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scheduleData = {
+            'yoga-flow': {
+                name: 'Yoga Flow',
+                time: '09:00 - 10:30',
+                location: 'Studio A',
+                revenue: '$240',
+                attendees: [
+                    { name: 'Sarah Connor', status: 'Paid' },
+                    { name: 'John Wick', status: 'Paid' },
+                    { name: 'Ellen Ripley', status: 'Paid' },
+                    { name: 'Laurie Strode', status: 'Unpaid' },
+                    { name: 'Sidney Prescott', status: 'Paid' }
+                ]
+            },
+            'private-session': {
+                name: 'Private Session (John)',
+                time: '11:00 - 12:00',
+                location: 'Gym Floor',
+                revenue: '$100',
+                attendees: [
+                    { name: 'Sarah Connor', status: 'Paid' }
+                ]
+            },
+            'hiit-blast': {
+                name: 'HIIT Blast',
+                time: '13:00 - 14:30',
+                location: 'Studio B',
+                revenue: '$160',
+                attendees: [
+                    { name: 'Rocky Balboa', status: 'Paid' },
+                    { name: 'Adonis Creed', status: 'Paid' },
+                    { name: 'Ivan Drago', status: 'Unpaid' }
+                ]
+            },
+            'sunset-yoga': {
+                name: 'Sunset Yoga',
+                time: '17:00 - 18:30',
+                location: 'Studio A',
+                revenue: '$300',
+                attendees: [
+                    { name: 'Beatrix Kiddo', status: 'Paid' },
+                    { name: 'Mia Wallace', status: 'Paid' },
+                    { name: 'O-Ren Ishii', status: 'Paid' },
+                    { name: 'Vernita Green', status: 'Paid' },
+                    { name: 'Budd', status: 'Paid' }
+                ]
+            },
+            'morning-bootcamp': {
+                name: 'Morning Bootcamp',
+                time: '07:00 - 08:00',
+                location: 'Outdoor Area',
+                revenue: '$400',
+                attendees: [
+                    { name: 'Tony Stark', status: 'Paid' },
+                    { name: 'Steve Rogers', status: 'Paid' },
+                    { name: 'Natasha Romanoff', status: 'Paid' },
+                    { name: 'Bruce Banner', status: 'Paid' },
+                    { name: 'Thor Odinson', status: 'Unpaid' },
+                    { name: 'Clint Barton', status: 'Paid' }
+                ]
+            }
+        };
+
+        function switchView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+            
+            // Show selected view
+            document.getElementById('view-' + viewName).style.display = 'block';
+            
+            // Update buttons
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        function openDetails(id) {
+            const data = scheduleData[id];
+            if (!data) return;
+
+            document.getElementById('modal-class-name').textContent = data.name;
+            document.getElementById('modal-time').textContent = data.time;
+            document.getElementById('modal-location').textContent = data.location;
+            document.getElementById('modal-revenue').textContent = data.revenue;
+            
+            // Populate attendees
+            const attendeesList = document.querySelector('.modal-body ul');
+            attendeesList.innerHTML = ''; // Clear existing
+            
+            data.attendees.forEach(attendee => {
+                const li = document.createElement('li');
+                li.style.cssText = 'padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between;';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = attendee.name;
+                
+                const statusSpan = document.createElement('span');
+                statusSpan.textContent = attendee.status;
+                statusSpan.style.color = attendee.status === 'Paid' ? '#2ecc71' : '#e74c3c';
+                
+                li.appendChild(nameSpan);
+                li.appendChild(statusSpan);
+                attendeesList.appendChild(li);
+            });
+
+            document.getElementById('details-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('details-modal').classList.remove('active');
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            var modal = document.getElementById('details-modal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

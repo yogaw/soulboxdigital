@@ -89,6 +89,74 @@
 
             <!-- Client Management Content -->
             <div class="admin-dashboard-content">
+                <!-- Quick Stats Dashboard -->
+                <div class="client-stats-dashboard">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number">248</span>
+                            <span class="stat-label">Total Clients</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 12% this month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number">186</span>
+                            <span class="stat-label">Active Members</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 8% this month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number">24</span>
+                            <span class="stat-label">Expiring Soon</span>
+                        </div>
+                        <div class="stat-trend">
+                            <span>Within 7 days</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="fas fa-user-times"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number">15</span>
+                            <span class="stat-label">Expired Packages</span>
+                        </div>
+                        <div class="stat-trend down">
+                            <i class="fas fa-arrow-down"></i> 3% this month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fas fa-user-plus"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number">32</span>
+                            <span class="stat-label">New This Month</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 15% vs last month
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts Bar -->
+                <div class="alerts-bar">
+                    <div class="alert-item warning">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span><strong>24 clients</strong> have packages expiring within 7 days</span>
+                        <button class="alert-action">View All</button>
+                    </div>
+                    <div class="alert-item info">
+                        <i class="fas fa-info-circle"></i>
+                        <span><strong>5 clients</strong> haven't visited in 30+ days</span>
+                        <button class="alert-action">View All</button>
+                    </div>
+                </div>
+
                 <!-- Action Bar -->
                 <div class="action-bar">
                     <button class="primary-action-btn" id="add-client-btn">
@@ -96,31 +164,57 @@
                     </button>
                     <div class="filter-controls">
                         <div class="filter-group">
-                            <label>Status:</label>
-                            <select class="filter-select" id="status-select">
-                                <option value="all">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                                <option value="pending">Pending</option>
+                            <label>Membership:</label>
+                            <select class="filter-select" id="membership-select">
+                                <option value="all">All</option>
+                                <option value="vip">VIP</option>
+                                <option value="regular">Regular</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label>Membership:</label>
-                            <select class="filter-select" id="membership-select">
-                                <option value="all">All Memberships</option>
-                                <option value="premium">Premium</option>
-                                <option value="standard">Standard</option>
-                                <option value="basic">Basic</option>
-                                <option value="trial">Trial</option>
+                            <label>Package:</label>
+                            <select class="filter-select" id="package-select">
+                                <option value="all">All Packages</option>
+                                <option value="pt">Personal Training</option>
+                                <option value="group-20x">Group 20x</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="unlimited">Unlimited</option>
+                                <option value="none">No Package</option>
                             </select>
                         </div>
                         <button class="filter-btn">
                             <i class="fas fa-filter"></i> Filter
                         </button>
+                        <button class="filter-btn" id="import-btn">
+                            <i class="fas fa-upload"></i> Import
+                        </button>
                         <button class="filter-btn">
                             <i class="fas fa-download"></i> Export
                         </button>
                     </div>
+                </div>
+
+                <!-- Bulk Actions Bar (shown when clients selected) -->
+                <div class="bulk-actions-bar" id="bulk-actions-bar">
+                    <span class="selected-count"><span id="selected-count">0</span> clients selected</span>
+                    <button class="bulk-action-btn" id="bulk-email-btn">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </button>
+                    <button class="bulk-action-btn" id="bulk-sms-btn">
+                        <i class="fas fa-sms"></i> Send SMS
+                    </button>
+                    <button class="bulk-action-btn" id="bulk-status-btn">
+                        <i class="fas fa-toggle-on"></i> Change Status
+                    </button>
+                    <button class="bulk-action-btn" id="bulk-package-btn">
+                        <i class="fas fa-box"></i> Assign Package
+                    </button>
+                    <button class="bulk-action-btn" id="bulk-tag-btn">
+                        <i class="fas fa-tags"></i> Add Tags
+                    </button>
+                    <button class="dismiss-btn" id="dismiss-bulk">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
 
                 <!-- Client List -->
@@ -131,12 +225,11 @@
                                 <th>
                                     <input type="checkbox" id="select-all-clients">
                                 </th>
-                                <th>Client ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Membership</th>
-                                <th>Status</th>
+                                <th>Package</th>
                                 <th>Last Visit</th>
                                 <th>Actions</th>
                             </tr>
@@ -146,18 +239,17 @@
                                 <td>
                                     <input type="checkbox" class="client-checkbox">
                                 </td>
-                                <td>#1056</td>
                                 <td class="client-name">
                                     <div class="client-avatar">JD</div>
                                     <div>John Doe</div>
                                 </td>
                                 <td>john.doe@example.com</td>
-                                <td>+1 234-567-8901</td>
+                                <td>+62 812-3456-7890</td>
                                 <td>
-                                    <span class="badge premium">Premium</span>
+                                    <span class="badge vip">VIP</span>
                                 </td>
                                 <td>
-                                    <span class="status-badge active">Active</span>
+                                    <span class="package-badge pt">Personal Training</span>
                                 </td>
                                 <td>Today</td>
                                 <td>
@@ -171,6 +263,9 @@
                                         <button class="action-btn book-btn" title="Book Class">
                                             <i class="fas fa-calendar-plus"></i>
                                         </button>
+                                        <button class="action-btn package-btn" title="Manage Package">
+                                            <i class="fas fa-box"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -178,18 +273,17 @@
                                 <td>
                                     <input type="checkbox" class="client-checkbox">
                                 </td>
-                                <td>#1208</td>
                                 <td class="client-name">
                                     <div class="client-avatar">JS</div>
                                     <div>Jane Smith</div>
                                 </td>
                                 <td>jane.smith@example.com</td>
-                                <td>+1 234-567-8902</td>
+                                <td>+62 813-4567-8901</td>
                                 <td>
-                                    <span class="badge standard">Standard</span>
+                                    <span class="badge regular">Regular</span>
                                 </td>
                                 <td>
-                                    <span class="status-badge active">Active</span>
+                                    <span class="package-badge group">Group 20x</span>
                                 </td>
                                 <td>Yesterday</td>
                                 <td>
@@ -203,6 +297,9 @@
                                         <button class="action-btn book-btn" title="Book Class">
                                             <i class="fas fa-calendar-plus"></i>
                                         </button>
+                                        <button class="action-btn package-btn" title="Manage Package">
+                                            <i class="fas fa-box"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -210,18 +307,17 @@
                                 <td>
                                     <input type="checkbox" class="client-checkbox">
                                 </td>
-                                <td>#1311</td>
                                 <td class="client-name">
                                     <div class="client-avatar">RJ</div>
                                     <div>Robert Johnson</div>
                                 </td>
                                 <td>robert.j@example.com</td>
-                                <td>+1 234-567-8903</td>
+                                <td>+62 814-5678-9012</td>
                                 <td>
-                                    <span class="badge basic">Basic</span>
+                                    <span class="badge regular">Regular</span>
                                 </td>
                                 <td>
-                                    <span class="status-badge inactive">Inactive</span>
+                                    <span class="package-badge none">No Package</span>
                                 </td>
                                 <td>2 weeks ago</td>
                                 <td>
@@ -235,6 +331,9 @@
                                         <button class="action-btn book-btn" title="Book Class">
                                             <i class="fas fa-calendar-plus"></i>
                                         </button>
+                                        <button class="action-btn package-btn" title="Manage Package">
+                                            <i class="fas fa-box"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -242,18 +341,17 @@
                                 <td>
                                     <input type="checkbox" class="client-checkbox">
                                 </td>
-                                <td>#1422</td>
                                 <td class="client-name">
                                     <div class="client-avatar">EW</div>
                                     <div>Emily Wilson</div>
                                 </td>
                                 <td>emily.w@example.com</td>
-                                <td>+1 234-567-8904</td>
+                                <td>+62 815-6789-0123</td>
                                 <td>
-                                    <span class="badge premium">Premium</span>
+                                    <span class="badge vip">VIP</span>
                                 </td>
                                 <td>
-                                    <span class="status-badge active">Active</span>
+                                    <span class="package-badge yoga">Yoga</span>
                                 </td>
                                 <td>3 days ago</td>
                                 <td>
@@ -267,6 +365,9 @@
                                         <button class="action-btn book-btn" title="Book Class">
                                             <i class="fas fa-calendar-plus"></i>
                                         </button>
+                                        <button class="action-btn package-btn" title="Manage Package">
+                                            <i class="fas fa-box"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -274,18 +375,17 @@
                                 <td>
                                     <input type="checkbox" class="client-checkbox">
                                 </td>
-                                <td>#1536</td>
                                 <td class="client-name">
                                     <div class="client-avatar">MB</div>
                                     <div>Michael Brown</div>
                                 </td>
                                 <td>michael.b@example.com</td>
-                                <td>+1 234-567-8905</td>
+                                <td>+62 816-7890-1234</td>
                                 <td>
-                                    <span class="badge trial">Trial</span>
+                                    <span class="badge regular">Regular</span>
                                 </td>
                                 <td>
-                                    <span class="status-badge pending">Pending</span>
+                                    <span class="package-badge unlimited">Unlimited</span>
                                 </td>
                                 <td>Never</td>
                                 <td>
@@ -298,6 +398,9 @@
                                         </button>
                                         <button class="action-btn book-btn" title="Book Class">
                                             <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                        <button class="action-btn package-btn" title="Manage Package">
+                                            <i class="fas fa-box"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -557,10 +660,8 @@
                         <label class="form-label">Membership Type</label>
                         <select class="form-control">
                             <option value="">Select membership</option>
-                            <option value="premium">Premium</option>
-                            <option value="standard">Standard</option>
-                            <option value="basic">Basic</option>
-                            <option value="trial">Trial</option>
+                            <option value="vip">VIP</option>
+                            <option value="regular">Regular</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -573,14 +674,161 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Health Information</label>
-                    <textarea class="form-control" rows="3" placeholder="Enter any health concerns, injuries, or special requirements"></textarea>
+                <!-- Emergency Contact Section -->
+                <div class="form-section">
+                    <h4 class="form-section-title"><i class="fas fa-phone-alt"></i> Emergency Contact <span class="required-badge">Required</span></h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Contact Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="emergency-name" placeholder="Enter emergency contact name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Phone <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="emergency-phone" placeholder="Enter emergency contact phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Relationship <span class="required">*</span></label>
+                            <select class="form-control" id="emergency-relation" required>
+                                <option value="">Select relationship</option>
+                                <option value="spouse">Spouse</option>
+                                <option value="parent">Parent</option>
+                                <option value="sibling">Sibling</option>
+                                <option value="child">Child</option>
+                                <option value="friend">Friend</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-control" rows="2" placeholder="Enter any additional notes"></textarea>
+
+                <!-- Package & Credits Section -->
+                <div class="form-section">
+                    <h4 class="form-section-title"><i class="fas fa-box"></i> Package & Credits</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Active Package</label>
+                            <select class="form-control" id="client-package">
+                                <option value="">No Package</option>
+                                <option value="personal-training">Personal Training</option>
+                                <option value="group-20x">Group 20x</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="unlimited">Unlimited</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sessions Remaining</label>
+                            <input type="number" class="form-control" id="sessions-remaining" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Package Expiry Date</label>
+                            <input type="date" class="form-control" id="package-expiry">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">PT Sessions Remaining</label>
+                            <input type="number" class="form-control" id="pt-sessions-remaining" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Default PT Trainer</label>
+                            <select class="form-control" id="default-trainer">
+                                <option value="">No Default Trainer</option>
+                                <option value="john">John</option>
+                                <option value="ankie">Ankie</option>
+                                <option value="abas">Abas</option>
+                                <option value="delpas">Delpas</option>
+                                <option value="aldi">Aldi</option>
+                                <option value="ian">Ian</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Information Section -->
+                <div class="form-section">
+                    <h4 class="form-section-title"><i class="fas fa-heartbeat"></i> Health Information</h4>
+                    <div class="form-group">
+                        <label class="form-label">Health Conditions / Injuries</label>
+                        <textarea class="form-control" rows="2" placeholder="Enter any health concerns, injuries, or special requirements"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Fitness Goals</label>
+                            <select class="form-control" multiple style="height: 80px;">
+                                <option value="weight-loss">Weight Loss</option>
+                                <option value="muscle-gain">Muscle Gain</option>
+                                <option value="endurance">Endurance</option>
+                                <option value="flexibility">Flexibility</option>
+                                <option value="strength">Strength</option>
+                                <option value="general-fitness">General Fitness</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Preferred Class Types</label>
+                            <select class="form-control" multiple style="height: 80px;">
+                                <option value="hiit">HIIT</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="pilates">Pilates</option>
+                                <option value="boxing">Boxing</option>
+                                <option value="bodycamp">BodyCamp</option>
+                                <option value="trx">TRX</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waiver & Documents Section -->
+                <div class="form-section">
+                    <h4 class="form-section-title"><i class="fas fa-file-signature"></i> Waivers & Documents</h4>
+                    <div class="waiver-checklist">
+                        <label class="waiver-checkbox">
+                            <input type="checkbox" id="waiver-liability">
+                            <span class="checkmark"></span>
+                            <span>Liability Waiver Signed</span>
+                        </label>
+                        <label class="waiver-checkbox">
+                            <input type="checkbox" id="waiver-health">
+                            <span class="checkmark"></span>
+                            <span>Health Declaration Signed</span>
+                        </label>
+                        <label class="waiver-checkbox">
+                            <input type="checkbox" id="waiver-terms">
+                            <span class="checkmark"></span>
+                            <span>Terms & Conditions Accepted</span>
+                        </label>
+                    </div>
+                    <div class="form-row" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label class="form-label">Waiver Signed Date</label>
+                            <input type="date" class="form-control" id="waiver-date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Internal Notes Section -->
+                <div class="form-section">
+                    <h4 class="form-section-title"><i class="fas fa-sticky-note"></i> Internal Notes</h4>
+                    <div class="form-group">
+                        <label class="form-label">Notes (Visible to staff only)</label>
+                        <textarea class="form-control" rows="2" placeholder="Enter any additional notes"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Client Tags</label>
+                            <input type="text" class="form-control" id="client-tags" placeholder="e.g., VIP, New Member, At Risk">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Internal Rating</label>
+                            <select class="form-control" id="client-rating">
+                                <option value="">No Rating</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Good</option>
+                                <option value="3">⭐⭐⭐ Average</option>
+                                <option value="2">⭐⭐ Below Average</option>
+                                <option value="1">⭐ Poor</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -704,16 +952,71 @@
                         <div class="client-profile-info">
                             <h2>John Doe</h2>
                             <p>Member since: Jan 15, 2023</p>
-                            <span class="badge premium">Premium</span>
-                            <span class="status-badge active">Active</span>
+                            <span class="badge vip">VIP</span>
                         </div>
                     </div>
                     
                     <div class="client-tabs">
-                        <button class="client-tab active" data-tab="info">Information</button>
+                        <button class="client-tab active" data-tab="overview">Overview</button>
+                        <button class="client-tab" data-tab="info">Information</button>
+                        <button class="client-tab" data-tab="packages">Packages</button>
+                        <button class="client-tab" data-tab="pt-sessions">PT Sessions</button>
                         <button class="client-tab" data-tab="bookings">Bookings</button>
                         <button class="client-tab" data-tab="billing">Billing</button>
+                        <button class="client-tab" data-tab="communication">Communication</button>
                         <button class="client-tab" data-tab="progress">Progress</button>
+                    </div>
+
+                    <!-- Overview Tab -->
+                    <div class="client-tab-content active" id="overview-tab">
+                        <div class="overview-section">
+                            <h4>Quick Stats</h4>
+                            <div class="quick-stats-grid">
+                                <div class="quick-stat">
+                                    <span class="stat-value">156</span>
+                                    <span class="stat-label">Total Classes</span>
+                                </div>
+                                <div class="quick-stat">
+                                    <span class="stat-value">24</span>
+                                    <span class="stat-label">PT Sessions</span>
+                                </div>
+                                <div class="quick-stat">
+                                    <span class="stat-value">Jan 2023</span>
+                                    <span class="stat-label">Member Since</span>
+                                </div>
+                                <div class="quick-stat">
+                                    <span class="stat-value">Today</span>
+                                    <span class="stat-label">Last Visit</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overview-section">
+                            <h4>Recent Activity</h4>
+                            <div class="activity-timeline">
+                                <div class="activity-item">
+                                    <div class="activity-icon completed"><i class="fas fa-check"></i></div>
+                                    <div class="activity-content">
+                                        <span class="activity-title">Completed HIIT Circuit</span>
+                                        <span class="activity-time">Today at 1:00 PM</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon booked"><i class="fas fa-calendar-plus"></i></div>
+                                    <div class="activity-content">
+                                        <span class="activity-title">Booked Yoga Flow</span>
+                                        <span class="activity-time">Yesterday at 3:30 PM</span>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon package"><i class="fas fa-box"></i></div>
+                                    <div class="activity-content">
+                                        <span class="activity-title">Package renewed - Group Class 10-Pack</span>
+                                        <span class="activity-time">Jan 15, 2024</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="client-tab-content active" id="info-tab">
@@ -763,7 +1066,431 @@
                             <p>Prefers morning classes. Interested in nutrition coaching.</p>
                         </div>
                     </div>
-                    
+
+                    <!-- Packages Tab -->
+                    <div class="client-tab-content" id="packages-tab" style="display: none;">
+                        <div class="packages-section">
+                            <h4>Active Packages</h4>
+                            <div class="package-cards">
+                                <div class="package-card active">
+                                    <div class="package-header">
+                                        <span class="package-name">Group Class 10-Pack</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                    <div class="package-details">
+                                        <div class="package-detail">
+                                            <span class="detail-label">Sessions</span>
+                                            <span class="detail-value">7 of 10 remaining</span>
+                                        </div>
+                                        <div class="package-detail">
+                                            <span class="detail-label">Expiry</span>
+                                            <span class="detail-value warning">Mar 15, 2024</span>
+                                        </div>
+                                        <div class="package-detail">
+                                            <span class="detail-label">Purchased</span>
+                                            <span class="detail-value">Jan 15, 2024</span>
+                                        </div>
+                                        <div class="package-detail">
+                                            <span class="detail-label">Price</span>
+                                            <span class="detail-value">Rp 1,350,000</span>
+                                        </div>
+                                    </div>
+                                    <div class="package-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 70%;"></div>
+                                        </div>
+                                        <span class="progress-text">70% used</span>
+                                    </div>
+                                    <div class="package-actions">
+                                        <button class="package-action-btn"><i class="fas fa-plus"></i> Add Sessions</button>
+                                        <button class="package-action-btn"><i class="fas fa-calendar-alt"></i> Extend</button>
+                                        <button class="package-action-btn"><i class="fas fa-history"></i> History</button>
+                                    </div>
+                                </div>
+
+                                <div class="package-card">
+                                    <div class="package-header">
+                                        <span class="package-name">PT 4-Pack</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                    <div class="package-details">
+                                        <div class="package-detail">
+                                            <span class="detail-label">Sessions</span>
+                                            <span class="detail-value">2 of 4 remaining</span>
+                                        </div>
+                                        <div class="package-detail">
+                                            <span class="detail-label">Expiry</span>
+                                            <span class="detail-value">Apr 30, 2024</span>
+                                        </div>
+                                        <div class="package-detail">
+                                            <span class="detail-label">Trainer</span>
+                                            <span class="detail-value">John</span>
+                                        </div>
+                                        <div class="package-detail">
+                                            <span class="detail-label">Price</span>
+                                            <span class="detail-value">Rp 1,200,000</span>
+                                        </div>
+                                    </div>
+                                    <div class="package-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 50%;"></div>
+                                        </div>
+                                        <span class="progress-text">50% used</span>
+                                    </div>
+                                    <div class="package-actions">
+                                        <button class="package-action-btn"><i class="fas fa-plus"></i> Add Sessions</button>
+                                        <button class="package-action-btn"><i class="fas fa-calendar-alt"></i> Extend</button>
+                                        <button class="package-action-btn"><i class="fas fa-history"></i> History</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-actions">
+                                <button class="primary-action-btn" style="margin-top: 20px;">
+                                    <i class="fas fa-plus"></i> Assign New Package
+                                </button>
+                            </div>
+
+                            <h4 style="margin-top: 30px;">Package History</h4>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Package</th>
+                                        <th>Action</th>
+                                        <th>Sessions</th>
+                                        <th>Expiry</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jan 15, 2024</td>
+                                        <td>Group Class 10-Pack</td>
+                                        <td><span class="badge standard">Purchased</span></td>
+                                        <td>10</td>
+                                        <td>Mar 15, 2024</td>
+                                        <td>Rp 1,350,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dec 20, 2023</td>
+                                        <td>PT 4-Pack</td>
+                                        <td><span class="badge standard">Purchased</span></td>
+                                        <td>4</td>
+                                        <td>Apr 30, 2024</td>
+                                        <td>Rp 1,200,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Oct 10, 2023</td>
+                                        <td>Group Class 10-Pack</td>
+                                        <td><span class="badge premium">Expired</span></td>
+                                        <td>10/10</td>
+                                        <td>Dec 10, 2023</td>
+                                        <td>Rp 1,350,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PT Sessions Tab -->
+                    <div class="client-tab-content" id="pt-sessions-tab" style="display: none;">
+                        <div class="pt-section">
+                            <!-- PT Package Summary -->
+                            <div class="pt-summary-card">
+                                <div class="pt-summary-header">
+                                    <h4>Current PT Package</h4>
+                                    <span class="status-badge active">Active</span>
+                                </div>
+                                <div class="pt-summary-grid">
+                                    <div class="pt-summary-item">
+                                        <span class="summary-label">Package</span>
+                                        <span class="summary-value">PT 4-Pack</span>
+                                    </div>
+                                    <div class="pt-summary-item">
+                                        <span class="summary-label">Sessions Remaining</span>
+                                        <span class="summary-value highlight">2 of 4</span>
+                                    </div>
+                                    <div class="pt-summary-item">
+                                        <span class="summary-label">Expiry Date</span>
+                                        <span class="summary-value">Apr 30, 2024</span>
+                                    </div>
+                                    <div class="pt-summary-item">
+                                        <span class="summary-label">Default Trainer</span>
+                                        <span class="summary-value">John</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Create PT Session -->
+                            <div class="create-pt-section">
+                                <div class="section-header-row">
+                                    <h4>Create New PT Session</h4>
+                                    <button class="collapse-btn"><i class="fas fa-chevron-up"></i></button>
+                                </div>
+                                <div class="create-pt-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Trainer</label>
+                                            <select class="form-control">
+                                                <option value="john" selected>John (Default)</option>
+                                                <option value="ankie">Ankie</option>
+                                                <option value="abas">Abas</option>
+                                                <option value="delpas">Delpas</option>
+                                                <option value="aldi">Aldi</option>
+                                                <option value="ian">Ian</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Date</label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Time</label>
+                                            <select class="form-control">
+                                                <option value="">Select time</option>
+                                                <option value="09:00">09:00 AM</option>
+                                                <option value="10:00">10:00 AM</option>
+                                                <option value="11:00">11:00 AM</option>
+                                                <option value="14:00">02:00 PM</option>
+                                                <option value="15:00">03:00 PM</option>
+                                                <option value="16:00">04:00 PM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Recurring</label>
+                                            <select class="form-control">
+                                                <option value="none">One-time</option>
+                                                <option value="weekly">Weekly (same day/time)</option>
+                                                <option value="biweekly">Bi-weekly</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Notes</label>
+                                            <input type="text" class="form-control" placeholder="Focus areas, special requests...">
+                                        </div>
+                                    </div>
+                                    <button class="primary-action-btn">
+                                        <i class="fas fa-plus"></i> Create PT Session
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming PT Sessions -->
+                            <h4>Upcoming PT Sessions</h4>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Trainer</th>
+                                        <th>Notes</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Feb 15, 2024</td>
+                                        <td>2:00 PM</td>
+                                        <td>John</td>
+                                        <td>Focus on upper body</td>
+                                        <td><span class="status-badge upcoming">Scheduled</span></td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn" title="Reschedule"><i class="fas fa-calendar-alt"></i></button>
+                                                <button class="action-btn" title="Cancel"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Feb 22, 2024</td>
+                                        <td>2:00 PM</td>
+                                        <td>John</td>
+                                        <td>-</td>
+                                        <td><span class="status-badge upcoming">Scheduled</span></td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn" title="Reschedule"><i class="fas fa-calendar-alt"></i></button>
+                                                <button class="action-btn" title="Cancel"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- PT Session History -->
+                            <h4 style="margin-top: 30px;">PT Session History</h4>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Trainer</th>
+                                        <th>Notes</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Feb 8, 2024</td>
+                                        <td>2:00 PM</td>
+                                        <td>John</td>
+                                        <td>Completed strength training</td>
+                                        <td><span class="status-badge completed">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Feb 1, 2024</td>
+                                        <td>2:00 PM</td>
+                                        <td>John</td>
+                                        <td>Cardio focus</td>
+                                        <td><span class="status-badge completed">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jan 25, 2024</td>
+                                        <td>2:00 PM</td>
+                                        <td>John</td>
+                                        <td>-</td>
+                                        <td><span class="status-badge cancelled">Cancelled (Client sick)</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Communication Tab -->
+                    <div class="client-tab-content" id="communication-tab" style="display: none;">
+                        <div class="communication-section">
+                            <!-- Add Communication -->
+                            <div class="add-communication">
+                                <h4>Log Communication</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Type</label>
+                                        <select class="form-control" id="comm-type">
+                                            <option value="call">Phone Call</option>
+                                            <option value="email">Email</option>
+                                            <option value="whatsapp">WhatsApp</option>
+                                            <option value="in-person">In-Person</option>
+                                            <option value="note">Internal Note</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Date & Time</label>
+                                        <input type="datetime-local" class="form-control" id="comm-datetime">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Summary</label>
+                                    <textarea class="form-control" rows="2" id="comm-summary" placeholder="Brief summary of the communication..."></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Follow-up Required?</label>
+                                        <select class="form-control" id="comm-followup">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="followup-date-group" style="display: none;">
+                                        <label class="form-label">Follow-up Date</label>
+                                        <input type="date" class="form-control" id="comm-followup-date">
+                                    </div>
+                                </div>
+                                <button class="primary-action-btn">
+                                    <i class="fas fa-plus"></i> Add Communication Log
+                                </button>
+                            </div>
+
+                            <!-- Communication Timeline -->
+                            <h4 style="margin-top: 30px;">Communication History</h4>
+                            <div class="communication-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-icon email"><i class="fas fa-envelope"></i></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-type">Email</span>
+                                            <span class="timeline-date">Feb 10, 2024 at 2:30 PM</span>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>Sent booking confirmation for HIIT Circuit class on Feb 15.</p>
+                                        </div>
+                                        <div class="timeline-meta">
+                                            <span class="meta-by">System</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-icon call"><i class="fas fa-phone-alt"></i></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-type">Phone Call</span>
+                                            <span class="timeline-date">Feb 8, 2024 at 11:00 AM</span>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>Discussed package renewal options. Client interested in upgrading to Combo Premium package. Will follow up next week.</p>
+                                        </div>
+                                        <div class="timeline-meta">
+                                            <span class="meta-by">Admin Jane</span>
+                                            <span class="meta-followup"><i class="fas fa-bell"></i> Follow-up: Feb 15, 2024</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-icon whatsapp"><i class="fab fa-whatsapp"></i></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-type">WhatsApp</span>
+                                            <span class="timeline-date">Feb 5, 2024 at 9:15 AM</span>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>Class reminder sent for tomorrow's BODYCAMP session.</p>
+                                        </div>
+                                        <div class="timeline-meta">
+                                            <span class="meta-by">System</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-icon note"><i class="fas fa-sticky-note"></i></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-type">Internal Note</span>
+                                            <span class="timeline-date">Feb 1, 2024 at 3:00 PM</span>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>Client mentioned interest in nutrition coaching. Has upcoming HYROX race in May. Very motivated!</p>
+                                        </div>
+                                        <div class="timeline-meta">
+                                            <span class="meta-by">Trainer John</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-icon in-person"><i class="fas fa-user"></i></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="timeline-type">In-Person</span>
+                                            <span class="timeline-date">Jan 20, 2024 at 6:00 PM</span>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>Checked in after HIIT class. Client happy with progress, feeling stronger. No complaints or issues.</p>
+                                        </div>
+                                        <div class="timeline-meta">
+                                            <span class="meta-by">Admin John</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="client-tab-content" id="bookings-tab" style="display: none;">
                         <div class="bookings-history">
                             <h4>Upcoming Bookings</h4>
@@ -981,6 +1708,627 @@
                 <button class="modal-btn edit">Edit Client</button>
                 <button class="modal-btn book">Book Class</button>
                 <button class="modal-btn close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Package Modal -->
+    <div class="modal" id="manage-package-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Manage Client Package</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Client Info -->
+                <div class="client-booking-info">
+                    <div class="client-avatar large">JD</div>
+                    <div class="client-details">
+                        <h4>John Doe</h4>
+                        <p>Premium Member • #1056</p>
+                    </div>
+                </div>
+
+                <!-- Current Package Summary -->
+                <div class="form-section">
+                    <h4 class="form-section-title"><i class="fas fa-box-open"></i> Current Package</h4>
+                    <div class="package-summary-grid">
+                        <div class="package-summary-item">
+                            <span class="summary-label">Active Package</span>
+                            <span class="summary-value">Group Class 10-Pack</span>
+                        </div>
+                        <div class="package-summary-item">
+                            <span class="summary-label">Sessions Remaining</span>
+                            <span class="summary-value highlight">7 of 10</span>
+                        </div>
+                        <div class="package-summary-item">
+                            <span class="summary-label">Expiry Date</span>
+                            <span class="summary-value warning">Mar 15, 2024</span>
+                        </div>
+                        <div class="package-summary-item">
+                            <span class="summary-label">Status</span>
+                            <span class="status-badge active">Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Tabs -->
+                <div class="package-action-tabs">
+                    <button class="package-action-tab active" data-action="assign">
+                        <i class="fas fa-plus-circle"></i> Assign New
+                    </button>
+                    <button class="package-action-tab" data-action="modify">
+                        <i class="fas fa-edit"></i> Modify
+                    </button>
+                    <button class="package-action-tab" data-action="history">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                </div>
+
+                <!-- Assign New Package -->
+                <div class="package-action-content active" id="assign-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Select Package</label>
+                            <select class="form-control" id="new-package-select">
+                                <option value="">Choose a package...</option>
+                                <option value="personal-training" data-price="1,200,000">Personal Training - Rp 1,200,000</option>
+                                <option value="group-20x" data-price="2,400,000">Group 20x - Rp 2,400,000</option>
+                                <option value="yoga" data-price="800,000">Yoga - Rp 800,000</option>
+                                <option value="unlimited" data-price="3,500,000">Unlimited - Rp 3,500,000</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Sessions</label>
+                            <input type="number" class="form-control" id="new-sessions" placeholder="Auto-filled">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control" id="new-expiry">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Price (Rp)</label>
+                            <input type="text" class="form-control" id="new-price" placeholder="Auto-filled">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Status</label>
+                            <select class="form-control" id="payment-status">
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                                <option value="complimentary">Complimentary</option>
+                                <option value="partial">Partial Payment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" rows="2" placeholder="Add any notes about this package assignment"></textarea>
+                    </div>
+                </div>
+
+                <!-- Modify Package -->
+                <div class="package-action-content" id="modify-content" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Add Sessions</label>
+                            <input type="number" class="form-control" id="add-sessions" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Remove Sessions</label>
+                            <input type="number" class="form-control" id="remove-sessions" placeholder="0" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Extend Expiry Date</label>
+                            <input type="date" class="form-control" id="extend-expiry">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reason for Modification</label>
+                            <select class="form-control" id="modify-reason">
+                                <option value="">Select reason...</option>
+                                <option value="customer-request">Customer Request</option>
+                                <option value="medical">Medical Issue</option>
+                                <option value="travel">Travel/Away</option>
+                                <option value="promotion">Promotion/Bonus</option>
+                                <option value="error">Correction/Error Fix</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" rows="2" placeholder="Explain the modification"></textarea>
+                    </div>
+                </div>
+
+                <!-- Package History -->
+                <div class="package-action-content" id="history-content" style="display: none;">
+                    <table class="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Action</th>
+                                <th>Package</th>
+                                <th>Sessions</th>
+                                <th>Expiry</th>
+                                <th>By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jan 15, 2024</td>
+                                <td><span class="badge standard">Purchased</span></td>
+                                <td>Group Class 10-Pack</td>
+                                <td>10</td>
+                                <td>Mar 15, 2024</td>
+                                <td>System</td>
+                            </tr>
+                            <tr>
+                                <td>Jan 20, 2024</td>
+                                <td><span class="badge premium">Used</span></td>
+                                <td>HIIT Circuit</td>
+                                <td>-1</td>
+                                <td>-</td>
+                                <td>System</td>
+                            </tr>
+                            <tr>
+                                <td>Jan 25, 2024</td>
+                                <td><span class="badge premium">Used</span></td>
+                                <td>Yoga Flow</td>
+                                <td>-1</td>
+                                <td>-</td>
+                                <td>System</td>
+                            </tr>
+                            <tr>
+                                <td>Feb 1, 2024</td>
+                                <td><span class="badge premium">Used</span></td>
+                                <td>BODYCAMP</td>
+                                <td>-1</td>
+                                <td>-</td>
+                                <td>System</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Clients Modal -->
+    <div class="modal" id="import-clients-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Import Clients</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="import-steps">
+                    <div class="import-step active" data-step="1">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Upload</span>
+                    </div>
+                    <div class="import-step" data-step="2">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Map Columns</span>
+                    </div>
+                    <div class="import-step" data-step="3">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Preview</span>
+                    </div>
+                    <div class="import-step" data-step="4">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Import</span>
+                    </div>
+                </div>
+
+                <!-- Step 1: Upload -->
+                <div class="import-content active" id="import-step-1">
+                    <div class="upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h4>Drag & drop your CSV file here</h4>
+                        <p>or</p>
+                        <button class="primary-action-btn">
+                            <i class="fas fa-folder-open"></i> Browse Files
+                        </button>
+                        <p class="upload-hint">Supported formats: CSV, XLSX (Max 5MB)</p>
+                    </div>
+                    <div class="template-download">
+                        <a href="#" class="template-link">
+                            <i class="fas fa-download"></i> Download Import Template
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Step 2: Map Columns -->
+                <div class="import-content" id="import-step-2" style="display: none;">
+                    <p class="import-info">Map your file columns to SoulBox fields</p>
+                    <div class="column-mapping">
+                        <div class="mapping-row">
+                            <div class="mapping-source">Column A: "First Name"</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <select class="form-control mapping-target">
+                                <option value="firstName" selected>First Name</option>
+                                <option value="lastName">Last Name</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                            </select>
+                        </div>
+                        <div class="mapping-row">
+                            <div class="mapping-source">Column B: "Last Name"</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <select class="form-control mapping-target">
+                                <option value="firstName">First Name</option>
+                                <option value="lastName" selected>Last Name</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                            </select>
+                        </div>
+                        <div class="mapping-row">
+                            <div class="mapping-source">Column C: "Email"</div>
+                            <i class="fas fa-arrow-right"></i>
+                            <select class="form-control mapping-target">
+                                <option value="firstName">First Name</option>
+                                <option value="lastName">Last Name</option>
+                                <option value="email" selected>Email</option>
+                                <option value="phone">Phone</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Preview -->
+                <div class="import-content" id="import-step-3" style="display: none;">
+                    <div class="import-summary">
+                        <span class="summary-item"><i class="fas fa-users"></i> 50 rows found</span>
+                        <span class="summary-item success"><i class="fas fa-check-circle"></i> 48 valid</span>
+                        <span class="summary-item error"><i class="fas fa-exclamation-circle"></i> 2 errors</span>
+                    </div>
+                    <div class="preview-table-container">
+                        <table class="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Andi</td>
+                                    <td>Pratama</td>
+                                    <td>andi@email.com</td>
+                                    <td>+62 812-1234-5678</td>
+                                    <td><span class="status-badge active">Valid</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Budi</td>
+                                    <td>Santoso</td>
+                                    <td>budi@email.com</td>
+                                    <td>+62 813-2345-6789</td>
+                                    <td><span class="status-badge active">Valid</span></td>
+                                </tr>
+                                <tr class="error-row">
+                                    <td>Citra</td>
+                                    <td></td>
+                                    <td>invalid-email</td>
+                                    <td></td>
+                                    <td><span class="status-badge cancelled">Error: Invalid email</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Step 4: Import -->
+                <div class="import-content" id="import-step-4" style="display: none;">
+                    <div class="import-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                        <div class="progress-text">Importing 36 of 48 clients...</div>
+                    </div>
+                    <div class="import-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle success"></i>
+                            <span>36 imported</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-exclamation-circle warning"></i>
+                            <span>0 duplicates skipped</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-times-circle error"></i>
+                            <span>2 errors</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn secondary" id="import-back" style="display: none;">Back</button>
+                <button class="modal-btn confirm" id="import-next">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Email Modal -->
+    <div class="modal" id="send-email-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Send Email to Clients</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="email-recipients">
+                    <h4>Recipients <span class="recipient-count">3 clients selected</span></h4>
+                    <div class="recipient-tags">
+                        <span class="recipient-tag">John Doe <button><i class="fas fa-times"></i></button></span>
+                        <span class="recipient-tag">Jane Smith <button><i class="fas fa-times"></i></button></span>
+                        <span class="recipient-tag">Emily Wilson <button><i class="fas fa-times"></i></button></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Template (Optional)</label>
+                    <select class="form-control" id="email-template">
+                        <option value="">No template - Write custom email</option>
+                        <option value="welcome">Welcome Email</option>
+                        <option value="package-expiring">Package Expiring Reminder</option>
+                        <option value="package-expired">Package Expired Notice</option>
+                        <option value="new-class">New Class Announcement</option>
+                        <option value="promotion">Promotion/Offer</option>
+                        <option value="birthday">Birthday Greeting</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Subject <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="email-subject" placeholder="Enter email subject">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message <span class="required">*</span></label>
+                    <textarea class="form-control" id="email-body" rows="8" placeholder="Write your message here..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Attachments</label>
+                        <div class="attachment-area">
+                            <button class="attachment-btn">
+                                <i class="fas fa-paperclip"></i> Add Attachment
+                            </button>
+                            <span class="attachment-hint">Max 10MB per file</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Schedule</label>
+                        <select class="form-control" id="email-schedule">
+                            <option value="now">Send immediately</option>
+                            <option value="schedule">Schedule for later</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="email-schedule-datetime" style="display: none;">
+                        <label class="form-label">Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="email-scheduled-time">
+                    </div>
+                </div>
+
+                <div class="email-preview">
+                    <h4>Preview</h4>
+                    <div class="preview-box">
+                        <div class="preview-header">
+                            <span><strong>From:</strong> SoulBox Digital &lt;info@soulbox.id&gt;</span>
+                            <span><strong>To:</strong> 3 recipients</span>
+                            <span><strong>Subject:</strong> <span id="preview-subject">[Your subject here]</span></span>
+                        </div>
+                        <div class="preview-body" id="preview-body">
+                            [Your message will appear here]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn secondary" id="save-email-draft">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button class="modal-btn confirm" id="send-email-btn">
+                    <i class="fas fa-paper-plane"></i> Send Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send SMS Modal -->
+    <div class="modal" id="send-sms-modal">
+        <div class="modal-content modal-sms">
+            <div class="modal-header">
+                <h3 class="modal-title">Send SMS/WhatsApp</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sms-recipients">
+                    <h4>Recipients <span class="recipient-count">3 clients selected</span></h4>
+                    <div class="recipient-tags">
+                        <span class="recipient-tag">+62 812-xxxx-7890 (John) <button><i class="fas fa-times"></i></button></span>
+                        <span class="recipient-tag">+62 813-xxxx-8901 (Jane) <button><i class="fas fa-times"></i></button></span>
+                        <span class="recipient-tag">+62 815-xxxx-0123 (Emily) <button><i class="fas fa-times"></i></button></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Send Via</label>
+                        <div class="channel-options">
+                            <label class="channel-option">
+                                <input type="radio" name="sms-channel" value="sms" checked>
+                                <span class="channel-icon"><i class="fas fa-sms"></i></span>
+                                <span class="channel-name">SMS</span>
+                            </label>
+                            <label class="channel-option">
+                                <input type="radio" name="sms-channel" value="whatsapp">
+                                <span class="channel-icon"><i class="fab fa-whatsapp"></i></span>
+                                <span class="channel-name">WhatsApp</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message Template (Optional)</label>
+                    <select class="form-control" id="sms-template">
+                        <option value="">No template - Write custom message</option>
+                        <option value="class-reminder">Class Reminder (2 hours before)</option>
+                        <option value="package-reminder">Package Expiry Reminder</option>
+                        <option value="payment-reminder">Payment Reminder</option>
+                        <option value="promotion">Promotion/Offer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message <span class="required">*</span></label>
+                    <textarea class="form-control" id="sms-body" rows="4" placeholder="Write your message here..." maxlength="320"></textarea>
+                    <div class="sms-counter">
+                        <span id="sms-char-count">0</span>/320 characters
+                        <span class="sms-segments">(~<span id="sms-segments">1</span> SMS)</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Schedule</label>
+                        <select class="form-control" id="sms-schedule">
+                            <option value="now">Send immediately</option>
+                            <option value="schedule">Schedule for later</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="sms-schedule-datetime" style="display: none;">
+                        <label class="form-label">Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="sms-scheduled-time">
+                    </div>
+                </div>
+
+                <div class="sms-cost-info">
+                    <div class="cost-item">
+                        <span class="cost-label">Estimated Cost:</span>
+                        <span class="cost-value">3 recipients × Rp 500 = <strong>Rp 1,500</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm" id="send-sms-btn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Status Modal -->
+    <div class="modal" id="change-status-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Client Status</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-info">You are changing status for <strong>3 clients</strong>.</p>
+
+                <div class="form-group">
+                    <label class="form-label">New Status</label>
+                    <select class="form-control" id="new-status">
+                        <option value="active">Active - Full access to booking</option>
+                        <option value="inactive">Inactive - Cannot book classes</option>
+                        <option value="pending">Pending - Awaiting verification</option>
+                        <option value="suspended">Suspended - Account frozen</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Reason (Optional)</label>
+                    <textarea class="form-control" rows="2" id="status-reason" placeholder="Enter reason for status change..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notify Clients?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-email">
+                            <span>Send email notification</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-sms">
+                            <span>Send SMS notification</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Tags Modal -->
+    <div class="modal" id="assign-tags-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 class="modal-title">Manage Client Tags</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-info">Managing tags for <strong>3 clients</strong>.</p>
+
+                <div class="form-group">
+                    <label class="form-label">Current Tags</label>
+                    <div class="tags-container">
+                        <span class="tag-item">VIP <button><i class="fas fa-times"></i></button></span>
+                        <span class="tag-item">Early Bird <button><i class="fas fa-times"></i></button></span>
+                        <button class="add-tag-btn"><i class="fas fa-plus"></i> Add Tag</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Available Tags</label>
+                    <div class="available-tags">
+                        <span class="tag-option" data-tag="VIP">VIP</span>
+                        <span class="tag-option" data-tag="Early Bird">Early Bird</span>
+                        <span class="tag-option" data-tag="New Member">New Member</span>
+                        <span class="tag-option" data-tag="At Risk">At Risk</span>
+                        <span class="tag-option" data-tag="Champion">Champion</span>
+                        <span class="tag-option" data-tag="Referral">Referral</span>
+                        <span class="tag-option" data-tag="Corporate">Corporate</span>
+                        <span class="tag-option" data-tag="Student">Student</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Create New Tag</label>
+                    <div class="form-row">
+                        <input type="text" class="form-control" placeholder="Enter new tag name">
+                        <button class="primary-action-btn">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel">Cancel</button>
+                <button class="modal-btn confirm">Save Tags</button>
             </div>
         </div>
     </div>
