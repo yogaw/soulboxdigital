@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trainer Board - SoulBox</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Trainer Board Specific Styles */
+        :root {
+            --progress-up: #22c55e;
+            --progress-down: #ef4444;
+            --progress-new: #eab308;
+            --progress-same: #808080;
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 60px;
+        }
+
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: var(--foreground-secondary, #b3b3b3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--foreground, #fff);
+        }
+
+        .admin-sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .admin-sidebar.collapsed .admin-logo span:not(.sidebar-toggle) {
+            display: none;
+        }
+
+        .admin-sidebar.collapsed .admin-nav-link span {
+            display: none;
+        }
+
+        .admin-sidebar.collapsed .admin-user-details {
+            display: none;
+        }
+
+        .admin-sidebar.collapsed .admin-logout-btn {
+            display: none;
+        }
+
+        .admin-main.expanded {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        /* Trainer Profile Image */
+        .trainer-avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary, #7d5fff);
+        }
+
+        .admin-avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Trainer Info - Inline in Class Info Bar */
+        .trainer-inline {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(125, 95, 255, 0.1), rgba(125, 95, 255, 0.05));
+            border-radius: 50px;
+            border: 1px solid rgba(125, 95, 255, 0.2);
+        }
+
+        .trainer-inline-photo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary, #7d5fff);
+        }
+
+        .trainer-inline-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trainer-inline-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--foreground, #fff);
+        }
+
+        .trainer-inline-role {
+            font-size: 0.7rem;
+            color: var(--primary, #7d5fff);
+        }
+
+        /* Class Info Bar with Trainer */
+        .class-info-bar-with-trainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--background-tertiary, #242424);
+            border-radius: 8px;
+            animation: classInfo 0.25s ease;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .class-info-left {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Fullscreen Mode */
+        .fullscreen-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(125, 95, 255, 0.2);
+            border: 1px solid var(--primary, #7d5fff);
+            border-radius: 8px;
+            color: var(--primary, #7d5fff);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .fullscreen-btn:hover {
+            background: var(--primary, #7d5fff);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(125, 95, 255, 0.4);
+        }
+
+        /* Fullscreen Presentation Mode */
+        body.fullscreen-mode {
+            overflow: hidden;
+        }
+
+        body.fullscreen-mode #admin-app {
+            display: block;
+        }
+
+        body.fullscreen-mode .admin-sidebar {
+            display: none !important;
+        }
+
+        body.fullscreen-mode .admin-main {
+            margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        body.fullscreen-mode .admin-header {
+            display: none;
+        }
+
+        body.fullscreen-mode .trainer-board-container {
+            padding: 80px 40px 20px 40px;
+            height: 100vh;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.fullscreen-mode .class-selector-section {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        body.fullscreen-mode .class-selector-header {
+            display: none;
+        }
+
+        body.fullscreen-mode .class-dropdown-container {
+            display: none;
+        }
+
+        body.fullscreen-mode .class-info-bar-with-trainer {
+            display: none;
+        }
+
+        body.fullscreen-mode .board-action-bar {
+            display: none;
+        }
+
+        body.fullscreen-mode .legend-bar {
+            display: none;
+        }
+
+        body.fullscreen-mode .progress-table-container {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: auto;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0;
+        }
+
+        body.fullscreen-mode .progress-table {
+            font-size: 1.15rem;
+            width: 100%;
+            min-width: max-content;
+        }
+
+        body.fullscreen-mode .progress-table th,
+        body.fullscreen-mode .progress-table td {
+            padding: 16px 18px;
+            white-space: nowrap;
+        }
+
+        body.fullscreen-mode .progress-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #1a1a1a;
+        }
+
+        body.fullscreen-mode .progress-table th.movement-group {
+            font-size: 0.95rem;
+        }
+
+        body.fullscreen-mode .customer-name {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        body.fullscreen-mode .customer-avatar {
+            width: 48px;
+            height: 48px;
+            font-size: 1rem;
+        }
+
+        body.fullscreen-mode .value-box {
+            min-width: 60px;
+            padding: 12px 14px;
+            font-size: 1.05rem;
+        }
+
+        body.fullscreen-mode .progress-indicator {
+            font-size: 1rem;
+            min-width: 70px;
+        }
+
+        body.fullscreen-mode .movement-header .movement-name {
+            font-size: 1.05rem;
+        }
+
+        body.fullscreen-mode .movement-header .movement-unit {
+            font-size: 0.85rem;
+        }
+
+        /* Hide inputs in presentation mode, show values only */
+        body.fullscreen-mode .value-current {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            pointer-events: none;
+            text-align: center;
+            color: var(--foreground, #fff);
+        }
+
+        body.fullscreen-mode .customer-badge {
+            display: none;
+        }
+
+        /* Remove duplicate fullscreen mode trainer styles - handled in presentation-header */
+
+        /* Exit Fullscreen Button */
+        .exit-fullscreen-btn {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--foreground, #fff);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        body.fullscreen-mode .exit-fullscreen-btn {
+            display: flex;
+        }
+
+        .exit-fullscreen-btn:hover {
+            background: rgba(239, 68, 68, 0.8);
+            border-color: var(--danger, #ef4444);
+        }
+
+        /* Presentation mode header overlay */
+        .presentation-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background: linear-gradient(to bottom, rgba(18, 18, 18, 0.98) 0%, rgba(18, 18, 18, 0.9) 70%, transparent 100%);
+            z-index: 50;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.fullscreen-mode .presentation-header {
+            display: flex;
+        }
+
+        body.fullscreen-mode .presentation-header .trainer-inline {
+            background: rgba(125, 95, 255, 0.15);
+            border: 1px solid rgba(125, 95, 255, 0.3);
+            padding: 8px 16px 8px 8px;
+        }
+
+        body.fullscreen-mode .presentation-header .trainer-inline-photo {
+            width: 40px;
+            height: 40px;
+        }
+
+        body.fullscreen-mode .presentation-header .trainer-inline-name {
+            font-size: 1rem;
+        }
+
+        body.fullscreen-mode .presentation-header .trainer-inline-role {
+            font-size: 0.8rem;
+        }
+
+        .presentation-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--foreground, #fff);
+            background: linear-gradient(135deg, #fff, #7d5fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .presentation-subtitle {
+            font-size: 1rem;
+            color: var(--foreground-secondary, #b3b3b3);
+            margin-top: 4px;
+        }
+
+        /* Remove number input spinners */
+        .value-current::-webkit-outer-spin-button,
+        .value-current::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .value-current[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Add new customer highlight */
+        .customer-option.selected {
+            background: rgba(125, 95, 255, 0.2) !important;
+            border-left: 3px solid var(--primary, #7d5fff);
+        }
+
+        /* Hint text in modal */
+        .modal-hint {
+            font-size: 0.75rem;
+            color: var(--foreground-muted, #808080);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .trainer-board-container {
+            padding: 24px;
+            animation: pageLoad 0.4s ease-out;
+        }
+
+        @keyframes pageLoad {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Class Selector Section */
+        .class-selector-section {
+            background: var(--background-secondary, #1a1a1a);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+        }
+
+        .class-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .class-selector-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--foreground, #fff);
+        }
+
+        .class-selector-subtitle {
+            font-size: 0.875rem;
+            color: var(--foreground-secondary, #b3b3b3);
+            margin-top: 4px;
+        }
+
+        .class-dropdown-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .class-dropdown {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--background-tertiary, #242424);
+            border: 2px solid var(--border, rgba(255, 255, 255, 0.1));
+            border-radius: 8px;
+            color: var(--foreground, #fff);
+            font-size: 1rem;
+            font-family: var(--font-sans, 'Montserrat', sans-serif);
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.2s ease;
+        }
+
+        .class-dropdown:hover {
+            border-color: var(--primary, #7d5fff);
+        }
+
+        .class-dropdown:focus {
+            outline: none;
+            border-color: var(--primary, #7d5fff);
+            box-shadow: 0 0 0 3px rgba(125, 95, 255, 0.2);
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--foreground-secondary, #b3b3b3);
+            pointer-events: none;
+        }
+
+        /* Class Info Bar */
+        .class-info-bar {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            padding: 16px;
+            background: var(--background-tertiary, #242424);
+            border-radius: 8px;
+            animation: classInfo 0.25s ease;
+        }
+
+        @keyframes classInfo {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .class-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .class-info-item i {
+            color: var(--primary, #7d5fff);
+            font-size: 1rem;
+        }
+
+        .class-info-label {
+            color: var(--foreground-secondary, #b3b3b3);
+            font-size: 0.875rem;
+        }
+
+        .class-info-value {
+            color: var(--foreground, #fff);
+            font-weight: 500;
+        }
+
+        /* Action Bar */
+        .board-action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .add-customer-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary, #7d5fff), #4a00e0);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .add-customer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(125, 95, 255, 0.4);
+        }
+
+        .add-customer-btn:active {
+            transform: scale(0.97);
+        }
+
+        .save-all-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--success, #22c55e);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .save-all-btn:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .save-all-btn:active {
+            transform: scale(0.97);
+        }
+
+        .save-all-btn.saving {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Progress Table */
+        .progress-table-container {
+            background: var(--background-secondary, #1a1a1a);
+            border-radius: 12px;
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+            overflow: hidden;
+        }
+
+        .progress-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .progress-table thead {
+            background: var(--table-header-bg, #242424);
+        }
+
+        .progress-table th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--foreground-secondary, #b3b3b3);
+            border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+        }
+
+        .progress-table th.customer-col {
+            width: 180px;
+        }
+
+        .progress-table th.movement-group {
+            text-align: center;
+            background: rgba(125, 95, 255, 0.1);
+            color: var(--primary, #7d5fff);
+        }
+
+        .progress-table th.sub-header {
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: rgba(125, 95, 255, 0.05);
+        }
+
+        .progress-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--table-border, rgba(255, 255, 255, 0.08));
+            vertical-align: middle;
+        }
+
+        .progress-table tbody tr {
+            transition: background 0.2s ease;
+            animation: rowLoad 0.35s ease-out backwards;
+        }
+
+        .progress-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+        .progress-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+        .progress-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+        .progress-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+        .progress-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+        .progress-table tbody tr:nth-child(6) { animation-delay: 0.3s; }
+        .progress-table tbody tr:nth-child(7) { animation-delay: 0.35s; }
+        .progress-table tbody tr:nth-child(8) { animation-delay: 0.4s; }
+
+        @keyframes rowLoad {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .progress-table tbody tr:hover {
+            background: var(--table-row-hover, rgba(125, 95, 255, 0.05));
+        }
+
+        .progress-table tbody tr:nth-child(even) {
+            background: var(--table-row-stripe, rgba(255, 255, 255, 0.02));
+        }
+
+        .progress-table tbody tr:nth-child(even):hover {
+            background: var(--table-row-hover, rgba(125, 95, 255, 0.05));
+        }
+
+        /* Customer Cell */
+        .customer-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .customer-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary, #7d5fff), #4a00e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .customer-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .customer-name {
+            font-weight: 500;
+            color: var(--foreground, #fff);
+            font-size: 0.9rem;
+        }
+
+        .customer-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(234, 179, 8, 0.2);
+            color: var(--progress-new, #eab308);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 2px;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        /* Movement Cells */
+        .movement-cell {
+            text-align: center;
+        }
+
+        .movement-values {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .value-box {
+            min-width: 40px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .value-pb {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold, #d4af37);
+            font-weight: 600;
+        }
+
+        .value-prev {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--foreground-secondary, #b3b3b3);
+        }
+
+        .value-current {
+            background: var(--background-tertiary, #242424);
+            border: 1px solid var(--input-border, rgba(255, 255, 255, 0.15));
+            color: var(--foreground, #fff);
+            transition: all 0.2s ease;
+        }
+
+        .value-current:focus {
+            outline: none;
+            border-color: var(--primary, #7d5fff);
+            box-shadow: 0 0 0 3px rgba(125, 95, 255, 0.2);
+        }
+
+        .value-current.changed {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: var(--success, #22c55e);
+        }
+
+        .value-current.error {
+            animation: valueError 0.4s ease;
+            border-color: var(--danger, #ef4444);
+        }
+
+        @keyframes valueError {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-4px); }
+            40% { transform: translateX(4px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .value-empty {
+            color: var(--foreground-muted, #808080);
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 50px;
+            justify-content: center;
+        }
+
+        .progress-indicator.up {
+            color: var(--progress-up, #22c55e);
+            animation: progressUp 0.4s ease;
+        }
+
+        .progress-indicator.down {
+            color: var(--progress-down, #ef4444);
+            animation: progressDown 0.3s ease;
+        }
+
+        .progress-indicator.new {
+            color: var(--progress-new, #eab308);
+        }
+
+        .progress-indicator.same {
+            color: var(--progress-same, #808080);
+        }
+
+        @keyframes progressUp {
+            0% { transform: scale(0.8) translateY(5px); opacity: 0; }
+            50% { transform: scale(1.2) translateY(-2px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        @keyframes progressDown {
+            0% { transform: rotate(0deg); opacity: 0.5; }
+            50% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); opacity: 1; }
+        }
+
+        /* Movement Header */
+        .movement-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .movement-name {
+            font-weight: 600;
+            color: var(--foreground, #fff);
+        }
+
+        .movement-unit {
+            font-size: 0.7rem;
+            color: var(--foreground-muted, #808080);
+            font-weight: 400;
+        }
+
+        /* Legend */
+        .legend-bar {
+            display: flex;
+            gap: 24px;
+            padding: 16px;
+            background: var(--background-tertiary, #242424);
+            border-radius: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--foreground-secondary, #b3b3b3);
+        }
+
+        .legend-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .legend-icon.up {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--progress-up, #22c55e);
+        }
+
+        .legend-icon.down {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--progress-down, #ef4444);
+        }
+
+        .legend-icon.new {
+            background: rgba(234, 179, 8, 0.2);
+            color: var(--progress-new, #eab308);
+        }
+
+        .legend-icon.same {
+            background: rgba(128, 128, 128, 0.2);
+            color: var(--progress-same, #808080);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: modalBackdrop 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes modalBackdrop {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--background-secondary, #1a1a1a);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+            animation: modalOpen 0.25s ease-out;
+        }
+
+        @keyframes modalOpen {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--foreground, #fff);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--foreground-secondary, #b3b3b3);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--foreground, #fff);
+        }
+
+        .modal-body {
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--foreground-secondary, #b3b3b3);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--background-tertiary, #242424);
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+            border-radius: 8px;
+            color: var(--foreground, #fff);
+            font-size: 0.9rem;
+            font-family: var(--font-sans, 'Montserrat', sans-serif);
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary, #7d5fff);
+            box-shadow: 0 0 0 3px rgba(125, 95, 255, 0.2);
+        }
+
+        .customer-select-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+            border-radius: 8px;
+        }
+
+        .customer-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.05));
+        }
+
+        .customer-option:last-child {
+            border-bottom: none;
+        }
+
+        .customer-option:hover {
+            background: rgba(125, 95, 255, 0.1);
+        }
+
+        .customer-option.selected {
+            background: rgba(125, 95, 255, 0.2);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            padding: 12px 20px;
+            background: transparent;
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.2));
+            border-radius: 8px;
+            color: var(--foreground-secondary, #b3b3b3);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--foreground, #fff);
+        }
+
+        .btn-confirm {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary, #7d5fff), #4a00e0);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(125, 95, 255, 0.4);
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--background-secondary, #1a1a1a);
+            border-radius: 12px;
+            border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-top: 12px;
+            animation: toastIn 0.3s ease-out;
+        }
+
+        .toast.hiding {
+            animation: toastOut 0.25s ease-in forwards;
+        }
+
+        @keyframes toastIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-icon.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success, #22c55e);
+        }
+
+        .toast-icon.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger, #ef4444);
+        }
+
+        .toast-message {
+            color: var(--foreground, #fff);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .progress-table {
+                font-size: 0.85rem;
+            }
+
+            .value-box {
+                min-width: 35px;
+                padding: 4px 6px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .progress-table-container {
+                overflow-x: auto;
+            }
+
+            .progress-table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .trainer-board-container {
+                padding: 16px;
+            }
+
+            .class-selector-section {
+                padding: 16px;
+            }
+
+            .board-action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .add-customer-btn, .save-all-btn {
+                justify-content: center;
+            }
+
+            .legend-bar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            /* Mobile Card View */
+            .progress-table-container {
+                display: none;
+            }
+
+            .mobile-cards-container {
+                display: block;
+            }
+
+            .mobile-customer-card {
+                background: var(--background-secondary, #1a1a1a);
+                border-radius: 12px;
+                border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+                padding: 16px;
+                margin-bottom: 16px;
+                animation: rowLoad 0.35s ease-out backwards;
+            }
+
+            .mobile-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+            }
+
+            .mobile-movement-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.05));
+            }
+
+            .mobile-movement-row:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-movement-name {
+                font-size: 0.85rem;
+                color: var(--foreground-secondary, #b3b3b3);
+            }
+
+            .mobile-movement-values {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-cards-container {
+                display: none;
+            }
+        }
+
+        /* Unsaved Changes Indicator */
+        .unsaved-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(234, 179, 8, 0.1);
+            border-radius: 8px;
+            color: var(--warning, #eab308);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .unsaved-indicator.visible {
+            display: flex;
+        }
+
+        .unsaved-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--warning, #eab308);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <!-- Admin Sidebar Navigation -->
+        <nav class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-logo">
+                <span>SOULBOX</span>
+                <span class="admin-badge">TRAINER</span>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <div class="admin-nav-links">
+                <a href="trainer-board.html" class="admin-nav-link active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Class Board</span>
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+
+            <div class="admin-user-info">
+                <img src="assets/images/ian.jpeg" alt="Ian" class="admin-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="admin-avatar" style="display: none;"><i class="fas fa-user"></i></div>
+                <div class="admin-user-details">
+                    <div class="admin-username">Ian</div>
+                    <div class="admin-role">Senior Trainer</div>
+                </div>
+                <button class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main" id="admin-main">
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Class Progress Board</h1>
+                    <p>Track customer progress during class</p>
+                </div>
+                <div class="admin-header-actions">
+                    <div class="unsaved-indicator" id="unsaved-indicator">
+                        <span class="unsaved-dot"></span>
+                        Unsaved changes
+                    </div>
+                    <button class="admin-notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">2</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="trainer-board-container">
+                <!-- Presentation Header (visible in fullscreen) -->
+                <div class="presentation-header">
+                    <div>
+                        <div class="presentation-title" id="presentation-title">Bodycamp: Strength & Endurance</div>
+                        <div class="presentation-subtitle" id="presentation-subtitle">Thu, Mar 12, 2026 • 07:00 - 08:00</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="trainer-inline">
+                            <img src="assets/images/ian.jpeg" alt="Ian" class="trainer-inline-photo" onerror="this.src='https://ui-avatars.com/api/?name=Ian&background=7d5fff&color=fff&size=36'">
+                            <div class="trainer-inline-info">
+                                <span class="trainer-inline-name">Ian</span>
+                                <span class="trainer-inline-role">Senior Trainer</span>
+                            </div>
+                        </div>
+                        <button class="exit-fullscreen-btn" id="exit-fullscreen-btn">
+                            <i class="fas fa-compress"></i>
+                            Exit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Exit Fullscreen Button (for non-presentation fallback) -->
+                <button class="exit-fullscreen-btn" id="exit-fullscreen-btn-fallback" style="display: none;">
+                    <i class="fas fa-compress"></i>
+                    Exit Presentation
+                </button>
+                <!-- Class Selector Section -->
+                <div class="class-selector-section">
+                    <div class="class-selector-header">
+                        <div>
+                            <h2 class="class-selector-title">Select Class</h2>
+                            <p class="class-selector-subtitle">Choose a class to view and update customer progress</p>
+                        </div>
+                    </div>
+
+                    <div class="class-dropdown-container">
+                        <select class="class-dropdown" id="class-selector">
+                            <option value="thu-mar12">Bodycamp: Strength & Endurance (Thu, Mar 12 2026)</option>
+                            <option value="fri-mar13">Bodycamp: Hypertrophy (Fri, Mar 13 2026)</option>
+                        </select>
+                        <span class="dropdown-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+
+                    <div class="class-info-bar-with-trainer" id="class-info">
+                        <div class="class-info-left">
+                            <div class="class-info-item">
+                                <i class="fas fa-calendar"></i>
+                                <span class="class-info-label">Date:</span>
+                                <span class="class-info-value" id="class-date">Thu, Mar 12, 2026</span>
+                            </div>
+                            <div class="class-info-item">
+                                <i class="fas fa-clock"></i>
+                                <span class="class-info-label">Time:</span>
+                                <span class="class-info-value" id="class-time">07:00 - 08:00</span>
+                            </div>
+                            <div class="class-info-item">
+                                <i class="fas fa-users"></i>
+                                <span class="class-info-label">Attendance:</span>
+                                <span class="class-info-value" id="class-attendance">8/12</span>
+                            </div>
+                            <div class="class-info-item">
+                                <i class="fas fa-dumbbell"></i>
+                                <span class="class-info-label">Focus:</span>
+                                <span class="class-info-value" id="class-focus">Strength & Endurance</span>
+                            </div>
+                        </div>
+                        <div class="trainer-inline">
+                            <img src="assets/images/ian.jpeg" alt="Ian" class="trainer-inline-photo" onerror="this.src='https://ui-avatars.com/api/?name=Ian&background=7d5fff&color=fff&size=36'">
+                            <div class="trainer-inline-info">
+                                <span class="trainer-inline-name">Ian</span>
+                                <span class="trainer-inline-role">Senior Trainer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="board-action-bar">
+                    <button class="add-customer-btn" id="add-customer-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Customer
+                    </button>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="fullscreen-btn" id="fullscreen-btn">
+                            <i class="fas fa-expand"></i>
+                            Presentation Mode
+                        </button>
+                        <button class="save-all-btn" id="save-all-btn">
+                            <i class="fas fa-save"></i>
+                            Save All Changes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Table (Desktop) -->
+                <div class="progress-table-container">
+                    <table class="progress-table" id="progress-table">
+                        <!-- Table will be populated by JavaScript -->
+                    </table>
+                </div>
+
+                <!-- Mobile Cards View -->
+                <div class="mobile-cards-container" id="mobile-cards">
+                    <!-- Cards will be populated by JavaScript -->
+                </div>
+
+                <!-- Legend -->
+                <div class="legend-bar">
+                    <div class="legend-item">
+                        <span class="legend-icon up"><i class="fas fa-arrow-up"></i></span>
+                        <span>Improved from last week</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon down"><i class="fas fa-arrow-down"></i></span>
+                        <span>Decreased from last week</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon new"><i class="fas fa-circle"></i></span>
+                        <span>New customer / No previous data</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon same"><i class="fas fa-minus"></i></span>
+                        <span>Same as last week</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal-overlay" id="add-customer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Customer to Class</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Search or Add Customer</label>
+                    <input type="text" class="form-input" id="customer-search" placeholder="Type name to search or add new...">
+                </div>
+                <div class="form-group" id="existing-customers-group">
+                    <label class="form-label">Existing Customers</label>
+                    <div class="customer-select-list" id="customer-list">
+                        <!-- Customer options will be populated by JavaScript -->
+                    </div>
+                    <div class="modal-hint">Click to select, double-click to add immediately</div>
+                </div>
+                <div class="form-group" id="new-customer-group" style="display: none;">
+                    <label class="form-label">Add New Customer</label>
+                    <div style="display: flex; gap: 12px; align-items: center; padding: 16px; background: rgba(234, 179, 8, 0.1); border-radius: 8px; border: 1px solid rgba(234, 179, 8, 0.3);">
+                        <div class="customer-avatar" id="new-customer-avatar" style="background: linear-gradient(135deg, #eab308, #ca8a04);">?</div>
+                        <div style="flex: 1;">
+                            <div id="new-customer-name" style="font-weight: 500; color: var(--foreground);"></div>
+                            <div style="font-size: 0.75rem; color: var(--warning);">New customer - will be added to system</div>
+                        </div>
+                        <button type="button" class="btn-confirm" id="add-new-customer-btn" style="padding: 8px 16px; font-size: 0.8rem;">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="modal-cancel">Cancel</button>
+                <button class="btn-confirm" id="modal-confirm">
+                    <i class="fas fa-plus"></i> Add to Class
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // ==========================================
+        // DATA MODELS
+        // ==========================================
+
+        // Available customers from SoulBox
+        const allCustomers = [
+            { id: 'cust-001', name: 'John Doe', initials: 'JD' },
+            { id: 'cust-002', name: 'Jane Smith', initials: 'JS' },
+            { id: 'cust-003', name: 'Mike Ross', initials: 'MR' },
+            { id: 'cust-004', name: 'Anna Sari', initials: 'AS' },
+            { id: 'cust-005', name: 'Budi Wijaya', initials: 'BW' },
+            { id: 'cust-006', name: 'Clara Lim', initials: 'CL' },
+            { id: 'cust-007', name: 'Riko Kurniawan', initials: 'RK' },
+            { id: 'cust-008', name: 'Sinta Yunita', initials: 'SY' },
+            { id: 'cust-009', name: 'David Chen', initials: 'DC' },
+            { id: 'cust-010', name: 'Maya Putri', initials: 'MP' },
+            { id: 'cust-011', name: 'Eko Prasetyo', initials: 'EP' },
+            { id: 'cust-012', name: 'Fira Handayani', initials: 'FH' }
+        ];
+
+        // Class configurations
+        const classConfigs = {
+            'thu-mar12': {
+                name: 'Bodycamp: Strength & Endurance',
+                date: 'Thu, Mar 12, 2026',
+                time: '07:00 - 08:00',
+                attendance: '8/12',
+                focus: 'Strength & Endurance',
+                movements: [
+                    { id: 'deadlift', name: 'Deadlift', unit: 'kg' },
+                    { id: 'pullup', name: 'Pull Up', unit: 'reps' },
+                    { id: 'shoulder', name: 'Shoulder Press', unit: 'kg' }
+                ],
+                customers: [
+                    {
+                        id: 'cust-001', name: 'John Doe', initials: 'JD', isNew: false,
+                        progress: {
+                            deadlift: { pb: 120, prev: 115, current: 118 },
+                            pullup: { pb: 12, prev: 10, current: 11 },
+                            shoulder: { pb: 45, prev: 40, current: 42 }
+                        }
+                    },
+                    {
+                        id: 'cust-002', name: 'Jane Smith', initials: 'JS', isNew: false,
+                        progress: {
+                            deadlift: { pb: 80, prev: 75, current: 78 },
+                            pullup: { pb: 8, prev: 7, current: 8 },
+                            shoulder: { pb: 30, prev: 28, current: 30 }
+                        }
+                    },
+                    {
+                        id: 'cust-003', name: 'Mike Ross', initials: 'MR', isNew: true,
+                        progress: {
+                            deadlift: { pb: 100, prev: null, current: null },
+                            pullup: { pb: 10, prev: 8, current: null },
+                            shoulder: { pb: 35, prev: 32, current: null }
+                        }
+                    },
+                    {
+                        id: 'cust-004', name: 'Anna Sari', initials: 'AS', isNew: false,
+                        progress: {
+                            deadlift: { pb: 90, prev: 88, current: 85 },
+                            pullup: { pb: 6, prev: 6, current: 5 },
+                            shoulder: { pb: 28, prev: 26, current: 24 }
+                        }
+                    },
+                    {
+                        id: 'cust-005', name: 'Budi Wijaya', initials: 'BW', isNew: false,
+                        progress: {
+                            deadlift: { pb: 110, prev: 105, current: 108 },
+                            pullup: { pb: 9, prev: 8, current: 9 },
+                            shoulder: { pb: 40, prev: 38, current: null }
+                        }
+                    },
+                    {
+                        id: 'cust-006', name: 'Clara Lim', initials: 'CL', isNew: false,
+                        progress: {
+                            deadlift: { pb: 75, prev: 70, current: 72 },
+                            pullup: { pb: 5, prev: 4, current: null },
+                            shoulder: { pb: 25, prev: null, current: null }
+                        }
+                    },
+                    {
+                        id: 'cust-007', name: 'Riko Kurniawan', initials: 'RK', isNew: false,
+                        progress: {
+                            deadlift: { pb: 130, prev: 125, current: 128 },
+                            pullup: { pb: 15, prev: 14, current: 15 },
+                            shoulder: { pb: 50, prev: 48, current: 50 }
+                        }
+                    },
+                    {
+                        id: 'cust-008', name: 'Sinta Yunita', initials: 'SY', isNew: true,
+                        progress: {
+                            deadlift: { pb: 85, prev: null, current: null },
+                            pullup: { pb: 7, prev: null, current: null },
+                            shoulder: { pb: 32, prev: null, current: null }
+                        }
+                    }
+                ]
+            },
+            'fri-mar13': {
+                name: 'Bodycamp: Hypertrophy',
+                date: 'Fri, Mar 13, 2026',
+                time: '17:00 - 18:00',
+                attendance: '6/12',
+                focus: 'Hypertrophy',
+                movements: [
+                    { id: 'benchpress', name: 'Bench Press', unit: 'kg' },
+                    { id: 'squat', name: 'Squat', unit: 'kg' },
+                    { id: 'barbellrow', name: 'Barbell Row', unit: 'kg' },
+                    { id: 'bicepcurl', name: 'Bicep Curl', unit: 'kg' }
+                ],
+                customers: [
+                    {
+                        id: 'cust-001', name: 'John Doe', initials: 'JD', isNew: false,
+                        progress: {
+                            benchpress: { pb: 85, prev: 80, current: 82 },
+                            squat: { pb: 140, prev: 135, current: 138 },
+                            barbellrow: { pb: 75, prev: 70, current: 72 },
+                            bicepcurl: { pb: 20, prev: 18, current: 19 }
+                        }
+                    },
+                    {
+                        id: 'cust-002', name: 'Jane Smith', initials: 'JS', isNew: false,
+                        progress: {
+                            benchpress: { pb: 50, prev: 48, current: 50 },
+                            squat: { pb: 90, prev: 85, current: 88 },
+                            barbellrow: { pb: 45, prev: 42, current: 44 },
+                            bicepcurl: { pb: 12, prev: 10, current: 12 }
+                        }
+                    },
+                    {
+                        id: 'cust-005', name: 'Budi Wijaya', initials: 'BW', isNew: false,
+                        progress: {
+                            benchpress: { pb: 95, prev: 90, current: 93 },
+                            squat: { pb: 150, prev: 145, current: 148 },
+                            barbellrow: { pb: 80, prev: 75, current: 78 },
+                            bicepcurl: { pb: 22, prev: 20, current: 21 }
+                        }
+                    },
+                    {
+                        id: 'cust-007', name: 'Riko Kurniawan', initials: 'RK', isNew: false,
+                        progress: {
+                            benchpress: { pb: 100, prev: 95, current: 98 },
+                            squat: { pb: 160, prev: 155, current: 158 },
+                            barbellrow: { pb: 85, prev: 80, current: 82 },
+                            bicepcurl: { pb: 25, prev: 22, current: 24 }
+                        }
+                    },
+                    {
+                        id: 'cust-009', name: 'David Chen', initials: 'DC', isNew: true,
+                        progress: {
+                            benchpress: { pb: 70, prev: null, current: null },
+                            squat: { pb: 120, prev: null, current: null },
+                            barbellrow: { pb: 60, prev: null, current: null },
+                            bicepcurl: { pb: 15, prev: null, current: null }
+                        }
+                    },
+                    {
+                        id: 'cust-010', name: 'Maya Putri', initials: 'MP', isNew: true,
+                        progress: {
+                            benchpress: { pb: 40, prev: null, current: null },
+                            squat: { pb: 70, prev: null, current: null },
+                            barbellrow: { pb: 35, prev: null, current: null },
+                            bicepcurl: { pb: 8, prev: null, current: null }
+                        }
+                    }
+                ]
+            }
+        };
+
+        // State management
+        let currentClass = 'thu-mar12';
+        let unsavedChanges = false;
+        let originalData = JSON.parse(JSON.stringify(classConfigs));
+
+        // ==========================================
+        // DOM ELEMENTS
+        // ==========================================
+
+        const classSelector = document.getElementById('class-selector');
+        const progressTable = document.getElementById('progress-table');
+        const mobileCards = document.getElementById('mobile-cards');
+        const addCustomerBtn = document.getElementById('add-customer-btn');
+        const saveAllBtn = document.getElementById('save-all-btn');
+        const addCustomerModal = document.getElementById('add-customer-modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalConfirm = document.getElementById('modal-confirm');
+        const customerSearch = document.getElementById('customer-search');
+        const customerList = document.getElementById('customer-list');
+        const unsavedIndicator = document.getElementById('unsaved-indicator');
+        const toastContainer = document.getElementById('toast-container');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const adminSidebar = document.getElementById('admin-sidebar');
+        const adminMain = document.getElementById('admin-main');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const exitFullscreenBtn = document.getElementById('exit-fullscreen-btn');
+        const presentationTitle = document.getElementById('presentation-title');
+        const presentationSubtitle = document.getElementById('presentation-subtitle');
+
+        // ==========================================
+        // RENDER FUNCTIONS
+        // ==========================================
+
+        function renderTable(classId) {
+            const config = classConfigs[classId];
+            const movements = config.movements;
+
+            // Build table header
+            let headerHtml = `
+                <thead>
+                    <tr>
+                        <th class="customer-col" rowspan="2">Customer</th>
+            `;
+
+            movements.forEach(movement => {
+                headerHtml += `
+                    <th class="movement-group" colspan="4">
+                        <div class="movement-header">
+                            <span class="movement-name">${movement.name}</span>
+                            <span class="movement-unit">(${movement.unit})</span>
+                        </div>
+                    </th>
+                `;
+            });
+
+            headerHtml += `</tr><tr>`;
+
+            movements.forEach(() => {
+                headerHtml += `
+                    <th class="sub-header">PB</th>
+                    <th class="sub-header">Prev</th>
+                    <th class="sub-header">Curr</th>
+                    <th class="sub-header">Δ</th>
+                `;
+            });
+
+            headerHtml += `</tr></thead>`;
+
+            // Build table body
+            let bodyHtml = `<tbody>`;
+
+            config.customers.forEach((customer, index) => {
+                bodyHtml += `
+                    <tr data-customer-id="${customer.id}">
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">${customer.initials}</div>
+                                <div class="customer-info">
+                                    <span class="customer-name">${customer.name}</span>
+                                    ${customer.isNew ? '<span class="customer-badge">New</span>' : ''}
+                                </div>
+                            </div>
+                        </td>
+                `;
+
+                movements.forEach(movement => {
+                    const progress = customer.progress[movement.id];
+                    const pb = progress.pb;
+                    const prev = progress.prev;
+                    const current = progress.current;
+                    const indicator = getProgressIndicator(prev, current);
+
+                    bodyHtml += `
+                        <td class="movement-cell">
+                            <span class="value-box value-pb">${pb || '--'}</span>
+                        </td>
+                        <td class="movement-cell">
+                            <span class="value-box value-prev">${prev !== null ? prev : '--'}</span>
+                        </td>
+                        <td class="movement-cell">
+                            <input type="number"
+                                   class="value-box value-current ${current !== progress.current ? 'changed' : ''}"
+                                   data-customer="${customer.id}"
+                                   data-movement="${movement.id}"
+                                   data-prev="${prev}"
+                                   value="${current !== null ? current : ''}"
+                                   placeholder="--">
+                        </td>
+                        <td class="movement-cell">
+                            <span class="progress-indicator ${indicator.class}">
+                                <i class="fas ${indicator.icon}"></i>
+                                ${indicator.diff}
+                            </span>
+                        </td>
+                    `;
+                });
+
+                bodyHtml += `</tr>`;
+            });
+
+            bodyHtml += `</tbody>`;
+
+            progressTable.innerHTML = headerHtml + bodyHtml;
+
+            // Add event listeners to inputs
+            document.querySelectorAll('.value-current').forEach(input => {
+                input.addEventListener('input', handleValueChange);
+                input.addEventListener('focus', handleInputFocus);
+                input.addEventListener('blur', handleInputBlur);
+            });
+        }
+
+        function renderMobileCards(classId) {
+            const config = classConfigs[classId];
+            const movements = config.movements;
+
+            let html = '';
+
+            config.customers.forEach((customer, index) => {
+                html += `
+                    <div class="mobile-customer-card" style="animation-delay: ${index * 0.05}s">
+                        <div class="mobile-card-header">
+                            <div class="customer-cell">
+                                <div class="customer-avatar">${customer.initials}</div>
+                                <div class="customer-info">
+                                    <span class="customer-name">${customer.name}</span>
+                                    ${customer.isNew ? '<span class="customer-badge">New</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                `;
+
+                movements.forEach(movement => {
+                    const progress = customer.progress[movement.id];
+                    const pb = progress.pb;
+                    const prev = progress.prev;
+                    const current = progress.current;
+                    const indicator = getProgressIndicator(prev, current);
+
+                    html += `
+                        <div class="mobile-movement-row">
+                            <div class="mobile-movement-name">${movement.name}</div>
+                            <div class="mobile-movement-values">
+                                <span class="value-box value-pb">${pb || '--'}</span>
+                                <span style="color: var(--foreground-muted);">→</span>
+                                <input type="number"
+                                       class="value-box value-current"
+                                       data-customer="${customer.id}"
+                                       data-movement="${movement.id}"
+                                       data-prev="${prev}"
+                                       value="${current !== null ? current : ''}"
+                                       placeholder="--">
+                                <span class="progress-indicator ${indicator.class}">
+                                    <i class="fas ${indicator.icon}"></i>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+            });
+
+            mobileCards.innerHTML = html;
+
+            // Add event listeners to mobile inputs
+            mobileCards.querySelectorAll('.value-current').forEach(input => {
+                input.addEventListener('input', handleValueChange);
+                input.addEventListener('focus', handleInputFocus);
+                input.addEventListener('blur', handleInputBlur);
+            });
+        }
+
+        function getProgressIndicator(prev, current) {
+            if (current === null || current === '' || current === undefined) {
+                return { class: 'new', icon: 'fa-circle', diff: '' };
+            }
+
+            if (prev === null || prev === '' || prev === undefined) {
+                return { class: 'new', icon: 'fa-circle', diff: '' };
+            }
+
+            const diff = current - prev;
+            if (diff > 0) {
+                return { class: 'up', icon: 'fa-arrow-up', diff: `+${diff}` };
+            } else if (diff < 0) {
+                return { class: 'down', icon: 'fa-arrow-down', diff: diff };
+            } else {
+                return { class: 'same', icon: 'fa-minus', diff: '' };
+            }
+        }
+
+        function updateClassInfo(classId) {
+            const config = classConfigs[classId];
+
+            document.getElementById('class-date').textContent = config.date;
+            document.getElementById('class-time').textContent = config.time;
+            document.getElementById('class-attendance').textContent = config.attendance;
+            document.getElementById('class-focus').textContent = config.focus;
+
+            // Update presentation header
+            presentationTitle.textContent = config.name;
+            presentationSubtitle.textContent = `${config.date} • ${config.time}`;
+        }
+
+        let newCustomerName = '';
+
+        function renderCustomerList(searchTerm = '') {
+            const config = classConfigs[currentClass];
+            const existingCustomerIds = config.customers.map(c => c.id);
+
+            let filteredCustomers = allCustomers.filter(c => !existingCustomerIds.includes(c.id));
+
+            if (searchTerm) {
+                filteredCustomers = filteredCustomers.filter(c =>
+                    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            const existingCustomersGroup = document.getElementById('existing-customers-group');
+            const newCustomerGroup = document.getElementById('new-customer-group');
+            const newCustomerNameEl = document.getElementById('new-customer-name');
+            const newCustomerAvatar = document.getElementById('new-customer-avatar');
+
+            // Check if search term doesn't match any existing customer
+            if (searchTerm && filteredCustomers.length === 0) {
+                existingCustomersGroup.style.display = 'none';
+                newCustomerGroup.style.display = 'block';
+                newCustomerName = searchTerm;
+                newCustomerNameEl.textContent = searchTerm;
+                // Generate initials from name
+                const initials = searchTerm.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                newCustomerAvatar.textContent = initials || '?';
+            } else {
+                existingCustomersGroup.style.display = 'block';
+                newCustomerGroup.style.display = 'none';
+            }
+
+            let html = '';
+            filteredCustomers.forEach(customer => {
+                html += `
+                    <div class="customer-option" data-customer-id="${customer.id}" data-customer-name="${customer.name}" data-customer-initials="${customer.initials}">
+                        <div class="customer-avatar">${customer.initials}</div>
+                        <span>${customer.name}</span>
+                    </div>
+                `;
+            });
+
+            if (filteredCustomers.length === 0 && !searchTerm) {
+                html = '<div style="padding: 20px; text-align: center; color: var(--foreground-muted);">All customers already in class</div>';
+            }
+
+            customerList.innerHTML = html;
+
+            // Add click handlers
+            document.querySelectorAll('.customer-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.customer-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+                // Double click to add immediately
+                option.addEventListener('dblclick', () => {
+                    addExistingCustomerToClass(option.dataset.customerId);
+                });
+            });
+        }
+
+        function addExistingCustomerToClass(customerId) {
+            const customer = allCustomers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const config = classConfigs[currentClass];
+
+            // Check if already in class
+            if (config.customers.find(c => c.id === customerId)) {
+                showToast('error', 'Customer already in class');
+                return;
+            }
+
+            // Add customer with empty progress
+            const newCustomer = {
+                id: customer.id,
+                name: customer.name,
+                initials: customer.initials,
+                isNew: true,
+                progress: {}
+            };
+
+            // Initialize progress for all movements
+            config.movements.forEach(movement => {
+                newCustomer.progress[movement.id] = {
+                    pb: null,
+                    prev: null,
+                    current: null
+                };
+            });
+
+            config.customers.push(newCustomer);
+
+            // Update attendance
+            const [current, max] = config.attendance.split('/');
+            config.attendance = `${parseInt(current) + 1}/${max}`;
+
+            // Re-render
+            updateClassInfo(currentClass);
+            renderTable(currentClass);
+            renderMobileCards(currentClass);
+
+            unsavedChanges = true;
+            unsavedIndicator.classList.add('visible');
+
+            handleModalClose();
+            showToast('success', `${customer.name} added to class`);
+        }
+
+        function addNewCustomerToClass(name) {
+            if (!name || name.trim() === '') {
+                showToast('error', 'Please enter a customer name');
+                return;
+            }
+
+            const config = classConfigs[currentClass];
+
+            // Generate a new customer ID
+            const newId = 'cust-new-' + Date.now();
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+            // Add to allCustomers for future use
+            const newCustomerData = {
+                id: newId,
+                name: name,
+                initials: initials
+            };
+            allCustomers.push(newCustomerData);
+
+            // Add to current class
+            const newCustomer = {
+                id: newId,
+                name: name,
+                initials: initials,
+                isNew: true,
+                progress: {}
+            };
+
+            // Initialize progress for all movements
+            config.movements.forEach(movement => {
+                newCustomer.progress[movement.id] = {
+                    pb: null,
+                    prev: null,
+                    current: null
+                };
+            });
+
+            config.customers.push(newCustomer);
+
+            // Update attendance
+            const [current, max] = config.attendance.split('/');
+            config.attendance = `${parseInt(current) + 1}/${max}`;
+
+            // Re-render
+            updateClassInfo(currentClass);
+            renderTable(currentClass);
+            renderMobileCards(currentClass);
+
+            unsavedChanges = true;
+            unsavedIndicator.classList.add('visible');
+
+            handleModalClose();
+            showToast('success', `${name} added to class`);
+        }
+
+        // ==========================================
+        // EVENT HANDLERS
+        // ==========================================
+
+        function handleValueChange(e) {
+            const input = e.target;
+            const customerId = input.dataset.customer;
+            const movementId = input.dataset.movement;
+            const value = input.value !== '' ? parseInt(input.value) : null;
+
+            // Update data
+            const config = classConfigs[currentClass];
+            const customer = config.customers.find(c => c.id === customerId);
+            if (customer) {
+                customer.progress[movementId].current = value;
+            }
+
+            // Mark as changed
+            input.classList.add('changed');
+            unsavedChanges = true;
+            unsavedIndicator.classList.add('visible');
+
+            // Update just the progress indicator for this cell without re-rendering
+            updateProgressIndicator(input, customerId, movementId);
+        }
+
+        function updateProgressIndicator(input, customerId, movementId) {
+            const config = classConfigs[currentClass];
+            const customer = config.customers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const progress = customer.progress[movementId];
+            const prev = progress.prev;
+            const current = progress.current;
+            const indicator = getProgressIndicator(prev, current);
+
+            // Find the progress indicator cell in the same row
+            const row = input.closest('tr');
+            if (row) {
+                const movementCells = row.querySelectorAll('.movement-cell');
+                // Find the indicator cell (every 4th cell, last one in each movement group)
+                const inputs = row.querySelectorAll('.value-current');
+                let inputIndex = -1;
+                inputs.forEach((inp, idx) => {
+                    if (inp === input) inputIndex = idx;
+                });
+
+                if (inputIndex !== -1) {
+                    // Each movement has 4 cells: PB, Prev, Curr, Delta
+                    // The indicator is at position (inputIndex * 4) + 3
+                    const allCells = row.querySelectorAll('.movement-cell');
+                    const indicatorCellIndex = (inputIndex * 4) + 3;
+                    if (allCells[indicatorCellIndex]) {
+                        allCells[indicatorCellIndex].innerHTML = `
+                            <span class="progress-indicator ${indicator.class}">
+                                <i class="fas ${indicator.icon}"></i>
+                                ${indicator.diff}
+                            </span>
+                        `;
+                    }
+                }
+            }
+        }
+
+        function handleInputFocus(e) {
+            e.target.select();
+        }
+
+        function handleInputBlur(e) {
+            // Validation could go here
+        }
+
+        function handleClassChange(e) {
+            currentClass = e.target.value;
+            updateClassInfo(currentClass);
+            renderTable(currentClass);
+            renderMobileCards(currentClass);
+        }
+
+        function handleSaveAll() {
+            saveAllBtn.classList.add('saving');
+            saveAllBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            // Simulate save
+            setTimeout(() => {
+                // Update original data
+                originalData = JSON.parse(JSON.stringify(classConfigs));
+
+                unsavedChanges = false;
+                unsavedIndicator.classList.remove('visible');
+
+                saveAllBtn.classList.remove('saving');
+                saveAllBtn.innerHTML = '<i class="fas fa-save"></i> Save All Changes';
+
+                // Remove changed class from inputs
+                document.querySelectorAll('.value-current').forEach(input => {
+                    input.classList.remove('changed');
+                });
+
+                showToast('success', 'All changes saved successfully!');
+            }, 1000);
+        }
+
+        function handleAddCustomer() {
+            addCustomerModal.classList.add('active');
+            customerSearch.value = '';
+            newCustomerName = '';
+            renderCustomerList();
+        }
+
+        function handleModalClose() {
+            addCustomerModal.classList.remove('active');
+            customerSearch.value = '';
+            document.getElementById('existing-customers-group').style.display = 'block';
+            document.getElementById('new-customer-group').style.display = 'none';
+        }
+
+        function handleModalConfirm() {
+            // Check if there's a new customer to add
+            if (newCustomerName && document.getElementById('new-customer-group').style.display !== 'none') {
+                addNewCustomerToClass(newCustomerName);
+                return;
+            }
+
+            // Otherwise check for selected existing customer
+            const selected = document.querySelector('.customer-option.selected');
+            if (!selected) {
+                showToast('error', 'Please select a customer or type a name to add new');
+                return;
+            }
+
+            addExistingCustomerToClass(selected.dataset.customerId);
+        }
+
+        // ==========================================
+        // TOAST NOTIFICATIONS
+        // ==========================================
+
+        function showToast(type, message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <span class="toast-icon ${type}">
+                    <i class="fas ${type === 'success' ? 'fa-check' : 'fa-exclamation'}"></i>
+                </span>
+                <span class="toast-message">${message}</span>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
+        }
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+
+        function init() {
+            // Event listeners
+            classSelector.addEventListener('change', handleClassChange);
+            addCustomerBtn.addEventListener('click', handleAddCustomer);
+            saveAllBtn.addEventListener('click', handleSaveAll);
+            modalClose.addEventListener('click', handleModalClose);
+            modalCancel.addEventListener('click', handleModalClose);
+            modalConfirm.addEventListener('click', handleModalConfirm);
+
+            // Sidebar toggle
+            sidebarToggle.addEventListener('click', () => {
+                adminSidebar.classList.toggle('collapsed');
+                adminMain.classList.toggle('expanded');
+            });
+
+            // Fullscreen mode
+            fullscreenBtn.addEventListener('click', () => {
+                document.body.classList.add('fullscreen-mode');
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            });
+
+            // Exit fullscreen - handle both buttons
+            exitFullscreenBtn.addEventListener('click', exitFullscreen);
+            document.getElementById('exit-fullscreen-btn-fallback')?.addEventListener('click', exitFullscreen);
+
+            function exitFullscreen() {
+                document.body.classList.remove('fullscreen-mode');
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+
+            // Handle escape key to exit fullscreen
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.body.classList.contains('fullscreen-mode')) {
+                    document.body.classList.remove('fullscreen-mode');
+                }
+            });
+
+            // Handle fullscreen change event
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    document.body.classList.remove('fullscreen-mode');
+                }
+            });
+
+            customerSearch.addEventListener('input', (e) => {
+                renderCustomerList(e.target.value);
+            });
+
+            // Add new customer button
+            document.getElementById('add-new-customer-btn').addEventListener('click', () => {
+                if (newCustomerName) {
+                    addNewCustomerToClass(newCustomerName);
+                }
+            });
+
+            // Enter key to add new customer
+            customerSearch.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && newCustomerName && document.getElementById('new-customer-group').style.display !== 'none') {
+                    addNewCustomerToClass(newCustomerName);
+                }
+            });
+
+            // Close modal on overlay click
+            addCustomerModal.addEventListener('click', (e) => {
+                if (e.target === addCustomerModal) {
+                    handleModalClose();
+                }
+            });
+
+            // Warn before leaving with unsaved changes
+            window.addEventListener('beforeunload', (e) => {
+                if (unsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+
+            // Initial render
+            updateClassInfo(currentClass);
+            renderTable(currentClass);
+            renderMobileCards(currentClass);
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
