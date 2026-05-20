@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Admin - Weekly Class Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="unified-theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stack {
+            display: grid;
+            gap: 15px;
+        }
+
+        .helper-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .week-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .day-chip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 8px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #222;
+            cursor: pointer;
+            user-select: none;
+            transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        .day-chip input {
+            display: none;
+        }
+
+        .day-chip.active {
+            background: rgba(74, 0, 224, 0.18);
+            border-color: rgba(74, 0, 224, 0.55);
+            color: #fff;
+        }
+
+        .day-chip:active {
+            transform: translateY(1px);
+        }
+
+        .template-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .template-table thead th {
+            background-color: #222;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        .template-table tbody td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            color: #ccc;
+            vertical-align: top;
+        }
+
+        .template-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #ddd;
+            margin-right: 6px;
+            margin-top: 6px;
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .mini-btn {
+            background: #333;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 10px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mini-btn:hover {
+            background: #444;
+        }
+
+        .mini-btn:active {
+            transform: translateY(1px);
+        }
+
+        .mini-btn.danger {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            color: #e74c3c;
+        }
+
+        .mini-btn.danger:hover {
+            background: rgba(231, 76, 60, 0.22);
+        }
+
+        .mini-btn.ghost {
+            background: transparent;
+            border: 1px solid #333;
+            color: #ccc;
+        }
+
+        .mini-btn.ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .schedule-table thead th {
+            background-color: #222;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .schedule-table tbody td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .schedule-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .schedule-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .sheet-table .form-control {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        .sheet-table .mini-btn {
+            padding: 7px 10px;
+        }
+
+        .sheet-help {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .sheet-error {
+            display: none;
+            background: rgba(231, 76, 60, 0.12);
+            border: 1px solid rgba(231, 76, 60, 0.35);
+            color: #e74c3c;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        .row-cancelled {
+            opacity: 0.6;
+        }
+
+        .row-cancelled .status-badge {
+            filter: saturate(0.8);
+        }
+
+        .stat-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .stat-pill {
+            background: #222;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .stat-pill .k {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .stat-pill .v {
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        @media (max-width: 1100px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .days-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+
+            .stat-strip {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <div id="admin-app">
+        <nav class="admin-sidebar">
+            <div class="admin-logo">
+                <span>SOULBOX</span>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-weekly-schedule.html" class="admin-nav-link active">
+                    <i class="fas fa-calendar-week"></i>
+                    <span>Weekly Scheduler</span>
+                </a>
+            </div>
+            
+            <div class="admin-user-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-user-details">
+                    <div class="admin-username">Admin User</div>
+                    <div class="admin-role">Scheduler</div>
+                </div>
+                <button class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <h1>Weekly Class Scheduler</h1>
+                    <p>Generate next week's schedule, update attendance, and cancel classes</p>
+                </div>
+                <div class="admin-header-actions"></div>
+            </header>
+
+            <div class="admin-dashboard-content">
+                <div class="admin-card">
+                    <div class="section-header">
+                        <h2>Build Schedule (Spreadsheet)</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button class="filter-btn" id="addRowBtn"><i class="fas fa-plus"></i> Add Row</button>
+                            <input id="importCsvInput" type="file" accept=".csv,text/csv" style="display:none;">
+                            <button class="filter-btn" id="importCsvBtn"><i class="fas fa-file-import"></i> Import CSV</button>
+                            <button class="filter-btn" id="downloadCsvExampleBtn"><i class="fas fa-file-csv"></i> CSV Example</button>
+                            <button class="filter-btn" id="clearDraftBtn"><i class="fas fa-eraser"></i> Clear Draft</button>
+                            <button class="primary-action-btn" id="submitScheduleBtn"><i class="fas fa-check"></i> Submit</button>
+                        </div>
+                    </div>
+
+                    <div class="helper-row" style="margin-bottom: 12px;">
+                        <div class="form-group" style="margin:0; width: 260px;">
+                            <label class="form-label" for="weekStart">Week Starts (Monday)</label>
+                            <input class="form-control" id="weekStart" type="date">
+                        </div>
+                        <div class="week-meta" id="weekMeta"></div>
+                    </div>
+
+                    <div class="sheet-help" style="margin-bottom: 12px;">Fill the rows below (or import CSV), then submit. After submit, manage attendance and cancellations in the section below.</div>
+                    <div class="sheet-error" id="builderError"></div>
+
+                    <div style="overflow:auto;">
+                        <table class="schedule-table sheet-table">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 90px;">Day</th>
+                                    <th style="min-width: 140px;">Date</th>
+                                    <th style="min-width: 110px;">Start</th>
+                                    <th style="min-width: 120px;">Duration</th>
+                                    <th style="min-width: 220px;">Class</th>
+                                    <th style="min-width: 160px;">Tag</th>
+                                    <th style="min-width: 160px;">Trainer</th>
+                                    <th style="min-width: 150px;">Location</th>
+                                    <th style="min-width: 110px;">Capacity</th>
+                                    <th style="text-align:right; min-width: 110px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="draftBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="section-header">
+                        <h2>Submitted Schedule (Edit)</h2>
+                        <div style="display:flex; gap:10px;">
+                            <button class="filter-btn" id="exportCsvBtn"><i class="fas fa-file-export"></i> Export CSV</button>
+                            <button class="filter-btn" id="clearWeekBtn"><i class="fas fa-trash"></i> Clear Week</button>
+                        </div>
+                    </div>
+
+                    <div style="overflow:auto;">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Class</th>
+                                    <th>Tag</th>
+                                    <th>Trainer</th>
+                                    <th>Location</th>
+                                    <th>Capacity</th>
+                                    <th>Attendance</th>
+                                    <th>Status</th>
+                                    <th style="text-align:right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="attendanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Attendance</h3>
+                <button class="modal-close" data-close="attendanceModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start; margin-bottom:15px;">
+                    <div>
+                        <div style="font-size:16px; font-weight:700;" id="attClassName">-</div>
+                        <div style="color:#999; font-size:13px;" id="attMeta">-</div>
+                    </div>
+                    <span class="status-badge upcoming" id="attStatus">Scheduled</span>
+                </div>
+                <div class="admin-two-column" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label class="form-label" for="attValue">Total Attendance</label>
+                        <input class="form-control" id="attValue" type="number" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="attCapacity">Capacity</label>
+                        <input class="form-control" id="attCapacity" type="number" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" data-close="attendanceModal">Cancel</button>
+                <button class="modal-btn confirm" id="saveAttendanceBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="cancelModal">
+        <div class="modal-content" style="max-width: 560px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Cancel Class</h3>
+                <button class="modal-close" data-close="cancelModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:14px; color:#ccc; line-height:1.6;">
+                    You are about to cancel:
+                    <div style="margin-top:10px; padding:12px 14px; background:#222; border:1px solid #333; border-radius:10px;">
+                        <div style="font-weight:700;" id="cancelClassName">-</div>
+                        <div style="color:#999; font-size:13px;" id="cancelMeta">-</div>
+                    </div>
+                </div>
+                <div style="margin-top:15px; font-size:13px; color:#999;">
+                    Cancelled classes remain visible for ops tracking.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" data-close="cancelModal">No, keep class</button>
+                <button class="modal-btn confirm" id="confirmCancelBtn">Yes, cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="waitlistModal">
+        <div class="modal-content" style="max-width: 620px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Waitlist Notes</h3>
+                <button class="modal-close" data-close="waitlistModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start; margin-bottom:15px;">
+                    <div>
+                        <div style="font-size:16px; font-weight:700;" id="waitClassName">-</div>
+                        <div style="color:#999; font-size:13px;" id="waitMeta">-</div>
+                    </div>
+                    <span class="status-badge upcoming" id="waitStatus">Scheduled</span>
+                </div>
+                <div class="admin-two-column" style="grid-template-columns: 1fr 1fr;">
+                    <div class="form-group">
+                        <label class="form-label" for="waitCount">Waitlist Count</label>
+                        <input class="form-control" id="waitCount" type="number" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="waitCapacityView">Capacity</label>
+                        <input class="form-control" id="waitCapacityView" type="number" disabled>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="waitNotes">Notes</label>
+                    <textarea class="form-control" id="waitNotes" rows="4" style="resize: vertical;" placeholder="Optional notes (e.g. names, special requests)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" data-close="waitlistModal">Cancel</button>
+                <button class="modal-btn confirm" id="saveWaitlistBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const DAYS = [
+                { key: 'mon', label: 'Mon', idx: 0 },
+                { key: 'tue', label: 'Tue', idx: 1 },
+                { key: 'wed', label: 'Wed', idx: 2 },
+                { key: 'thu', label: 'Thu', idx: 3 },
+                { key: 'fri', label: 'Fri', idx: 4 },
+                { key: 'sat', label: 'Sat', idx: 5 },
+                { key: 'sun', label: 'Sun', idx: 6 }
+            ];
+
+            const TRAINERS = ['John', 'Ankie', 'Abas', 'Delpas', 'Aldi', 'Ian'];
+            const LOCATIONS = ['Gym Area', 'Studio A', 'Studio B', 'Outdoor Area'];
+
+            const els = {
+                weekStart: document.getElementById('weekStart'),
+                weekMeta: document.getElementById('weekMeta'),
+                builderError: document.getElementById('builderError'),
+                draftBody: document.getElementById('draftBody'),
+                addRowBtn: document.getElementById('addRowBtn'),
+                importCsvInput: document.getElementById('importCsvInput'),
+                importCsvBtn: document.getElementById('importCsvBtn'),
+                downloadCsvExampleBtn: document.getElementById('downloadCsvExampleBtn'),
+                clearDraftBtn: document.getElementById('clearDraftBtn'),
+                submitScheduleBtn: document.getElementById('submitScheduleBtn'),
+                scheduleBody: document.getElementById('scheduleBody'),
+                clearWeekBtn: document.getElementById('clearWeekBtn'),
+                exportCsvBtn: document.getElementById('exportCsvBtn'),
+                attendanceModal: document.getElementById('attendanceModal'),
+                attClassName: document.getElementById('attClassName'),
+                attMeta: document.getElementById('attMeta'),
+                attStatus: document.getElementById('attStatus'),
+                attValue: document.getElementById('attValue'),
+                attCapacity: document.getElementById('attCapacity'),
+                saveAttendanceBtn: document.getElementById('saveAttendanceBtn'),
+                cancelModal: document.getElementById('cancelModal'),
+                cancelClassName: document.getElementById('cancelClassName'),
+                cancelMeta: document.getElementById('cancelMeta'),
+                confirmCancelBtn: document.getElementById('confirmCancelBtn'),
+                waitlistModal: document.getElementById('waitlistModal'),
+                waitClassName: document.getElementById('waitClassName'),
+                waitMeta: document.getElementById('waitMeta'),
+                waitStatus: document.getElementById('waitStatus'),
+                waitCount: document.getElementById('waitCount'),
+                waitCapacityView: document.getElementById('waitCapacityView'),
+                waitNotes: document.getElementById('waitNotes'),
+                saveWaitlistBtn: document.getElementById('saveWaitlistBtn')
+            };
+
+            let draftRows = [];
+            let schedule = [];
+            let editingId = null;
+            let cancelId = null;
+            let waitlistId = null;
+
+            function pad2(n) {
+                return String(n).padStart(2, '0');
+            }
+
+            function toISODate(date) {
+                return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+            }
+
+            function addDays(date, days) {
+                const d = new Date(date);
+                d.setDate(d.getDate() + days);
+                return d;
+            }
+
+            function parseISODate(iso) {
+                const [y, m, d] = iso.split('-').map(Number);
+                return new Date(y, m - 1, d);
+            }
+
+            function getNextMondayISO() {
+                const now = new Date();
+                const day = now.getDay();
+                const daysUntilNextMonday = (8 - day) % 7 || 7;
+                const nextMon = addDays(now, daysUntilNextMonday);
+                return toISODate(nextMon);
+            }
+
+            function formatWeekRange(weekStartISO) {
+                const start = parseISODate(weekStartISO);
+                const end = addDays(start, 6);
+                return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            }
+
+            function formatDateLabel(iso) {
+                const d = parseISODate(iso);
+                return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            }
+
+            function minutesToTimeStr(minutesFromMidnight) {
+                const h = Math.floor(minutesFromMidnight / 60);
+                const m = minutesFromMidnight % 60;
+                return `${pad2(h)}:${pad2(m)}`;
+            }
+
+            function timeStrToMinutes(t) {
+                const [h, m] = t.split(':').map(Number);
+                return h * 60 + m;
+            }
+
+            function buildLocalStorageKeySchedule(weekStartISO) {
+                return `soulbox.weeklyScheduler.schedule.v1.${weekStartISO}`;
+            }
+
+            function buildLocalStorageKeyDraft(weekStartISO) {
+                return `soulbox.weeklyScheduler.draft.v1.${weekStartISO}`;
+            }
+
+            function notifyUserScheduleUpdated(weekStartISO) {
+                try {
+                    localStorage.setItem('soulbox.weeklyScheduler.publishedWeekStart.v1', weekStartISO);
+                    localStorage.setItem('soulbox.weeklyScheduler.updatedAt.v1', String(Date.now()));
+                } catch {}
+
+                try {
+                    const ch = new BroadcastChannel('soulbox.weeklyScheduler');
+                    ch.postMessage({ type: 'scheduleUpdated', weekStart: weekStartISO });
+                    ch.close();
+                } catch {}
+            }
+
+            function loadSchedule(weekStartISO) {
+                try {
+                    const raw = localStorage.getItem(buildLocalStorageKeySchedule(weekStartISO));
+                    schedule = raw ? JSON.parse(raw) : [];
+                } catch {
+                    schedule = [];
+                }
+            }
+
+            function saveSchedule(weekStartISO) {
+                localStorage.setItem(buildLocalStorageKeySchedule(weekStartISO), JSON.stringify(schedule));
+            }
+
+            function uid() {
+                return `c_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+            }
+
+            function renderWeekMeta(weekStartISO) {
+                els.weekMeta.innerHTML = '';
+                const range = document.createElement('div');
+                range.textContent = formatWeekRange(weekStartISO);
+                els.weekMeta.appendChild(range);
+
+                const note = document.createElement('div');
+                note.textContent = 'Stored locally (browser)';
+                els.weekMeta.appendChild(note);
+            }
+
+            function sortSchedule() {
+                schedule.sort((a, b) => {
+                    if (a.date !== b.date) return a.date.localeCompare(b.date);
+                    return a.start.localeCompare(b.start);
+                });
+            }
+
+            function loadDraft(weekStartISO) {
+                try {
+                    const raw = localStorage.getItem(buildLocalStorageKeyDraft(weekStartISO));
+                    draftRows = raw ? JSON.parse(raw) : [];
+                } catch {
+                    draftRows = [];
+                }
+            }
+
+            function saveDraft(weekStartISO) {
+                localStorage.setItem(buildLocalStorageKeyDraft(weekStartISO), JSON.stringify(draftRows));
+            }
+
+            function clearBuilderError() {
+                els.builderError.style.display = 'none';
+                els.builderError.textContent = '';
+            }
+
+            function showBuilderError(msg) {
+                els.builderError.textContent = msg;
+                els.builderError.style.display = 'block';
+            }
+
+            function buildSelectOptions(values, currentValue, placeholderLabel) {
+                const current = String(currentValue || '').trim();
+                const list = Array.from(values);
+                if (current && !list.includes(current)) list.unshift(current);
+
+                const placeholder = placeholderLabel ? `<option value="">${escapeHtml(placeholderLabel)}</option>` : '';
+                return placeholder + list.map(v => `<option value="${escapeHtml(v)}" ${v === current ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
+            }
+
+            function getDateForDayKey(weekStartISO, dayKey) {
+                const weekStart = parseISODate(weekStartISO);
+                const idx = DAYS.find(d => d.key === dayKey)?.idx;
+                if (idx == null) return null;
+                return toISODate(addDays(weekStart, idx));
+            }
+
+            function renderDraft(weekStartISO) {
+                clearBuilderError();
+                els.draftBody.innerHTML = '';
+
+                if (!draftRows || draftRows.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td colspan="10" style="color:#777;">No rows yet. Click “Add Row” to start.</td>`;
+                    els.draftBody.appendChild(tr);
+                    return;
+                }
+
+                draftRows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.setAttribute('data-row-id', row.id);
+                    const isoDate = getDateForDayKey(weekStartISO, row.dayKey) || '';
+                    const dateLabel = isoDate ? formatDateLabel(isoDate) : '-';
+
+                    tr.innerHTML = `
+                        <td>
+                            <select class="form-control" data-field="dayKey" data-id="${row.id}" data-col="0">
+                                ${DAYS.map(d => `<option value="${d.key}" ${d.key === row.dayKey ? 'selected' : ''}>${d.label}</option>`).join('')}
+                            </select>
+                        </td>
+                        <td style="color:#ddd;">
+                            <div>${escapeHtml(dateLabel)}</div>
+                            <div style="color:#777; font-size:12px;">${escapeHtml(isoDate || '')}</div>
+                        </td>
+                        <td>
+                            <input class="form-control" type="time" data-field="start" data-id="${row.id}" data-col="1" value="${escapeHtml(row.start)}">
+                        </td>
+                        <td>
+                            <select class="form-control" data-field="duration" data-id="${row.id}" data-col="2">
+                                ${[45, 60, 75, 90, 120].map(v => `<option value="${v}" ${String(v) === String(row.duration) ? 'selected' : ''}>${v} min</option>`).join('')}
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" data-field="name" data-id="${row.id}" data-col="3" value="${escapeHtml(row.name)}" placeholder="e.g. HIIT Circuit">
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" data-field="tag" data-id="${row.id}" data-col="4" value="${escapeHtml(row.tag || '')}" placeholder="e.g. HYPERTROPHY">
+                        </td>
+                        <td>
+                            <select class="form-control" data-field="trainer" data-id="${row.id}" data-col="5">
+                                ${buildSelectOptions(TRAINERS, row.trainer, 'Select')}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" data-field="location" data-id="${row.id}" data-col="6">
+                                ${buildSelectOptions(LOCATIONS, row.location, 'Select')}
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" min="1" step="1" data-field="capacity" data-id="${row.id}" data-col="7" value="${escapeHtml(row.capacity)}">
+                        </td>
+                        <td style="text-align:right;">
+                            <button class="mini-btn danger" data-remove-row="${row.id}"><i class="fas fa-trash"></i> Remove</button>
+                        </td>
+                    `;
+                    els.draftBody.appendChild(tr);
+                });
+            }
+
+            function addDraftRow(weekStartISO) {
+                clearBuilderError();
+                const newRow = {
+                    id: uid(),
+                    dayKey: 'mon',
+                    start: '09:00',
+                    duration: 60,
+                    name: '',
+                    tag: '',
+                    trainer: '',
+                    location: 'Gym Area',
+                    capacity: 15
+                };
+                draftRows.push(newRow);
+                saveDraft(weekStartISO);
+                renderDraft(weekStartISO);
+            }
+
+            function updateDraftField(weekStartISO, id, field, value) {
+                const row = draftRows.find(r => r.id === id);
+                if (!row) return;
+                if (field === 'duration' || field === 'capacity') {
+                    row[field] = Number(value);
+                } else {
+                    row[field] = value;
+                }
+                saveDraft(weekStartISO);
+
+                if (field === 'dayKey') {
+                    const tr = els.draftBody.querySelector(`tr[data-row-id="${id}"]`);
+                    if (tr) {
+                        const isoDate = getDateForDayKey(weekStartISO, row.dayKey) || '';
+                        const dateLabel = isoDate ? formatDateLabel(isoDate) : '-';
+                        const dateCell = tr.querySelector('td:nth-child(2)');
+                        if (dateCell) {
+                            dateCell.innerHTML = `<div>${escapeHtml(dateLabel)}</div><div style="color:#777; font-size:12px;">${escapeHtml(isoDate || '')}</div>`;
+                        }
+                    }
+                }
+            }
+
+            function removeDraftRow(weekStartISO, id) {
+                draftRows = draftRows.filter(r => r.id !== id);
+                saveDraft(weekStartISO);
+                renderDraft(weekStartISO);
+            }
+
+            function isDraftRowComplete(row) {
+                const name = String(row.name || '').trim();
+                const trainer = String(row.trainer || '').trim();
+                const location = String(row.location || '').trim();
+                const start = String(row.start || '').trim();
+                const dayKey = String(row.dayKey || '').trim();
+                const duration = Number(row.duration);
+                const capacity = Number(row.capacity);
+                return Boolean(name && trainer && location && start && dayKey && Number.isFinite(duration) && duration > 0 && Number.isFinite(capacity) && capacity > 0);
+            }
+
+            function base64UrlEncodeUtf8(str) {
+                const utf8 = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16)));
+                const b64 = btoa(utf8);
+                return b64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+            }
+
+            function submitDraftToSchedule(weekStartISO) {
+                clearBuilderError();
+                const completeRows = draftRows.filter(isDraftRowComplete);
+                if (completeRows.length === 0) {
+                    showBuilderError('Add at least one complete row before submitting.');
+                    return;
+                }
+
+                schedule = completeRows.map(r => {
+                    const date = getDateForDayKey(weekStartISO, r.dayKey);
+                    return {
+                        id: uid(),
+                        date,
+                        start: r.start,
+                        duration: Number(r.duration),
+                        name: String(r.name).trim(),
+                        tag: String(r.tag || '').trim(),
+                        trainer: String(r.trainer).trim(),
+                        location: String(r.location).trim(),
+                        capacity: Math.max(1, Math.floor(Number(r.capacity))),
+                        attendance: 0,
+                        status: 'scheduled'
+                    };
+                }).filter(x => Boolean(x.date));
+
+                saveSchedule(weekStartISO);
+                localStorage.setItem('soulbox.weeklyScheduler.publishedWeekStart.v1', weekStartISO);
+                notifyUserScheduleUpdated(weekStartISO);
+                draftRows = [];
+                saveDraft(weekStartISO);
+                renderDraft(weekStartISO);
+                renderSchedule();
+
+                try {
+                    const payload = { weekStart: weekStartISO, schedule };
+                    const encoded = base64UrlEncodeUtf8(JSON.stringify(payload));
+                    window.open(`group-class-announcement.html#weeklySchedule=${encoded}`, '_blank');
+                } catch {}
+            }
+
+            function dayKeyFromText(weekStartISO, value) {
+                const raw = String(value || '').trim();
+                if (!raw) return null;
+
+                const isoMatch = raw.match(/^\d{4}-\d{2}-\d{2}$/);
+                if (isoMatch) {
+                    const base = parseISODate(weekStartISO);
+                    const target = parseISODate(raw);
+                    const diffDays = Math.floor((target.getTime() - base.getTime()) / (24 * 60 * 60 * 1000));
+                    if (diffDays >= 0 && diffDays <= 6) return DAYS[diffDays].key;
+                }
+
+                const norm = raw.toLowerCase();
+                const first3 = norm.slice(0, 3);
+                const direct = DAYS.find(d => d.key === first3 || d.label.toLowerCase() === first3);
+                if (direct) return direct.key;
+
+                if (norm === 'monday') return 'mon';
+                if (norm === 'tuesday') return 'tue';
+                if (norm === 'wednesday') return 'wed';
+                if (norm === 'thursday') return 'thu';
+                if (norm === 'friday') return 'fri';
+                if (norm === 'saturday') return 'sat';
+                if (norm === 'sunday') return 'sun';
+
+                return null;
+            }
+
+            function parseNumberCell(value) {
+                const raw = String(value || '').trim();
+                if (!raw) return null;
+                const m = raw.match(/-?\d+/);
+                if (!m) return null;
+                const n = Number(m[0]);
+                if (!Number.isFinite(n)) return null;
+                return n;
+            }
+
+            function ensureDraftRows(weekStartISO, count) {
+                while (draftRows.length < count) {
+                    draftRows.push({
+                        id: uid(),
+                        dayKey: 'mon',
+                        start: '09:00',
+                        duration: 60,
+                        name: '',
+                        tag: '',
+                        trainer: '',
+                        location: 'Gym Area',
+                        capacity: 15
+                    });
+                }
+                saveDraft(weekStartISO);
+            }
+
+            function copyRowToClipboard(rowId) {
+                const row = draftRows.find(r => r.id === rowId);
+                if (!row) return;
+
+                const dayLabel = DAYS.find(d => d.key === row.dayKey)?.label || row.dayKey;
+                const tsv = [
+                    dayLabel,
+                    row.start,
+                    String(row.duration),
+                    String(row.name || ''),
+                    String(row.tag || ''),
+                    String(row.trainer || ''),
+                    String(row.location || ''),
+                    String(row.capacity || '')
+                ].join('\t');
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(tsv).catch(() => {});
+                    return;
+                }
+
+                const ta = document.createElement('textarea');
+                ta.value = tsv;
+                ta.setAttribute('readonly', 'readonly');
+                ta.style.position = 'fixed';
+                ta.style.top = '-1000px';
+                ta.style.left = '-1000px';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); } catch {}
+                ta.remove();
+            }
+
+            function parseCsvText(text) {
+                const rows = [];
+                let row = [];
+                let cur = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < text.length; i++) {
+                    const ch = text[i];
+                    const next = text[i + 1];
+
+                    if (inQuotes) {
+                        if (ch === '"' && next === '"') {
+                            cur += '"';
+                            i++;
+                            continue;
+                        }
+                        if (ch === '"') {
+                            inQuotes = false;
+                            continue;
+                        }
+                        cur += ch;
+                        continue;
+                    }
+
+                    if (ch === '"') {
+                        inQuotes = true;
+                        continue;
+                    }
+
+                    if (ch === ',') {
+                        row.push(cur);
+                        cur = '';
+                        continue;
+                    }
+
+                    if (ch === '\n') {
+                        row.push(cur);
+                        rows.push(row);
+                        row = [];
+                        cur = '';
+                        continue;
+                    }
+
+                    if (ch === '\r') {
+                        continue;
+                    }
+
+                    cur += ch;
+                }
+
+                row.push(cur);
+                rows.push(row);
+
+                return rows
+                    .map(r => r.map(c => String(c ?? '').trim()))
+                    .filter(r => r.some(c => c !== ''));
+            }
+
+            function normalizeHeaderKey(s) {
+                return String(s || '')
+                    .trim()
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, '');
+            }
+
+            function importCsvToDraft(weekStartISO, csvText) {
+                clearBuilderError();
+                const table = parseCsvText(csvText);
+                if (table.length === 0) {
+                    showBuilderError('CSV is empty.');
+                    return;
+                }
+
+                const headerRow = table[0];
+                const headerMap = {};
+                headerRow.forEach((h, idx) => {
+                    headerMap[normalizeHeaderKey(h)] = idx;
+                });
+
+                const hasHeader = Object.keys(headerMap).some(k => [
+                    'day', 'date', 'start', 'time', 'duration', 'durationmin', 'durationmins', 'durationminutes', 'class', 'classname', 'tag', 'trainer', 'location', 'capacity'
+                ].includes(k));
+
+                const dataRows = hasHeader ? table.slice(1) : table;
+                if (dataRows.length === 0) {
+                    showBuilderError('CSV has no data rows.');
+                    return;
+                }
+
+                const getCell = (cells, headerKeys, fallbackIndex) => {
+                    for (const key of headerKeys) {
+                        const idx = headerMap[key];
+                        if (hasHeader && idx != null) return cells[idx] ?? '';
+                    }
+                    return !hasHeader && fallbackIndex != null ? (cells[fallbackIndex] ?? '') : '';
+                };
+
+                const imported = dataRows.map(cells => {
+                    const dayOrDate = getCell(cells, ['day', 'date'], 0);
+                    const dayKey = dayKeyFromText(weekStartISO, dayOrDate) || 'mon';
+
+                    const startRaw = getCell(cells, ['start', 'time'], 1);
+                    let start = '09:00';
+                    if (startRaw) {
+                        const m = startRaw.match(/^(\d{1,2}):(\d{2})$/);
+                        const rawDigits = startRaw.match(/^\d{3,4}$/);
+                        if (m) {
+                            start = `${pad2(Number(m[1]))}:${pad2(Number(m[2]))}`;
+                        } else if (rawDigits) {
+                            const digits = startRaw.padStart(4, '0');
+                            start = `${digits.slice(0, 2)}:${digits.slice(2, 4)}`;
+                        }
+                    }
+
+                    const durationRaw = getCell(cells, ['duration', 'durationmin', 'durationmins', 'durationminutes'], 2);
+                    const durationNum = parseNumberCell(durationRaw);
+                    const duration = durationNum != null && durationNum > 0 ? durationNum : 60;
+
+                    const name = getCell(cells, ['class', 'classname'], 3);
+                    const tag = getCell(cells, ['tag'], 4);
+                    const trainer = getCell(cells, ['trainer'], 5);
+                    const location = getCell(cells, ['location'], 6) || 'Gym Area';
+
+                    const capacityRaw = getCell(cells, ['capacity'], 7);
+                    const capacityNum = parseNumberCell(capacityRaw);
+                    const capacity = capacityNum != null && capacityNum > 0 ? capacityNum : 15;
+
+                    return {
+                        id: uid(),
+                        dayKey,
+                        start,
+                        duration,
+                        name,
+                        tag,
+                        trainer,
+                        location,
+                        capacity
+                    };
+                });
+
+                draftRows = imported;
+                saveDraft(weekStartISO);
+                renderDraft(weekStartISO);
+            }
+
+            function downloadCsvExample() {
+                const header = ['Day', 'Start', 'Duration', 'Class', 'Tag', 'Trainer', 'Location', 'Capacity'];
+                const rows = [
+                    ['Mon', '07:00', '60', 'BODYCAMP', 'HYPERTROPHY', 'Abas', 'Gym Area', '15'],
+                    ['Wed', '18:00', '60', 'HYROX', 'ENGINE', 'Delpas', 'Gym Area', '20'],
+                    ['Fri', '19:00', '60', 'YOGA FLOW', 'RECOVERY', 'Ankie', 'Studio A', '15']
+                ];
+
+                const csv = [header, ...rows]
+                    .map(r => r.map(csvEscape).join(','))
+                    .join('\n');
+
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'weekly-scheduler-draft-example.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            }
+
+            function formatTimeRange(startStr, durationMinutes) {
+                const startMin = timeStrToMinutes(startStr);
+                const endMin = startMin + durationMinutes;
+                return `${minutesToTimeStr(startMin)} - ${minutesToTimeStr(endMin)}`;
+            }
+
+            function renderSchedule() {
+                sortSchedule();
+                els.scheduleBody.innerHTML = '';
+
+                if (schedule.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td colspan="10" style="color:#777;">No classes generated for this week yet.</td>`;
+                    els.scheduleBody.appendChild(tr);
+                    return;
+                }
+
+                schedule.forEach(item => {
+                    const tr = document.createElement('tr');
+                    if (item.status === 'cancelled') tr.classList.add('row-cancelled');
+
+                    const statusBadgeClass = item.status === 'cancelled' ? 'cancelled' : 'upcoming';
+                    const statusLabel = item.status === 'cancelled' ? 'Cancelled' : 'Scheduled';
+
+                    tr.innerHTML = `
+                        <td>${escapeHtml(formatDateLabel(item.date))}</td>
+                        <td>${escapeHtml(formatTimeRange(item.start, item.duration))}</td>
+                        <td style="color:#fff; font-weight:600;">${escapeHtml(item.name)}</td>
+                        <td>${escapeHtml(item.tag || '')}</td>
+                        <td>${escapeHtml(item.trainer)}</td>
+                        <td>${escapeHtml(item.location)}</td>
+                        <td>${item.capacity}</td>
+                        <td>${item.attendance}</td>
+                        <td><span class="status-badge ${statusBadgeClass}">${statusLabel}</span></td>
+                        <td style="text-align:right;">
+                            <div class="row-actions">
+                                <button class="mini-btn ghost" data-mark-full="${item.id}" ${item.status === 'cancelled' ? 'disabled' : ''}><i class="fas fa-user-check"></i> Mark Full</button>
+                                <button class="mini-btn ghost" data-edit-waitlist="${item.id}" ${item.status === 'cancelled' ? 'disabled' : ''}><i class="fas fa-clipboard-list"></i> Waitlist</button>
+                                <button class="mini-btn ghost" data-edit-attendance="${item.id}" ${item.status === 'cancelled' ? 'disabled' : ''}><i class="fas fa-pen"></i> Attendance</button>
+                                <button class="mini-btn danger" data-cancel-class="${item.id}" ${item.status === 'cancelled' ? 'disabled' : ''}><i class="fas fa-ban"></i> Cancel</button>
+                            </div>
+                        </td>
+                    `;
+
+                    els.scheduleBody.appendChild(tr);
+                });
+            }
+
+            function openModal(modalEl) {
+                modalEl.style.display = 'flex';
+            }
+
+            function closeModal(modalEl) {
+                modalEl.style.display = 'none';
+            }
+
+            function escapeHtml(s) {
+                return String(s)
+                    .replaceAll('&', '&amp;')
+                    .replaceAll('<', '&lt;')
+                    .replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;')
+                    .replaceAll("'", '&#039;');
+            }
+
+            function initModalCloseHandlers() {
+                document.querySelectorAll('[data-close]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-close');
+                        const modal = document.getElementById(id);
+                        if (modal) closeModal(modal);
+                    });
+                });
+
+                window.addEventListener('click', (e) => {
+                    if (e.target === els.attendanceModal) closeModal(els.attendanceModal);
+                    if (e.target === els.cancelModal) closeModal(els.cancelModal);
+                    if (e.target === els.waitlistModal) closeModal(els.waitlistModal);
+                });
+            }
+
+            function openAttendanceFor(id) {
+                const item = schedule.find(x => x.id === id);
+                if (!item) return;
+                editingId = id;
+                els.attClassName.textContent = item.name;
+                els.attMeta.textContent = `${formatDateLabel(item.date)} • ${formatTimeRange(item.start, item.duration)} • ${item.trainer} • ${item.location}`;
+                els.attCapacity.value = String(item.capacity);
+                els.attValue.value = String(item.attendance);
+                els.attValue.max = String(item.capacity);
+
+                const statusBadgeClass = item.status === 'cancelled' ? 'cancelled' : 'upcoming';
+                els.attStatus.className = `status-badge ${statusBadgeClass}`;
+                els.attStatus.textContent = item.status === 'cancelled' ? 'Cancelled' : 'Scheduled';
+
+                openModal(els.attendanceModal);
+            }
+
+            function saveAttendance(weekStartISO) {
+                if (!editingId) return;
+                const item = schedule.find(x => x.id === editingId);
+                if (!item) return;
+
+                const raw = Number(els.attValue.value);
+                const safe = Number.isFinite(raw) ? raw : 0;
+                const clipped = Math.max(0, Math.min(item.capacity, Math.floor(safe)));
+                item.attendance = clipped;
+
+                saveSchedule(weekStartISO);
+                notifyUserScheduleUpdated(weekStartISO);
+                renderSchedule();
+                closeModal(els.attendanceModal);
+            }
+
+            function markFull(weekStartISO, id) {
+                const item = schedule.find(x => x.id === id);
+                if (!item) return;
+                if (item.status === 'cancelled') return;
+                item.attendance = item.capacity;
+                saveSchedule(weekStartISO);
+                notifyUserScheduleUpdated(weekStartISO);
+                renderSchedule();
+            }
+
+            function openCancelFor(id) {
+                const item = schedule.find(x => x.id === id);
+                if (!item) return;
+                cancelId = id;
+                els.cancelClassName.textContent = item.name;
+                els.cancelMeta.textContent = `${formatDateLabel(item.date)} • ${formatTimeRange(item.start, item.duration)} • ${item.trainer} • ${item.location}`;
+                openModal(els.cancelModal);
+            }
+
+            function confirmCancel(weekStartISO) {
+                if (!cancelId) return;
+                const item = schedule.find(x => x.id === cancelId);
+                if (!item) return;
+                item.status = 'cancelled';
+                saveSchedule(weekStartISO);
+                notifyUserScheduleUpdated(weekStartISO);
+                renderSchedule();
+                closeModal(els.cancelModal);
+            }
+
+            function openWaitlistFor(id) {
+                const item = schedule.find(x => x.id === id);
+                if (!item) return;
+                waitlistId = id;
+
+                els.waitClassName.textContent = item.name;
+                els.waitMeta.textContent = `${formatDateLabel(item.date)} • ${formatTimeRange(item.start, item.duration)} • ${item.trainer} • ${item.location}`;
+                els.waitCapacityView.value = String(item.capacity);
+                els.waitCount.value = String(Number(item.waitlistCount || 0));
+                els.waitNotes.value = String(item.waitlistNotes || '');
+
+                const statusBadgeClass = item.status === 'cancelled' ? 'cancelled' : 'upcoming';
+                els.waitStatus.className = `status-badge ${statusBadgeClass}`;
+                els.waitStatus.textContent = item.status === 'cancelled' ? 'Cancelled' : 'Scheduled';
+
+                openModal(els.waitlistModal);
+            }
+
+            function saveWaitlist(weekStartISO) {
+                if (!waitlistId) return;
+                const item = schedule.find(x => x.id === waitlistId);
+                if (!item) return;
+
+                const rawCount = Number(els.waitCount.value);
+                const count = Number.isFinite(rawCount) ? Math.max(0, Math.floor(rawCount)) : 0;
+                item.waitlistCount = count;
+                item.waitlistNotes = String(els.waitNotes.value || '').trim();
+
+                saveSchedule(weekStartISO);
+                notifyUserScheduleUpdated(weekStartISO);
+                renderSchedule();
+                closeModal(els.waitlistModal);
+            }
+
+            function csvEscape(value) {
+                const s = String(value ?? '');
+                const needsQuotes = /[",\n\r]/.test(s);
+                const escaped = s.replaceAll('"', '""');
+                return needsQuotes ? `"${escaped}"` : escaped;
+            }
+
+            function exportCsv(weekStartISO) {
+                const header = [
+                    'Date',
+                    'Start',
+                    'Duration (min)',
+                    'End',
+                    'Class',
+                    'Tag',
+                    'Trainer',
+                    'Location',
+                    'Capacity',
+                    'Attendance',
+                    'Status'
+                ];
+
+                const lines = [header.map(csvEscape).join(',')];
+
+                const sorted = [...schedule].sort((a, b) => {
+                    if (a.date !== b.date) return a.date.localeCompare(b.date);
+                    return a.start.localeCompare(b.start);
+                });
+
+                sorted.forEach(item => {
+                    const end = formatTimeRange(item.start, item.duration).split(' - ')[1] || '';
+                    lines.push([
+                        item.date,
+                        item.start,
+                        item.duration,
+                        end,
+                        item.name,
+                        item.tag || '',
+                        item.trainer,
+                        item.location,
+                        item.capacity,
+                        item.attendance,
+                        item.status
+                    ].map(csvEscape).join(','));
+                });
+
+                const csv = lines.join('\n');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `soulbox-week-schedule-${weekStartISO}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            }
+
+            function attachHandlers() {
+                els.weekStart.addEventListener('change', () => {
+                    const iso = els.weekStart.value;
+                    if (!iso) return;
+                    renderWeekMeta(iso);
+                    loadDraft(iso);
+                    renderDraft(iso);
+                    loadSchedule(iso);
+                    renderSchedule();
+                });
+
+                els.addRowBtn.addEventListener('click', () => addDraftRow(els.weekStart.value));
+
+                els.importCsvBtn.addEventListener('click', () => {
+                    if (els.importCsvInput) els.importCsvInput.click();
+                });
+
+                els.downloadCsvExampleBtn.addEventListener('click', () => {
+                    downloadCsvExample();
+                });
+
+                els.importCsvInput.addEventListener('change', async () => {
+                    const weekStartISO = els.weekStart.value;
+                    if (!weekStartISO) return;
+                    const file = els.importCsvInput.files && els.importCsvInput.files[0];
+                    if (!file) return;
+                    const text = await file.text();
+                    importCsvToDraft(weekStartISO, text);
+                    els.importCsvInput.value = '';
+                });
+
+                els.clearDraftBtn.addEventListener('click', () => {
+                    const weekStartISO = els.weekStart.value;
+                    draftRows = [];
+                    saveDraft(weekStartISO);
+                    renderDraft(weekStartISO);
+                });
+
+                els.draftBody.addEventListener('change', (e) => {
+                    const input = e.target.closest('[data-field][data-id]');
+                    if (!input) return;
+                    const weekStartISO = els.weekStart.value;
+                    updateDraftField(weekStartISO, input.getAttribute('data-id'), input.getAttribute('data-field'), input.value);
+                });
+
+                els.draftBody.addEventListener('keydown', (e) => {
+                    const isCopy = (e.ctrlKey || e.metaKey) && String(e.key || '').toLowerCase() === 'c';
+                    if (!isCopy) return;
+
+                    const active = e.target;
+                    const cell = active && active.closest ? active.closest('[data-field][data-id]') : null;
+                    if (!cell) return;
+
+                    if (active && active.tagName && active.tagName.toLowerCase() === 'input') {
+                        if (active.selectionStart != null && active.selectionEnd != null && active.selectionStart !== active.selectionEnd) return;
+                    }
+
+                    e.preventDefault();
+                    copyRowToClipboard(cell.getAttribute('data-id'));
+                });
+
+                els.draftBody.addEventListener('paste', (e) => {
+                    const cell = e.target.closest('[data-col][data-id]');
+                    if (!cell) return;
+
+                    const text = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+                    if (!text) return;
+
+                    const isMultiCell = text.includes('\t') || text.includes('\n') || text.includes('\r');
+                    if (!isMultiCell) return;
+
+                    e.preventDefault();
+                    clearBuilderError();
+
+                    const weekStartISO = els.weekStart.value;
+                    const startId = cell.getAttribute('data-id');
+                    const startRowIndex = draftRows.findIndex(r => r.id === startId);
+                    if (startRowIndex < 0) return;
+
+                    const startCol = Number(cell.getAttribute('data-col'));
+                    if (!Number.isFinite(startCol)) return;
+
+                    const fieldsByCol = ['dayKey', 'start', 'duration', 'name', 'tag', 'trainer', 'location', 'capacity'];
+
+                    const lines = text.replace(/\r/g, '').split('\n').filter(l => l.trim() !== '');
+                    const table = lines.map(line => line.split('\t'));
+
+                    ensureDraftRows(weekStartISO, startRowIndex + table.length);
+
+                    table.forEach((rowCells, rIdx) => {
+                        const targetRow = draftRows[startRowIndex + rIdx];
+                        if (!targetRow) return;
+
+                        rowCells.forEach((rawValue, cIdx) => {
+                            const col = startCol + cIdx;
+                            const field = fieldsByCol[col];
+                            if (!field) return;
+
+                            const value = String(rawValue ?? '').trim();
+
+                            if (field === 'dayKey') {
+                                const parsed = dayKeyFromText(weekStartISO, value);
+                                if (parsed) targetRow.dayKey = parsed;
+                                return;
+                            }
+
+                            if (field === 'start') {
+                                const m = value.match(/^(\d{1,2}):(\d{2})$/);
+                                const rawDigits = value.match(/^\d{3,4}$/);
+                                if (m) {
+                                    const hh = pad2(Number(m[1]));
+                                    const mm = pad2(Number(m[2]));
+                                    targetRow.start = `${hh}:${mm}`;
+                                    return;
+                                }
+                                if (rawDigits) {
+                                    const digits = value.padStart(4, '0');
+                                    const hh = digits.slice(0, 2);
+                                    const mm = digits.slice(2, 4);
+                                    targetRow.start = `${hh}:${mm}`;
+                                    return;
+                                }
+                                return;
+                            }
+
+                            if (field === 'duration') {
+                                const n = parseNumberCell(value);
+                                if (n != null && n > 0) targetRow.duration = n;
+                                return;
+                            }
+
+                            if (field === 'capacity') {
+                                const n = parseNumberCell(value);
+                                if (n != null && n > 0) targetRow.capacity = n;
+                                return;
+                            }
+
+                            targetRow[field] = value;
+                        });
+                    });
+
+                    saveDraft(weekStartISO);
+                    renderDraft(weekStartISO);
+                });
+
+                els.draftBody.addEventListener('click', (e) => {
+                    const btn = e.target.closest('[data-remove-row]');
+                    if (!btn) return;
+                    const weekStartISO = els.weekStart.value;
+                    removeDraftRow(weekStartISO, btn.getAttribute('data-remove-row'));
+                });
+
+                els.submitScheduleBtn.addEventListener('click', () => {
+                    const weekStartISO = els.weekStart.value;
+                    if (!weekStartISO) return;
+                    submitDraftToSchedule(weekStartISO);
+                    renderSchedule();
+                });
+
+                els.clearWeekBtn.addEventListener('click', () => {
+                    const weekStartISO = els.weekStart.value;
+                    if (!weekStartISO) return;
+                    schedule = [];
+                    saveSchedule(weekStartISO);
+                    notifyUserScheduleUpdated(weekStartISO);
+                    renderSchedule();
+                });
+
+                els.scheduleBody.addEventListener('click', (e) => {
+                    const markFullBtn = e.target.closest('[data-mark-full]');
+                    if (markFullBtn) {
+                        markFull(els.weekStart.value, markFullBtn.getAttribute('data-mark-full'));
+                        return;
+                    }
+
+                    const waitBtn = e.target.closest('[data-edit-waitlist]');
+                    if (waitBtn) {
+                        openWaitlistFor(waitBtn.getAttribute('data-edit-waitlist'));
+                        return;
+                    }
+
+                    const editBtn = e.target.closest('[data-edit-attendance]');
+                    if (editBtn) {
+                        openAttendanceFor(editBtn.getAttribute('data-edit-attendance'));
+                        return;
+                    }
+                    const cancelBtn = e.target.closest('[data-cancel-class]');
+                    if (cancelBtn) {
+                        openCancelFor(cancelBtn.getAttribute('data-cancel-class'));
+                    }
+                });
+
+                els.saveAttendanceBtn.addEventListener('click', () => saveAttendance(els.weekStart.value));
+                els.confirmCancelBtn.addEventListener('click', () => confirmCancel(els.weekStart.value));
+                els.saveWaitlistBtn.addEventListener('click', () => saveWaitlist(els.weekStart.value));
+
+                els.exportCsvBtn.addEventListener('click', () => {
+                    const weekStartISO = els.weekStart.value;
+                    if (!weekStartISO) return;
+                    exportCsv(weekStartISO);
+                });
+            }
+
+            function init() {
+                els.weekStart.value = getNextMondayISO();
+                renderWeekMeta(els.weekStart.value);
+                loadDraft(els.weekStart.value);
+                renderDraft(els.weekStart.value);
+                loadSchedule(els.weekStart.value);
+                renderSchedule();
+                initModalCloseHandlers();
+                attachHandlers();
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
