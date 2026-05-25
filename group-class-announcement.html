@@ -373,6 +373,13 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        .class-item.past {
+            opacity: 0.5;
+            background: rgba(255, 255, 255, 0.015);
+            border-color: rgba(255, 255, 255, 0.06);
+            filter: saturate(0.7);
+        }
+
         .class-item:hover,
         .class-item:active {
             background: rgba(255, 255, 255, 0.065);
@@ -493,6 +500,11 @@
         }
 
         .class-spots.full {
+            background: rgba(37, 211, 102, 0.18);
+            color: #25D366;
+        }
+
+        .class-spots.cancelled {
             background: rgba(244, 67, 54, 0.2);
             color: #f44336;
         }
@@ -597,21 +609,11 @@
 
         .class-item.class-full {
             opacity: 0.85;
+            border-color: rgba(37, 211, 102, 0.28);
         }
 
         .class-item.class-full .class-name {
             position: relative;
-        }
-
-        .class-item.class-full .class-name::after {
-            content: 'FULL';
-            font-size: 9px;
-            font-weight: 600;
-            color: #f44336;
-            margin-left: 8px;
-            padding: 2px 6px;
-            background: rgba(244, 67, 54, 0.15);
-            border-radius: 4px;
         }
 
         /* Empty States */
@@ -1343,7 +1345,7 @@
     </a>
 
     <script>
-        window.SB_SCHEDULE_API_URL = 'https://script.google.com/macros/s/AKfycbxfC65EORIgtKz5wf2dpfx5JrnaK-yLXDSqbHqtj_NhrkWIJ0HxDjA8cMd5UTWUW4NJLA/exec';
+        window.SB_SCHEDULE_API_URL = 'https://script.google.com/macros/s/AKfycbx_FiaMzcgeccug7Xu5_XBNraP1wyezwd0vO1O2akh89CMGRSrni4D34umTDmUOF-TVCA/exec';
     </script>
 
     <script>
@@ -1440,6 +1442,15 @@
                 }
             }
 
+            //#region debug-point group-class-no-data
+            function setScheduleDebug(patch) {
+                try {
+                    const prev = (window.__sbScheduleDebug && typeof window.__sbScheduleDebug === 'object') ? window.__sbScheduleDebug : {};
+                    window.__sbScheduleDebug = { ...prev, ...patch };
+                } catch {}
+            }
+            //#endregion debug-point group-class-no-data
+
             function loadJsonp(url, timeoutMs = 12000) {
                 return new Promise((resolve, reject) => {
                     const cbName = `__sbJsonpCb_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
@@ -1484,7 +1495,12 @@
 
             async function importScheduleFromRemotePublished() {
                 const apiUrl = getRemoteApiUrl();
-                if (!apiUrl) return false;
+                if (!apiUrl) {
+                    //#region debug-point group-class-no-data
+                    setScheduleDebug({ ok: false, stage: 'no-api-url', at: Date.now() });
+                    //#endregion debug-point group-class-no-data
+                    return false;
+                }
 
                 let url = '';
                 try {
@@ -1492,6 +1508,9 @@
                     u.searchParams.set('action', 'published');
                     url = u.toString();
                 } catch {
+                    //#region debug-point group-class-no-data
+                    setScheduleDebug({ ok: false, stage: 'bad-api-url', at: Date.now(), apiUrl });
+                    //#endregion debug-point group-class-no-data
                     return false;
                 }
 
@@ -1507,8 +1526,14 @@
                     if (!weekStart || !items) return false;
                     activeWeekStartISO = weekStart;
                     scheduleData = mapScheduleItemsToScheduleData(items);
+                    //#region debug-point group-class-no-data
+                    setScheduleDebug({ ok: true, stage: 'loaded', at: Date.now(), url, weekStart, count: items.length });
+                    //#endregion debug-point group-class-no-data
                     return true;
                 } catch {
+                    //#region debug-point group-class-no-data
+                    setScheduleDebug({ ok: false, stage: 'load-failed', at: Date.now(), url });
+                    //#endregion debug-point group-class-no-data
                     return false;
                 }
             }
@@ -1530,13 +1555,19 @@
 
                     const cap = Number(item.capacity) || 0;
                     const att = Number(item.attendance) || 0;
-                    const status = String(item.status || 'scheduled');
+                    const rawStatus = String(item.status || 'scheduled');
+                    const isCancelled = rawStatus === 'cancelled';
+                    const computedFull = !isCancelled && cap > 0 && att >= cap;
+                    const isFull = rawStatus === 'full' || computedFull;
+                    const status = isCancelled ? 'cancelled' : isFull ? 'full' : 'scheduled';
                     const available = Math.max(cap - att, 0);
 
                     next[dayName].push({
                         name: String(item.name || 'CLASS'),
                         tag: String(item.tag || ''),
+                        dateISO: String(item.date || ''),
                         time: String(item.start),
+                        durationMinutes: Number(item.duration) || 60,
                         instructor: String(item.trainer || ''),
                         spots: status === 'cancelled' ? 0 : available,
                         type: String(item.location || 'GROUP'),
@@ -1552,6 +1583,20 @@
                 });
 
                 return next;
+            }
+
+            function classEndEpochMsJakarta(dateISO, hhmm, durationMinutes) {
+                const d = String(dateISO || '').trim();
+                const t = String(hhmm || '').trim();
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return null;
+                if (!/^\d{2}:\d{2}$/.test(t)) return null;
+
+                const startMs = Date.parse(`${d}T${t}:00+07:00`);
+                if (!Number.isFinite(startMs)) return null;
+
+                const dur = Number(durationMinutes);
+                const safeDur = Number.isFinite(dur) && dur > 0 ? dur : 60;
+                return startMs + safeDur * 60 * 1000;
             }
 
             function generateDayNavigation() {
@@ -1625,13 +1670,16 @@
             function generateClassItems(classes, day) {
                 return classes.map(classInfo => {
                     const isCancelled = classInfo.status === 'cancelled';
-                    const isFull = isCancelled || classInfo.spots === 0;
+                    const isFull = classInfo.status === 'full';
                     const isLow = classInfo.spots > 0 && classInfo.spots <= 2;
-                    const spotsClass = isFull ? 'full' : isLow ? 'low' : '';
+                    const spotsClass = isCancelled ? 'cancelled' : isFull ? 'full' : isLow ? 'low' : '';
                     const spotsText = isCancelled ? 'Cancelled' : isFull ? 'Full' : `${classInfo.spots} spot${classInfo.spots === 1 ? '' : 's'}`;
 
+                    const endMs = classEndEpochMsJakarta(classInfo.dateISO, classInfo.time, classInfo.durationMinutes);
+                    const isPast = !isCancelled && endMs != null && endMs < Date.now();
+
                     return `
-                    <div class="class-item ${isFull ? 'class-full' : ''}">
+                    <div class="class-item ${isFull ? 'class-full' : ''} ${isPast ? 'past' : ''}">
                         <div class="class-main-info">
                             <div class="class-header-row">
                                 <div class="class-name">${classInfo.name}${classInfo.tag ? ` <span class="class-title-tag">${classInfo.tag}</span>` : ''}</div>
@@ -1642,7 +1690,7 @@
                                 <div class="class-time"><i class="fas fa-clock"></i> ${classInfo.time}</div>
                                 <div class="class-instructor"><i class="fas fa-user"></i> ${classInfo.instructor}</div>
                                 <div class="class-spots ${spotsClass}">${spotsText}</div>
-                                ${(isFull && Number(classInfo.waitlist || 0) > 0) ? `<div class="waitlist-count"><i class="fas fa-clock"></i> ${Number(classInfo.waitlist)} waiting</div>` : ''}
+                                ${(!isCancelled && isFull && Number(classInfo.waitlist || 0) > 0) ? `<div class="waitlist-count"><i class="fas fa-clock"></i> ${Number(classInfo.waitlist)} waiting</div>` : ''}
                             </div>
                         </div>
                     </div>
