@@ -337,6 +337,10 @@
                             <label class="form-label" for="weekStart">Week Starts (Monday)</label>
                             <input class="form-control" id="weekStart" type="date">
                         </div>
+                        <div class="form-group" style="margin:0; flex: 1; min-width: 320px; max-width: 560px;">
+                            <label class="form-label" for="remoteApiUrl">Google Sheets API URL (optional)</label>
+                            <input class="form-control" id="remoteApiUrl" type="url" placeholder="Paste Apps Script Web App URL">
+                        </div>
                         <div class="week-meta" id="weekMeta"></div>
                     </div>
 
@@ -507,6 +511,7 @@
 
             const els = {
                 weekStart: document.getElementById('weekStart'),
+                remoteApiUrl: document.getElementById('remoteApiUrl'),
                 weekMeta: document.getElementById('weekMeta'),
                 builderError: document.getElementById('builderError'),
                 draftBody: document.getElementById('draftBody'),
@@ -603,6 +608,109 @@
                 return `soulbox.weeklyScheduler.draft.v1.${weekStartISO}`;
             }
 
+            const REMOTE_API_URL_KEY = 'soulbox.weeklyScheduler.remoteApiUrl.v1';
+
+            function getRemoteApiUrl() {
+                try {
+                    return String(localStorage.getItem(REMOTE_API_URL_KEY) || '').trim();
+                } catch {
+                    return '';
+                }
+            }
+
+            function setRemoteApiUrl(value) {
+                try {
+                    const v = String(value || '').trim();
+                    if (v) localStorage.setItem(REMOTE_API_URL_KEY, v);
+                    else localStorage.removeItem(REMOTE_API_URL_KEY);
+                } catch {}
+            }
+
+            async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 10000) {
+                const ctrl = new AbortController();
+                const t = setTimeout(() => ctrl.abort(), timeoutMs);
+                try {
+                    const res = await fetch(url, { ...options, signal: ctrl.signal });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return await res.json();
+                } finally {
+                    clearTimeout(t);
+                }
+            }
+
+            async function remotePublishCurrentWeek(weekStartISO) {
+                const apiUrl = getRemoteApiUrl();
+                if (!apiUrl) return;
+
+                try {
+                    const body = JSON.stringify({ action: 'publish', weekStart: weekStartISO, schedule });
+                    await fetchJsonWithTimeout(apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }, 12000);
+                } catch {}
+            }
+
+            async function remoteLoadWeek(weekStartISO) {
+                const apiUrl = getRemoteApiUrl();
+                if (!apiUrl) return false;
+
+                let url = '';
+                try {
+                    const u = new URL(apiUrl);
+                    u.searchParams.set('action', 'week');
+                    u.searchParams.set('weekStart', weekStartISO);
+                    url = u.toString();
+                } catch {
+                    return false;
+                }
+
+                try {
+                    const data = await fetchJsonWithTimeout(url, { method: 'GET' }, 12000);
+                    const items = data && Array.isArray(data.schedule) ? data.schedule : null;
+                    if (!items) return false;
+                    schedule = items;
+                    saveSchedule(weekStartISO);
+                    renderSchedule();
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+
+            async function remoteBootstrapFromPublished() {
+                const apiUrl = getRemoteApiUrl();
+                if (!apiUrl) return false;
+
+                let url = '';
+                try {
+                    const u = new URL(apiUrl);
+                    u.searchParams.set('action', 'published');
+                    url = u.toString();
+                } catch {
+                    return false;
+                }
+
+                try {
+                    const data = await fetchJsonWithTimeout(url, { method: 'GET' }, 12000);
+                    const weekStart = data && data.weekStart ? String(data.weekStart) : '';
+                    const items = data && Array.isArray(data.schedule) ? data.schedule : null;
+                    if (!weekStart || !items) return false;
+
+                    try {
+                        localStorage.setItem('soulbox.weeklyScheduler.publishedWeekStart.v1', weekStart);
+                    } catch {}
+
+                    els.weekStart.value = weekStart;
+                    renderWeekMeta(weekStart);
+                    loadDraft(weekStart);
+                    renderDraft(weekStart);
+                    schedule = items;
+                    saveSchedule(weekStart);
+                    renderSchedule();
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+
             function notifyUserScheduleUpdated(weekStartISO) {
                 try {
                     localStorage.setItem('soulbox.weeklyScheduler.publishedWeekStart.v1', weekStartISO);
@@ -614,6 +722,8 @@
                     ch.postMessage({ type: 'scheduleUpdated', weekStart: weekStartISO });
                     ch.close();
                 } catch {}
+
+                remotePublishCurrentWeek(weekStartISO);
             }
 
             function loadSchedule(weekStartISO) {
@@ -623,6 +733,8 @@
                 } catch {
                     schedule = [];
                 }
+
+                remoteLoadWeek(weekStartISO);
             }
 
             function saveSchedule(weekStartISO) {
@@ -640,7 +752,7 @@
                 els.weekMeta.appendChild(range);
 
                 const note = document.createElement('div');
-                note.textContent = 'Stored locally (browser)';
+                note.textContent = getRemoteApiUrl() ? 'Synced to Google Sheets' : 'Stored locally (browser)';
                 els.weekMeta.appendChild(note);
             }
 
@@ -852,7 +964,9 @@
                 try {
                     const payload = { weekStart: weekStartISO, schedule };
                     const encoded = base64UrlEncodeUtf8(JSON.stringify(payload));
-                    window.open(`group-class-announcement.html#weeklySchedule=${encoded}`, '_blank');
+                    const apiUrl = getRemoteApiUrl();
+                    const qs = apiUrl ? `?apiUrl=${encodeURIComponent(apiUrl)}` : '';
+                    window.open(`group-class-announcement.html${qs}#weeklySchedule=${encoded}`, '_blank');
                 } catch {}
             }
 
@@ -1359,6 +1473,14 @@
                     renderSchedule();
                 });
 
+                if (els.remoteApiUrl) {
+                    els.remoteApiUrl.addEventListener('change', async () => {
+                        setRemoteApiUrl(els.remoteApiUrl.value);
+                        renderWeekMeta(els.weekStart.value);
+                        await remoteBootstrapFromPublished();
+                    });
+                }
+
                 els.addRowBtn.addEventListener('click', () => addDraftRow(els.weekStart.value));
 
                 els.importCsvBtn.addEventListener('click', () => {
@@ -1552,6 +1674,9 @@
             }
 
             function init() {
+                if (els.remoteApiUrl) {
+                    els.remoteApiUrl.value = getRemoteApiUrl();
+                }
                 els.weekStart.value = getNextMondayISO();
                 renderWeekMeta(els.weekStart.value);
                 loadDraft(els.weekStart.value);
@@ -1560,6 +1685,8 @@
                 renderSchedule();
                 initModalCloseHandlers();
                 attachHandlers();
+
+                remoteBootstrapFromPublished();
             }
 
             init();

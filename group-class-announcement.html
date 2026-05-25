@@ -1337,17 +1337,21 @@
         </div>
     </div>
 
-    <a class="contact-fab" href="soulbox-links.html" aria-label="Contact our admin for booking or enquiry">
-        <i class="fas fa-headset"></i>
-        Contact admin
+    <a class="contact-fab" href="https://wa.me/628111510030" target="_blank" rel="noopener" aria-label="Chat admin on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        Chat admin
     </a>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+            function pad2(n) {
+                return String(n).padStart(2, '0');
+            }
+
             function toISODate(d) {
-                return d.toISOString().slice(0, 10);
+                return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
             }
 
             function parseISODate(iso) {
@@ -1382,14 +1386,6 @@
                 }, {});
             }
 
-            function buildAdminScheduleKey(weekStartISO) {
-                return `soulbox.weeklyScheduler.schedule.v1.${weekStartISO}`;
-            }
-
-            function loadPublishedWeekStartISO() {
-                return localStorage.getItem('soulbox.weeklyScheduler.publishedWeekStart.v1') || '';
-            }
-
             function base64UrlDecodeUtf8(b64url) {
                 const padded = String(b64url || '').replaceAll('-', '+').replaceAll('_', '/').padEnd(Math.ceil(String(b64url || '').length / 4) * 4, '=');
                 const binary = atob(padded);
@@ -1397,83 +1393,80 @@
                 return decodeURIComponent(bytes);
             }
 
-            function getHashParam(name) {
-                const hash = String(window.location.hash || '').replace(/^#/, '');
-                if (!hash) return '';
-                const pairs = hash.split('&').map(p => p.split('='));
-                const entry = pairs.find(([k]) => k === name);
-                return entry && entry[1] ? decodeURIComponent(entry[1]) : '';
+            function getQueryParam(name) {
+                try {
+                    return new URLSearchParams(window.location.search || '').get(name) || '';
+                } catch {
+                    return '';
+                }
             }
 
-            function hydrateScheduleFromHash() {
-                const encoded = getHashParam('weeklySchedule');
-                if (!encoded) return false;
-
-                let payload = null;
+            function removeQueryParam(name) {
                 try {
-                    payload = JSON.parse(base64UrlDecodeUtf8(encoded));
-                } catch {
-                    payload = null;
-                }
-
-                const weekStart = payload && payload.weekStart ? String(payload.weekStart) : '';
-                const items = payload && Array.isArray(payload.schedule) ? payload.schedule : null;
-                if (!weekStart || !items) return false;
-
-                try {
-                    localStorage.setItem('soulbox.weeklyScheduler.publishedWeekStart.v1', weekStart);
-                    localStorage.setItem(buildAdminScheduleKey(weekStart), JSON.stringify(items));
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete(name);
+                    window.history.replaceState(null, '', url.pathname + (url.search ? url.search : '') + (url.hash ? url.hash : ''));
                 } catch {}
+            }
 
-                try {
-                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
-                } catch {}
-
+            function hydrateRemoteApiUrlFromQuery() {
+                const apiUrl = getQueryParam('apiUrl');
+                if (!apiUrl) return false;
+                remoteApiUrl = String(apiUrl || '').trim();
                 return true;
             }
 
-            let activeWeekStartISO = loadPublishedWeekStartISO() || getCurrentMondayISO();
+            const REMOTE_API_URL_DEFAULT = '';
+            let remoteApiUrl = '';
+
+            function getRemoteApiUrl() {
+                return String(remoteApiUrl || REMOTE_API_URL_DEFAULT || '').trim();
+            }
+
+            async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 10000) {
+                const ctrl = new AbortController();
+                const t = setTimeout(() => ctrl.abort(), timeoutMs);
+                try {
+                    const res = await fetch(url, { ...options, signal: ctrl.signal });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return await res.json();
+                } finally {
+                    clearTimeout(t);
+                }
+            }
+
+            async function importScheduleFromRemotePublished() {
+                const apiUrl = getRemoteApiUrl();
+                if (!apiUrl) return false;
+
+                let url = '';
+                try {
+                    const u = new URL(apiUrl);
+                    u.searchParams.set('action', 'published');
+                    url = u.toString();
+                } catch {
+                    return false;
+                }
+
+                try {
+                    const data = await fetchJsonWithTimeout(url, { method: 'GET' }, 12000);
+                    const weekStart = data && data.weekStart ? String(data.weekStart) : '';
+                    const items = data && Array.isArray(data.schedule) ? data.schedule : null;
+                    if (!weekStart || !items) return false;
+                    activeWeekStartISO = weekStart;
+                    scheduleData = mapScheduleItemsToScheduleData(items);
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+
+            let activeWeekStartISO = getCurrentMondayISO();
 
             let scheduleData = createEmptyScheduleData();
 
-            function importScheduleFromAdmin() {
-                const published = loadPublishedWeekStartISO();
-                activeWeekStartISO = published || getCurrentMondayISO();
-
-                let raw = '';
-                try {
-                    raw = localStorage.getItem(buildAdminScheduleKey(activeWeekStartISO)) || '';
-                } catch {
-                    raw = '';
-                }
-
-                if (!raw) {
-                    if (published) {
-                        scheduleData = createEmptyScheduleData();
-                        return true;
-                    }
-                    return false;
-                }
-
-                let items = [];
-                try {
-                    items = JSON.parse(raw);
-                } catch {
-                    items = [];
-                }
-
-                if (!Array.isArray(items)) {
-                    if (published) {
-                        scheduleData = createEmptyScheduleData();
-                        return true;
-                    }
-                    return false;
-                }
-
-                if (items.length === 0) {
-                    scheduleData = createEmptyScheduleData();
-                    return true;
-                }
+            function mapScheduleItemsToScheduleData(items) {
+                if (!Array.isArray(items) || items.length === 0) return createEmptyScheduleData();
 
                 const next = createEmptyScheduleData();
 
@@ -1506,8 +1499,7 @@
                     next[day].sort((a, b) => String(a.time).localeCompare(String(b.time)));
                 });
 
-                scheduleData = next;
-                return true;
+                return next;
             }
 
             function generateDayNavigation() {
@@ -1628,29 +1620,18 @@
                 }
             }
 
-            function refreshScheduleUI() {
-                hydrateScheduleFromHash();
-                importScheduleFromAdmin();
+            async function refreshScheduleUI() {
+                hydrateRemoteApiUrlFromQuery();
+                const apiUrl = getRemoteApiUrl();
+                activeWeekStartISO = getCurrentMondayISO();
+                scheduleData = createEmptyScheduleData();
+
+                if (apiUrl) await importScheduleFromRemotePublished();
                 generateDayNavigation();
                 generateDayContent();
             }
 
             refreshScheduleUI();
-
-            window.addEventListener('storage', (e) => {
-                if (!e || !e.key) return;
-                if (e.key === 'soulbox.weeklyScheduler.publishedWeekStart.v1' || e.key === 'soulbox.weeklyScheduler.updatedAt.v1' || e.key.startsWith('soulbox.weeklyScheduler.schedule.v1.')) {
-                    refreshScheduleUI();
-                }
-            });
-
-            try {
-                const ch = new BroadcastChannel('soulbox.weeklyScheduler');
-                ch.addEventListener('message', (e) => {
-                    const msg = e && e.data ? e.data : null;
-                    if (msg && msg.type === 'scheduleUpdated') refreshScheduleUI();
-                });
-            } catch {}
 
         });
     </script>
