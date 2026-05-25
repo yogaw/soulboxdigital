@@ -1343,6 +1343,10 @@
     </a>
 
     <script>
+        window.SB_SCHEDULE_API_URL = 'https://script.google.com/macros/s/AKfycbxfC65EORIgtKz5wf2dpfx5JrnaK-yLXDSqbHqtj_NhrkWIJ0HxDjA8cMd5UTWUW4NJLA/exec';
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -1420,7 +1424,8 @@
             let remoteApiUrl = '';
 
             function getRemoteApiUrl() {
-                return String(remoteApiUrl || REMOTE_API_URL_DEFAULT || '').trim();
+                const globalUrl = (typeof window !== 'undefined' && window.SB_SCHEDULE_API_URL) ? String(window.SB_SCHEDULE_API_URL) : '';
+                return String(remoteApiUrl || globalUrl || REMOTE_API_URL_DEFAULT || '').trim();
             }
 
             async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 10000) {
@@ -1433,6 +1438,48 @@
                 } finally {
                     clearTimeout(t);
                 }
+            }
+
+            function loadJsonp(url, timeoutMs = 12000) {
+                return new Promise((resolve, reject) => {
+                    const cbName = `__sbJsonpCb_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+                    let done = false;
+
+                    const cleanup = () => {
+                        if (done) return;
+                        done = true;
+                        try { delete window[cbName]; } catch { window[cbName] = undefined; }
+                        if (script && script.parentNode) script.parentNode.removeChild(script);
+                        if (timer) clearTimeout(timer);
+                    };
+
+                    const timer = setTimeout(() => {
+                        cleanup();
+                        reject(new Error('JSONP timeout'));
+                    }, timeoutMs);
+
+                    window[cbName] = (data) => {
+                        cleanup();
+                        resolve(data);
+                    };
+
+                    let finalUrl = url;
+                    try {
+                        const u = new URL(url);
+                        u.searchParams.set('callback', cbName);
+                        u.searchParams.set('_', String(Date.now()));
+                        finalUrl = u.toString();
+                    } catch {}
+
+                    const script = document.createElement('script');
+                    script.src = finalUrl;
+                    script.async = true;
+                    script.onerror = () => {
+                        cleanup();
+                        reject(new Error('JSONP load error'));
+                    };
+                    document.head.appendChild(script);
+                });
             }
 
             async function importScheduleFromRemotePublished() {
@@ -1449,7 +1496,12 @@
                 }
 
                 try {
-                    const data = await fetchJsonWithTimeout(url, { method: 'GET' }, 12000);
+                    let data = null;
+                    try {
+                        data = await fetchJsonWithTimeout(url, { method: 'GET' }, 12000);
+                    } catch {
+                        data = await loadJsonp(url, 12000);
+                    }
                     const weekStart = data && data.weekStart ? String(data.weekStart) : '';
                     const items = data && Array.isArray(data.schedule) ? data.schedule : null;
                     if (!weekStart || !items) return false;
