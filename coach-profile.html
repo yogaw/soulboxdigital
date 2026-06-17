@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SoulBox Coach Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="unified-theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-0: #0d0d0d;
+            --bg-1: #121212;
+            --surface-1: rgba(26, 26, 26, 0.86);
+            --surface-2: rgba(34, 34, 34, 0.94);
+            --border: rgba(255, 255, 255, 0.12);
+            --border-strong: rgba(255, 255, 255, 0.18);
+            --text: #ffffff;
+            --text-2: rgba(255, 255, 255, 0.72);
+            --text-3: rgba(255, 255, 255, 0.54);
+            --gold: #d4af37;
+            --gold-2: #b8941f;
+            --green: #25d366;
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            background:
+                radial-gradient(1100px 620px at 50% -120px, rgba(212, 175, 55, 0.17), transparent 60%),
+                linear-gradient(180deg, #2a2f3a 0%, var(--bg-1) 48%, var(--bg-0) 100%);
+            line-height: 1.55;
+        }
+
+        #app {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 110px;
+        }
+
+        .main-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(16, 16, 16, 0.74);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            background: #000;
+            border: 1px solid var(--border);
+        }
+
+        .logo img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            opacity: 0.92;
+        }
+
+        .nav-copy {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+        }
+
+        .nav-subtitle {
+            font-size: 11px;
+            color: var(--text-3);
+        }
+
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--border-strong);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .icon-btn:hover,
+        .icon-btn:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .page-shell {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .hero-card {
+            overflow: hidden;
+            border-radius: 22px;
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 50vh;
+            background:
+                linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.45)),
+                url('assets/images/abas.jpeg') center top / cover no-repeat;
+        }
+
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(10, 10, 10, 0.42) 65%, rgba(10, 10, 10, 0.78));
+        }
+
+        .hero-badge {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text);
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-content {
+            padding: 22px 20px 24px;
+            background: linear-gradient(180deg, rgba(23, 23, 23, 0.96), rgba(16, 16, 16, 0.98));
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .coach-name {
+            font-size: 30px;
+            line-height: 1.05;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .coach-role {
+            font-size: 15px;
+            color: var(--text-2);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .coach-bio {
+            color: var(--text-2);
+            font-size: 14px;
+            margin-bottom: 18px;
+            max-width: 34ch;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            padding: 14px 14px 12px;
+            border-radius: 14px;
+            background: var(--surface-2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-value {
+            font-size: 18px;
+            line-height: 1.1;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .content-stack {
+            display: grid;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .info-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+        }
+
+        .section-label {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            line-height: 1.15;
+            margin-bottom: 8px;
+        }
+
+        .section-copy {
+            color: var(--text-2);
+            font-size: 14px;
+        }
+
+        .highlight-list,
+        .cert-list,
+        .best-for-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: var(--text-2);
+            font-size: 14px;
+        }
+
+        .list-icon {
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 11px;
+            color: #111;
+            background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        }
+
+        .quote-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 46%);
+            pointer-events: none;
+        }
+
+        .quote-mark {
+            font-size: 42px;
+            line-height: 1;
+            color: rgba(212, 175, 55, 0.45);
+            margin-bottom: 8px;
+        }
+
+        .quote-text {
+            font-size: 18px;
+            line-height: 1.45;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .quote-caption {
+            margin-top: 12px;
+            color: var(--text-3);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .cert-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .cert-chip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-2);
+            font-size: 13px;
+        }
+
+        .cert-chip strong {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sticky-cta {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 25;
+            padding: 12px 16px 16px;
+            background: linear-gradient(180deg, rgba(13, 13, 13, 0), rgba(13, 13, 13, 0.94) 34%, rgba(13, 13, 13, 0.98));
+        }
+
+        .sticky-cta-inner {
+            max-width: 780px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 18px;
+            background: rgba(18, 18, 18, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .cta-copy {
+            padding: 6px 4px 6px 8px;
+        }
+
+        .cta-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .cta-subtitle {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 2px;
+        }
+
+        .cta-button {
+            min-width: 144px;
+            border: none;
+            border-radius: 14px;
+            padding: 0 18px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+            color: #101010;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 18px rgba(212, 175, 55, 0.28);
+        }
+
+        .cta-button.secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        @media (min-width: 768px) {
+            .page-shell {
+                padding: 20px 20px 28px;
+            }
+
+            .hero-card {
+                display: grid;
+                grid-template-columns: 1.05fr 1fr;
+                min-height: 620px;
+            }
+
+            .hero-visual {
+                min-height: 100%;
+            }
+
+            .hero-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 30px 28px;
+            }
+
+            .content-stack {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .content-stack .info-card.full-span {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="main-nav">
+            <div class="nav-left">
+                <a class="icon-btn" href="trainer-management.html" aria-label="Back">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="logo">
+                    <img src="assets/images/soulboxlogo.png" alt="SOULBOX">
+                </div>
+                <div class="nav-copy">
+                    <div class="nav-title">SOULBOX</div>
+                    <div class="nav-subtitle">Coach Profile</div>
+                </div>
+            </div>
+            <a class="icon-btn" href="https://wa.me/628111510030" target="_blank" rel="noopener" aria-label="Chat admin">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </nav>
+
+        <main class="page-shell">
+            <section class="hero-card">
+                <div class="hero-visual">
+                    <div class="hero-badge">
+                        <i class="fas fa-shield-heart"></i>
+                        SoulBox Coach Spotlight
+                    </div>
+                </div>
+                <div class="hero-content">
+                    <div class="eyebrow">Meet The Coach</div>
+                    <h1 class="coach-name">Coach Abas</h1>
+                    <div class="coach-role">Boxing & Strength Coach</div>
+                    <p class="coach-bio">
+                        Helping members build better technique, strength, and training consistency through structured coaching that feels clear, progressive, and sustainable.
+                    </p>
+
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-value">6+ Years</div>
+                            <div class="stat-label">Experience</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">120+ Members</div>
+                            <div class="stat-label">Coached</div>
+                        </div>
+                    </div>
+
+                    <div class="tag-row">
+                        <span class="tag-pill">Boxing Technique</span>
+                        <span class="tag-pill">Strength Training</span>
+                        <span class="tag-pill">Fat Loss</span>
+                        <span class="tag-pill">Functional Conditioning</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-stack">
+                <article class="info-card">
+                    <div class="section-label">Key Highlights</div>
+                    <h2 class="section-title">Why Members Train With Coach Abas</h2>
+                    <div class="highlight-list">
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-star"></i></div>
+                            <div>6+ years coaching boxing, strength, and structured conditioning programs.</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-users"></i></div>
+                            <div>Trusted by 120+ SoulBox members across private training and group sessions.</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-fire"></i></div>
+                            <div>Focuses on efficient sessions that improve technique, consistency, and confidence.</div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="info-card">
+                    <div class="section-label">Specialization</div>
+                    <h2 class="section-title">Built For Clear Progress</h2>
+                    <p class="section-copy">
+                        Best for members who want a coach that can balance skill work, performance structure, and practical strength development.
+                    </p>
+                    <div class="tag-row" style="margin-top: 14px;">
+                        <span class="tag-pill">Boxing Fundamentals</span>
+                        <span class="tag-pill">Pad Work</span>
+                        <span class="tag-pill">Strength Blocks</span>
+                        <span class="tag-pill">Conditioning</span>
+                    </div>
+                </article>
+
+                <article class="info-card quote-card full-span">
+                    <div class="section-label">Coaching Style</div>
+                    <div class="quote-mark">“</div>
+                    <div class="quote-text">
+                        Train with purpose, move with control, and build consistency that lasts beyond motivation.
+                    </div>
+                    <div class="quote-caption">Coach Abas Philosophy</div>
+                </article>
+
+                <article class="info-card">
+                    <div class="section-label">Certifications</div>
+                    <h2 class="section-title">Trust Builder</h2>
+                    <div class="cert-grid">
+                        <div class="cert-chip">
+                            <div>
+                                <strong>Certified Boxing Coach</strong><br>
+                                National coaching pathway
+                            </div>
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="cert-chip">
+                            <div>
+                                <strong>Strength & Conditioning</strong><br>
+                                Performance-focused training
+                            </div>
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="cert-chip">
+                            <div>
+                                <strong>Functional Training</strong><br>
+                                Mobility and movement-based programming
+                            </div>
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="info-card">
+                    <div class="section-label">Best For</div>
+                    <h2 class="section-title">Members Who Want</h2>
+                    <div class="best-for-list">
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-check"></i></div>
+                            <div>Better boxing technique and cleaner movement fundamentals.</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-check"></i></div>
+                            <div>Strength sessions with structure, not random intensity.</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-check"></i></div>
+                            <div>A coach who keeps progress realistic, progressive, and sustainable.</div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <div class="sticky-cta">
+            <div class="sticky-cta-inner">
+                <div class="cta-copy">
+                    <div class="cta-title">Ready to train with Coach Abas?</div>
+                    <div class="cta-subtitle">Book a class or chat with admin for availability.</div>
+                </div>
+                <a class="cta-button" href="group-class-announcement.html">
+                    <i class="fas fa-calendar-check"></i>
+                    Book Class
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
