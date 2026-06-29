@@ -60,9 +60,10 @@
             justify-content: center;
             align-items: center;
             padding: 0;
-            min-height: 18px;
-            background: rgba(16, 16, 16, 0.7);
-            backdrop-filter: blur(6px);
+            min-height: 0;
+            height: 0;
+            background: transparent;
+            backdrop-filter: none;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -75,7 +76,7 @@
             align-items: center;
             width: 100%;
             margin: 0;
-            padding: 10px 0;
+            padding: 8px 0;
             background: #000;
             border-bottom: none;
             border-radius: 0;
@@ -137,8 +138,8 @@
         /* App Header - Mobile Optimized */
         .app-header {
             padding: 15px 20px;
-            background: rgba(16, 16, 16, 0.55);
-            backdrop-filter: blur(6px);
+            background: transparent;
+            backdrop-filter: none;
             border-bottom: none;
         }
 
@@ -434,29 +435,29 @@
         }
 
         .class-item.class-full {
-            opacity: 0.85;
+            opacity: 0.55;
             border-color: rgba(180, 180, 180, 0.12);
-            background: rgba(180, 180, 180, 0.12);
-            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-            transform: translateY(-1px);
-            filter: saturate(0.85);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: none;
+            transform: none;
+            filter: saturate(0.55) brightness(0.85);
         }
 
         .class-item.class-full::before {
-            background: rgba(107, 114, 128, 0.9);
+            background: rgba(107, 114, 128, 0.55);
         }
 
         .class-item.class-cancelled {
-            opacity: 0.82;
+            opacity: 0.55;
             border-color: rgba(180, 180, 180, 0.12);
-            background: rgba(180, 180, 180, 0.12);
-            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
-            transform: translateY(-1px);
-            filter: saturate(0.85);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: none;
+            transform: none;
+            filter: saturate(0.55) brightness(0.85);
         }
 
         .class-item.class-cancelled::before {
-            background: #EF4444;
+            background: rgba(239, 68, 68, 0.55);
         }
 
         .class-item.class-available:hover,
