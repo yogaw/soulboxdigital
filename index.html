@@ -17,8 +17,12 @@
             --text: #ffffff;
             --text-2: rgba(255, 255, 255, 0.72);
             --text-3: rgba(255, 255, 255, 0.55);
-            --gold: #D4AF37;
-            --gold-2: #B8941F;
+            --gold: #FFED00;
+            --gold-2: #FFED00;
+            --gold-text-outline: -1px -1px 0 rgba(0, 0, 0, 0.92), 1px -1px 0 rgba(0, 0, 0, 0.92), -1px 1px 0 rgba(0, 0, 0, 0.92), 1px 1px 0 rgba(0, 0, 0, 0.92), 0 -1px 0 rgba(0, 0, 0, 0.92), 0 1px 0 rgba(0,  0, 0, 0.92), -1px 0 0 rgba(0, 0, 0, 0.92), 1px 0 0 rgba(0, 0, 0, 0.92);
+            --gold-text-stroke: 0.9px rgba(0, 0, 0, 0.65);
+            --on-yellow-text-outline: none;
+            --on-yellow-text-stroke: 0.35px rgba(0, 0, 0, 0.35);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
         }
 
@@ -34,7 +38,7 @@
         }
 
         body {
-            background: radial-gradient(1200px 700px at 40% -100px, rgba(212, 175, 55, 0.16), transparent 60%),
+            background: radial-gradient(1200px 700px at 40% -100px, rgba(255, 237, 0, 0.16), transparent 60%),
                 linear-gradient(180deg, #2a2f3a 0%, var(--bg-1) 50%, var(--bg-0) 100%);
             color: var(--text);
             font-family: 'Montserrat', sans-serif;
@@ -53,9 +57,10 @@
         /* Navigation - Mobile Optimized */
         .main-nav {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 15px 20px;
+            padding: 0;
+            min-height: 18px;
             background: rgba(16, 16, 16, 0.7);
             backdrop-filter: blur(6px);
             position: sticky;
@@ -64,30 +69,46 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .logo {
-            width: 44px;
-            height: 44px;
+        .brand-strip {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 0;
+            padding: 6px 0;
             background: #000;
-            border-radius: 50%;
+            border-bottom: 1px solid var(--border);
+            border-radius: 0;
+        }
+
+        .logo {
+            width: 72px;
+            height: 72px;
             display: grid;
             place-items: center;
-            border: 1px solid var(--border);
-            overflow: hidden;
+            margin: 0 auto;
+            border: none;
+            background: transparent;
         }
 
         .logo img {
-            width: 32px;
-            height: 32px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            opacity: 0.9;
+            object-position: center;
+            opacity: 1;
+            display: block;
+        }
+
+        @media (min-width: 480px) {
+            .logo {
+                width: 84px;
+                height: 84px;
+            }
         }
 
         .header-actions {
-            display: flex;
-            gap: 12px;
-            min-width: 44px;
-            min-height: 44px;
-            align-items: center;
+            display: none;
         }
 
         .icon-btn {
@@ -143,6 +164,10 @@
 
         .screen.active {
             display: block;
+        }
+
+        #group-class-screen {
+            background: #000;
         }
 
         .weekly-classes-container {
@@ -268,10 +293,16 @@
         }
 
         .day-tab.active {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
-            color: #fff;
-            border-color: #D4AF37;
-            box-shadow: 0 8px 18px rgba(212, 175, 55, 0.18);
+            background: linear-gradient(135deg, #FFED00 0%, #FFED00 100%);
+            color: #111;
+            border-color: #FFED00;
+            box-shadow: 0 8px 18px rgba(255, 237, 0, 0.18);
+        }
+
+        .day-tab.active,
+        .day-tab.active * {
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         .day-tab-name {
@@ -290,14 +321,16 @@
             position: absolute;
             top: -4px;
             right: -4px;
-            background: #D4AF37;
-            color: #fff;
+            background: #FFED00;
+            color: #111;
             border-radius: 8px;
             padding: 1px 5px;
             font-size: 9px;
             font-weight: 600;
             min-width: 16px;
             text-align: center;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         /* Search and Filter Section - Mobile Optimized */
@@ -380,15 +413,37 @@
             filter: saturate(0.7);
         }
 
-        .class-item:hover,
-        .class-item:active {
+        .class-item.class-available {
+            border-color: #FFED00;
+        }
+
+        .class-item.class-full {
+            opacity: 0.85;
+            border-color: rgba(107, 114, 128, 0.75);
+            background: rgba(180, 180, 180, 0.12);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            transform: translateY(-1px);
+            filter: saturate(0.85);
+        }
+
+        .class-item.class-cancelled {
+            opacity: 0.82;
+            border-color: #EF4444;
+            background: rgba(180, 180, 180, 0.12);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            transform: translateY(-1px);
+            filter: saturate(0.85);
+        }
+
+        .class-item.class-available:hover,
+        .class-item.class-available:active {
             background: rgba(255, 255, 255, 0.065);
-            border-color: rgba(212, 175, 55, 0.25);
+            border-color: rgba(255, 237, 0, 0.95);
         }
 
         .class-item.selected {
-            border-color: #D4AF37;
-            background: rgba(76, 175, 80, 0.1);
+            border-color: #FFED00;
+            background: rgba(255, 255, 255, 0.065);
         }
 
         .class-main-info {
@@ -402,6 +457,12 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 10px;
+        }
+
+        .class-title-block {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
         }
 
         .class-name {
@@ -421,7 +482,6 @@
         .class-title-tag {
             display: inline-flex;
             align-items: center;
-            margin-left: 8px;
             padding: 2px 8px;
             border-radius: 999px;
             font-size: 10px;
@@ -431,6 +491,14 @@
             background: rgba(255, 255, 255, 0.06);
             letter-spacing: 0.4px;
             text-transform: uppercase;
+            max-width: 100%;
+            white-space: normal;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .class-tag-row {
+            margin-top: 6px;
         }
 
         .contact-fab {
@@ -480,8 +548,21 @@
         }
 
         .class-time {
-            color: #D4AF37;
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #FFED00;
+            color: #111;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
+        }
+
+        .class-time i {
+            color: inherit;
         }
 
         .class-instructor {
@@ -500,13 +581,13 @@
         }
 
         .class-spots.full {
-            background: rgba(37, 211, 102, 0.18);
-            color: #25D366;
+            background: #22C55E;
+            color: #fff;
         }
 
         .class-spots.cancelled {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
+            background: #EF4444;
+            color: #fff;
         }
 
         .class-spots.low {
@@ -515,8 +596,8 @@
         }
 
         .waitlist-count {
-            background: rgba(156, 39, 176, 0.2);
-            color: #ce93d8;
+            background: #3B82F6;
+            color: #fff;
             padding: 3px 6px;
             border-radius: 5px;
             font-size: 10px;
@@ -539,20 +620,22 @@
         }
 
         .class-type-badge {
-            background: #D4AF37;
-            color: #fff;
+            background: #FFED00;
+            color: #111;
             padding: 3px 6px;
             border-radius: 5px;
             font-size: 9px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         .quick-book-btn {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            background: linear-gradient(135deg, #FFED00 0%, #FFED00 100%);
             border: none;
-            color: white;
+            color: #111;
             padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
@@ -564,6 +647,8 @@
             align-items: center;
             justify-content: center;
             -webkit-tap-highlight-color: transparent;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         .quick-book-btn:hover,
@@ -581,8 +666,8 @@
 
         .waitlist-btn {
             background: transparent;
-            border: 1px solid #ce93d8;
-            color: #ce93d8;
+            border: 1px solid #3B82F6;
+            color: #3B82F6;
             padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
@@ -599,17 +684,12 @@
 
         .waitlist-btn:hover,
         .waitlist-btn:active {
-            background: rgba(156, 39, 176, 0.15);
+            background: rgba(59, 130, 246, 0.15);
             transform: translateY(-1px);
         }
 
         .waitlist-btn i {
             font-size: 10px;
-        }
-
-        .class-item.class-full {
-            opacity: 0.85;
-            border-color: rgba(37, 211, 102, 0.28);
         }
 
         .class-item.class-full .class-name {
@@ -737,7 +817,7 @@
             position: absolute;
             bottom: 0;
             height: 3px;
-            background: #D4AF37;
+            background: #FFED00;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 3px;
         }
@@ -757,8 +837,10 @@
         }
 
         .filter-option input[type="checkbox"]:checked + label {
-            color: #D4AF37;
+            color: #FFED00;
             font-weight: 500;
+            text-shadow: var(--gold-text-outline);
+            -webkit-text-stroke: var(--gold-text-stroke);
         }
 
         /* Smooth Scroll for Mobile */
@@ -829,7 +911,7 @@
         }
 
         .payment-method.selected {
-            border-color: #D4AF37;
+            border-color: #FFED00;
             background: rgba(76, 175, 80, 0.1);
         }
 
@@ -837,7 +919,9 @@
             font-size: 20px;
             margin-bottom: 8px;
             display: block;
-            color: #D4AF37;
+            color: #FFED00;
+            text-shadow: var(--gold-text-outline);
+            -webkit-text-stroke: var(--gold-text-stroke);
         }
 
         .payment-method-name {
@@ -868,10 +952,12 @@
 
         .payment-detail-item.total {
             font-weight: 600;
-            color: #D4AF37;
+            color: #FFED00;
             font-size: 16px;
             padding-top: 12px;
             border-top: 2px solid #444;
+            text-shadow: var(--gold-text-outline);
+            -webkit-text-stroke: var(--gold-text-stroke);
         }
 
         .payment-detail-label {
@@ -907,8 +993,10 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
-            color: white;
+            background: linear-gradient(135deg, #FFED00 0%, #FFED00 100%);
+            color: #111;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         .btn-secondary {
@@ -993,7 +1081,7 @@
         }
 
         .payment-method.selected {
-            border-color: #D4AF37;
+            border-color: #FFED00;
             background: rgba(76, 175, 80, 0.1);
         }
 
@@ -1001,7 +1089,9 @@
             font-size: 24px;
             margin-bottom: 10px;
             display: block;
-            color: #D4AF37;
+            color: #FFED00;
+            text-shadow: var(--gold-text-outline);
+            -webkit-text-stroke: var(--gold-text-stroke);
         }
 
         .payment-method-name {
@@ -1032,10 +1122,12 @@
 
         .payment-detail-item.total {
             font-weight: 600;
-            color: #D4AF37;
+            color: #FFED00;
             font-size: 18px;
             padding-top: 15px;
             border-top: 2px solid #444;
+            text-shadow: var(--gold-text-outline);
+            -webkit-text-stroke: var(--gold-text-stroke);
         }
 
         .payment-detail-label {
@@ -1065,8 +1157,10 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
-            color: white;
+            background: linear-gradient(135deg, #FFED00 0%, #FFED00 100%);
+            color: #111;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         .btn-secondary {
@@ -1086,11 +1180,13 @@
         }
 
         .success-message {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            background: linear-gradient(135deg, #FFED00 0%, #FFED00 100%);
             border-radius: 15px;
             padding: 30px;
             text-align: center;
-            color: white;
+            color: #111;
+            text-shadow: none;
+            -webkit-text-stroke: 0;
         }
 
         .success-icon {
@@ -1100,25 +1196,25 @@
 
         /* Waitlist Section Styles */
         .waitlist-section {
-            background: linear-gradient(135deg, rgba(156, 39, 176, 0.3) 0%, rgba(103, 58, 183, 0.3) 100%);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%);
             border-radius: 15px;
             padding: 30px;
             text-align: center;
             color: white;
-            border: 1px solid rgba(156, 39, 176, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.45);
         }
 
         .waitlist-icon {
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
-            background: rgba(156, 39, 176, 0.3);
+            background: rgba(59, 130, 246, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
-            color: #ce93d8;
+            color: #3B82F6;
         }
 
         .waitlist-section h3 {
@@ -1158,12 +1254,12 @@
 
         .waitlist-class-details i {
             font-size: 11px;
-            color: #ce93d8;
+            color: #3B82F6;
         }
 
         .waitlist-position {
             font-size: 14px;
-            color: #ce93d8;
+            color: #3B82F6;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1183,16 +1279,16 @@
         }
 
         .waitlist-note i {
-            color: #ce93d8;
+            color: #3B82F6;
         }
 
         .waitlist-success {
-            background: linear-gradient(135deg, rgba(156, 39, 176, 0.2) 0%, rgba(103, 58, 183, 0.2) 100%);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
             border-radius: 15px;
             padding: 30px;
             text-align: center;
             color: white;
-            border: 1px solid rgba(156, 39, 176, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.35);
         }
 
         .waitlist-success h3 {
@@ -1311,17 +1407,18 @@
 <body>
     <div id="app">
         <nav class="main-nav">
-            <div class="logo">
-                <img src="assets/images/soulboxlogo.png" alt="SOULBOX">
-            </div>
-            <div class="header-actions"></div>
         </nav>
+        <div class="brand-strip">
+            <div class="logo">
+                <img src="assets/images/sblogorsz1.PNG" alt="SOULBOX">
+            </div>
+        </div>
 
         <div id="group-class-screen" class="screen active">
             <header class="app-header">
                 <div class="user-greeting">
                     <h2>GROUP CLASSES</h2>
-                    <p class="motivation-text">SOULBOX Senopati</p>
+                    <p class="motivation-text">SOULBOX JAKARTA</p>
                 </div>
             </header>
 
@@ -1677,12 +1774,16 @@
 
                     const endMs = classEndEpochMsJakarta(classInfo.dateISO, classInfo.time, classInfo.durationMinutes);
                     const isPast = !isCancelled && endMs != null && endMs < Date.now();
+                    const itemStateClass = isCancelled ? 'class-cancelled' : isFull ? 'class-full' : 'class-available';
 
                     return `
-                    <div class="class-item ${isFull ? 'class-full' : ''} ${isPast ? 'past' : ''}">
+                    <div class="class-item ${itemStateClass} ${isPast ? 'past' : ''}">
                         <div class="class-main-info">
                             <div class="class-header-row">
-                                <div class="class-name">${classInfo.name}${classInfo.tag ? ` <span class="class-title-tag">${classInfo.tag}</span>` : ''}</div>
+                                <div class="class-title-block">
+                                    <div class="class-name">${classInfo.name}</div>
+                                    ${classInfo.tag ? `<div class="class-tag-row"><span class="class-title-tag">${classInfo.tag}</span></div>` : ''}
+                                </div>
                                 <div class="class-type-badge">${classInfo.type}</div>
                             </div>
                             ${classInfo.subtext ? `<div class="class-subtext">${classInfo.subtext}</div>` : ''}
