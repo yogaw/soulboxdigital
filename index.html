@@ -1849,7 +1849,7 @@
                     const endMs = classEndEpochMsJakarta(classInfo.dateISO, classInfo.time, classInfo.durationMinutes);
                     const isPast = !isCancelled && endMs != null && endMs < Date.now();
                     const itemStateClass = isCancelled ? 'class-cancelled' : isFull ? 'class-full' : 'class-available';
-                    const hideSpots = isPast || isCancelled;
+                    const hideSpots = isPast;
 
                     return `
                     <div class="class-item ${itemStateClass} ${isPast ? 'past' : ''}">
