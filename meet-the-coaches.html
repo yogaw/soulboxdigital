@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOULBOX Meet the Coaches</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="unified-theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-0: #000000;
+            --bg-1: #000000;
+            --surface-1: rgba(16, 16, 16, 0.96);
+            --surface-2: rgba(22, 22, 22, 0.98);
+            --border: rgba(255, 255, 255, 0.06);
+            --text: #ffffff;
+            --text-2: rgba(255, 255, 255, 0.72);
+            --text-3: rgba(255, 255, 255, 0.54);
+            --gold: #FFED00;
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.5;
+        }
+
+        #app {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 16px 6px;
+            background: #000;
+        }
+
+        .nav-lockup {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            display: grid;
+            place-items: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+        }
+
+        .nav-title {
+            font-size: 12px;
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .page-shell {
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .page-header {
+            margin-bottom: 18px;
+        }
+
+        .page-kicker {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            line-height: 1.1;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-copy {
+            color: var(--text-2);
+            font-size: 14px;
+            max-width: 42ch;
+        }
+
+        .coach-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .coach-card {
+            display: grid;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 20px;
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .coach-card:hover,
+        .coach-card:active {
+            transform: translateY(-1px);
+            border-color: rgba(255, 237, 0, 0.28);
+            background: rgba(20, 20, 20, 0.98);
+        }
+
+        .coach-photo {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #0d0d0d;
+        }
+
+        .coach-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .coach-meta {
+            display: grid;
+            gap: 10px;
+        }
+
+        .coach-name {
+            font-size: 24px;
+            line-height: 1.1;
+            font-weight: 700;
+        }
+
+        .coach-role {
+            color: var(--text-2);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .coach-bio {
+            color: var(--text-2);
+            font-size: 14px;
+        }
+
+        .coach-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .coach-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .coach-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        @media (min-width: 768px) {
+            .page-shell {
+                padding: 20px 20px 32px;
+            }
+
+            .coach-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="main-nav">
+            <div class="nav-lockup">
+                <div class="logo">
+                    <img src="assets/images/sblogorsz1.PNG" alt="SOULBOX">
+                </div>
+                <div class="nav-title">Meet the Coaches</div>
+            </div>
+        </nav>
+
+        <main class="page-shell">
+            <header class="page-header">
+                <div class="page-kicker">SOULBOX Jakarta</div>
+                <h1 class="page-title">Meet the Coaches</h1>
+                <p class="page-copy">Explore the coaches behind the training experience and open each profile for more details.</p>
+            </header>
+
+            <section class="coach-grid">
+                <a class="coach-card" href="coach-abas-profile.html">
+                    <div class="coach-photo">
+                        <img src="assets/images/abas.jpg" alt="Coach Abas">
+                    </div>
+                    <div class="coach-meta">
+                        <div>
+                            <div class="coach-name">Coach Abas</div>
+                            <div class="coach-role">Personal Training, Functional Training, Strength Training</div>
+                        </div>
+                        <div class="coach-bio">Build strength, improve movement quality, and develop a sustainable training rhythm.</div>
+                        <div class="coach-tags">
+                            <span class="coach-tag">Strength</span>
+                            <span class="coach-tag">Fat Loss</span>
+                            <span class="coach-tag">Muscle Building</span>
+                        </div>
+                        <div class="coach-link">
+                            <span>View Profile</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="coach-card" href="coach-gavi-profile.html">
+                    <div class="coach-photo">
+                        <img src="assets/images/gavi.jpg" alt="Coach Gavi">
+                    </div>
+                    <div class="coach-meta">
+                        <div>
+                            <div class="coach-name">Coach Gavi</div>
+                            <div class="coach-role">Strength & Conditioning, Functional Training, Sports Nutrition</div>
+                        </div>
+                        <div class="coach-bio">Progress strength, conditioning, and movement with clear structure and coach-led technique.</div>
+                        <div class="coach-tags">
+                            <span class="coach-tag">Conditioning</span>
+                            <span class="coach-tag">Mobility</span>
+                            <span class="coach-tag">Nutrition</span>
+                        </div>
+                        <div class="coach-link">
+                            <span>View Profile</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
