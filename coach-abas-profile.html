@@ -131,12 +131,15 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(10, 10, 10, 0.34) 62%, rgba(10, 10, 10, 0.72));
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(10, 10, 10, 0.3) 56%, rgba(0, 0, 0, 0.9) 100%);
         }
 
         .hero-content {
-            padding: 20px 20px 24px;
-            background: linear-gradient(180deg, rgba(12, 12, 12, 0.98), rgba(0, 0, 0, 0.99));
+            position: relative;
+            z-index: 1;
+            margin-top: -42px;
+            padding: 44px 20px 24px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(6, 6, 6, 0.92) 22%, rgba(0, 0, 0, 0.99) 100%);
         }
 
         .coach-name {
@@ -390,7 +393,6 @@
 
                 <article class="info-card">
                     <div class="section-label">Best For</div>
-                    <h2 class="section-title">Members Who Want</h2>
                     <div class="best-for-list">
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-check"></i></div>
