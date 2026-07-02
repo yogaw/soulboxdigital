@@ -167,11 +167,38 @@
             margin-bottom: 18px;
         }
 
+        .stats-row.is-collapsed .stat-card:nth-child(n + 4) {
+            display: none;
+        }
+
         .stat-card {
             padding: 14px 14px 12px;
             border-radius: 14px;
             background: var(--surface-2);
             border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stats-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: -4px 0 18px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .stats-toggle i {
+            color: var(--gold);
+            font-size: 11px;
         }
 
         .stat-value {
@@ -356,18 +383,14 @@
                         Strength & Conditioning Coach and Sports Nutritionist with 6+ years of experience, specializing in athletic development, functional performance, and nutrition strategies. Former NCAA Division I golfer and Indonesian National Team representative.
                     </p>
 
-                    <div class="stats-row">
+                    <div class="stats-row is-collapsed" id="gaviStatsRow">
                         <div class="stat-card">
-                            <div class="stat-value">Maybank Marathon</div>
-                            <div class="stat-label">4:36</div>
+                            <div class="stat-value">Hyrox Singles Jakarta</div>
+                            <div class="stat-label">1:24</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value">Sydney Marathon</div>
                             <div class="stat-label">4:33</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">Berlin Marathon</div>
-                            <div class="stat-label">4:41</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value">Berlin Marathon</div>
@@ -382,16 +405,19 @@
                             <div class="stat-label">1:22</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value">Hyrox Singles Jakarta</div>
-                            <div class="stat-label">1:24</div>
-                        </div>
+                            <div class="stat-value">Maybank Marathon</div>
+                            <div class="stat-label">4:36</div>
+                        </div>                        
                     </div>
+                    <button class="stats-toggle" id="gaviStatsToggle" type="button" aria-expanded="false" aria-controls="gaviStatsRow">
+                        <span>Show More</span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
 
                     <div class="tag-row">
-                        <span class="tag-pill">Strength Training</span>
-                        <span class="tag-pill">Functional Training</span>
-                        <span class="tag-pill">Conditioning</span>
-                        <span class="tag-pill">Mobility</span>
+                        <span class="tag-pill">Strength & Conditioning</span>
+                        <span class="tag-pill">Sports Nutrition</span>
+                        <span class="tag-pill">Athletic Development</span>
                     </div>
                 </div>
             </section>
@@ -401,9 +427,9 @@
                     <div class="section-label">Coaching Style</div>
                     <div class="quote-mark">“</div>
                     <div class="quote-text">
-                        Keep it simple, keep it consistent, and progress will follow.
+                        Fitness is about feeling strong, confident, and empowered. I help people move away from just 'looking good' toward building a body that can perform, endure, and adapt to any challenge.
                     </div>
-                    <div class="quote-caption">Coach Gavi Philosophy</div>
+                    <div class="quote-caption">Coach Gavrilla Arya Philosophy</div>
                 </article>
 
                 <article class="info-card">
@@ -412,19 +438,23 @@
                     <div class="cert-list">
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-certificate"></i></div>
-                            <div>Certified Personal Trainer (CPT)</div>
+                            <div>ISSA Strength & Conditioning</div>
                         </div>
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-dumbbell"></i></div>
-                            <div>Strength & Conditioning Foundation</div>
+                            <div>UESCA Running Coach Certification</div>
                         </div>
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-bolt"></i></div>
-                            <div>Functional Training & Movement Coaching</div>
+                            <div>Precision Nutrition Level 1</div>
                         </div>
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-heart-pulse"></i></div>
-                            <div>CPR / First Aid</div>
+                            <div>ISSA Sports Nutrition</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon"><i class="fas fa-medal"></i></div>
+                            <div>Titleist Performance Institute Level 1</div>
                         </div>
                     </div>
                 </article>
@@ -435,7 +465,7 @@
                     <div class="best-for-list">
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-check"></i></div>
-                            <div>Build strength with good form and clear progressions.</div>
+                            <div>Member yang ga complain and not looking for an always easy workout.</div>
                         </div>
                         <div class="list-item">
                             <div class="list-icon"><i class="fas fa-check"></i></div>
@@ -450,5 +480,19 @@
             </section>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsRow = document.getElementById('gaviStatsRow');
+            const statsToggle = document.getElementById('gaviStatsToggle');
+            if (!statsRow || !statsToggle) return;
+
+            statsToggle.addEventListener('click', function() {
+                const isCollapsed = statsRow.classList.toggle('is-collapsed');
+                statsToggle.setAttribute('aria-expanded', String(!isCollapsed));
+                statsToggle.querySelector('span').textContent = isCollapsed ? 'Show More' : 'Show Less';
+                statsToggle.querySelector('i').className = isCollapsed ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+            });
+        });
+    </script>
 </body>
 </html>
